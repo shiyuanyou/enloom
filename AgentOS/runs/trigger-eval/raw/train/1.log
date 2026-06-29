@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: INVOKE
+The user explicitly requests cross-session state tracking, worker task packets with acceptance gating, and a running state file for resuming, all of which directly match the skill's trigger conditions.

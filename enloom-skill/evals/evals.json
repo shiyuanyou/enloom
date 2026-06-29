@@ -1,0 +1,100 @@
+{
+  "skill_name": "enloom",
+  "evals": [
+    {
+      "id": 1,
+      "prompt": "I have a multi-stage migration across several sessions: it needs a researcher to map the current API, a coder to do the rewrite, a reviewer to gate each phase, project state that survives context resets, and an archive when each phase closes. Set this up and run the first phase.",
+      "expected_output": "triage returns enloom. The agent reads minimal state, plans only the current phase, produces at least one complete task packet, and does NOT promise a scheduler, CLI, or auto worker runtime.",
+      "expectations": [
+        "triage conclusion is enloom (not direct, not light-plan)",
+        "the agent plans only the current phase, not the whole project",
+        "at least one task packet is produced with goal, anti-goal, inputs, allowed tools, output, acceptance criteria, review budget",
+        "no promise of a scheduler, CLI, automatic model selection, or background daemon"
+      ]
+    },
+    {
+      "id": 2,
+      "prompt": "Fix the typo in the README heading that says 'Recieve' — it should be 'Receive'. Tell me what you changed.",
+      "expected_output": "triage returns direct. The agent makes the one-line edit normally and creates no Enloom files.",
+      "expectations": [
+        "triage conclusion is direct",
+        "no Enloom directory or state files are created",
+        "the single edit is made directly without task packets or review ceremony"
+      ]
+    },
+    {
+      "id": 3,
+      "prompt": "Write a one-off script that renames these 10 files from .jpeg to .jpg in this folder and prints a summary.",
+      "expected_output": "triage returns direct (one-off script, no durable state). The agent writes the script and runs it, without entering the workflow.",
+      "expectations": [
+        "triage conclusion is direct",
+        "no Enloom files are created",
+        "the script is treated as one-off, not as part of an audited migration unless the user says so"
+      ]
+    },
+    {
+      "id": 4,
+      "prompt": "Compare three database migration architectures. Use a separate researcher for each architecture, then have a reviewer merge the findings into a single decision record. Note: the decision record depends on all three researchers finishing, so sequence them carefully.",
+      "expected_output": "triage returns enloom. Despite multiple workers, strategy is serial because the decision record depends on all researcher outputs and review budget is tight — the reviewer cannot merge until all three reports exist.",
+      "expectations": [
+        "triage conclusion is enloom",
+        "strategy is serial (or hybrid with explicit serial integration), NOT parallel-by-default for the merge step",
+        "the plan recognizes the dependency: the merge task waits for all research outputs",
+        "a file ownership table exists if any parallel step is declared"
+      ]
+    },
+    {
+      "id": 5,
+      "prompt": "Review this worker report and decide what to do: Result: done. Files changed: output.md. Verification: not run. Evidence: trust me, it works. Known risks: none.",
+      "expected_output": "review returns needs-rework. Required verification was not run and evidence is insufficient ('trust me'), so the report cannot be accepted.",
+      "expectations": [
+        "review conclusion is needs-rework (not accepted, not accepted-with-risk)",
+        "the reason cites: verification not run + insufficient evidence",
+        "the reviewer asks for specific evidence or a narrowed task, rather than accepting the bare PASS"
+      ]
+    },
+    {
+      "id": 6,
+      "prompt": "A worker returned output.md at 900 lines of raw transcript. Their report.md is one line: 'see output.md'. Review this.",
+      "expected_output": "review returns needs-rework. The report failed to compress — a one-line report pointing at 900 lines of raw transcript violates report-first review and the review budget. The reviewer must demand a compressed report, not ingest the raw transcript.",
+      "expectations": [
+        "review conclusion is needs-rework",
+        "the reviewer demands report compression rather than reading the 900-line raw output",
+        "the raw transcript is NOT copied into the review conclusion or project state"
+      ]
+    },
+    {
+      "id": 7,
+      "prompt": "An audit worker ran a dead-link scan and a quote-encoding scan over the phase outputs. Their report says verdict = PASS, but the Evidence section is empty ('checks ran, all fine') and there is no Not Checked section. Accept this audit?",
+      "expected_output": "The audit cannot be PASS. The Evidence Contract hard constraint requires non-empty evidence for every declared check — an empty Evidence section with a bare 'all fine' is a PASS-without-evidence, which auto-downgrades to FAIL / needs-rework. The missing Not Checked section is a second violation (blind spots not declared).",
+      "expectations": [
+        "verdict is NOT PASS (downgraded to FAIL or needs-rework)",
+        "the reason cites the Evidence Contract: empty evidence for declared checks, bare PASS without proof",
+        "the reviewer demands concrete evidence (command output / file paths) for each declared check, and an explicit Not Checked declaration",
+        "the reviewer does not accept 'trust me, checks ran' as evidence"
+      ]
+    },
+    {
+      "id": 8,
+      "prompt": "Worker A wrote a forward reference to an output that Worker B promised to create. Worker A finished, but Worker B failed and never created it. The Verify-stage audit now finds the dangling reference. What should the control agent do?",
+      "expected_output": "The unfulfilled promise is a broken reference. The control agent must log it into the Registry's Broken References section (moved from Promised Outputs where its status becomes 'broken'), and either trigger point-to-point fix (re-dispatch Worker B or reassign) or downgrade the dependent work. It must NOT silently leave the dangling reference unrecorded.",
+      "expectations": [
+        "the broken promise is logged into the Registry (Broken References), not left unrecorded",
+        "the Promised Outputs entry's status is updated to 'broken'",
+        "the control agent chooses a resolution path (re-dispatch / reassign / downgrade) rather than ignoring it",
+        "the response recognizes that this storage tolerated dangling references (so promise + parallel was allowed), but the end-verification still caught the failure"
+      ]
+    },
+    {
+      "id": 9,
+      "prompt": "project_state.md is 240 lines. The control agent runs compaction, moving resolved/closed Registry items and old Accepted Results into the archive. After compaction, the Broken References section has dropped from 4 items to 1, but none of those 3 removed items were marked resolved. What happened and what should the agent do?",
+      "expected_output": "Compaction misdeleted unclosed risks — the 3 removed Broken References were not resolved, so their count should not have dropped. Per the Compaction Protocol anti-error rule, the risk-section item count may only decrease when an item is genuinely resolved. The agent must roll back the compaction.",
+      "expectations": [
+        "the agent identifies this as a compaction misdelete (risk-section count dropped without resolution)",
+        "the agent rolls back the compaction (restores project_state from before compaction)",
+        "the response cites the anti-error rule: risk sections (Pending/Broken/Accepted-with-Risk/Rejected) must not shrink unless genuinely resolved",
+        "the agent does NOT accept the compacted state as correct"
+      ]
+    }
+  ]
+}

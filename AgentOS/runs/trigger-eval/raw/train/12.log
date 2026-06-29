@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: BYPASS
+The user explicitly frames this as a single, self-contained deliverable with no multi-stage workflow, worker coordination, or cross-session state needed.

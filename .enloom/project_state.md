@@ -1,0 +1,75 @@
+# Enloom · 重命名阶段 project_state
+
+> 本文件是 Enloom skill 自身生命周期的落地示范(dogfood)。隐藏在 `.enloom/` 下,用户项目里默认不可见——这正是 skill 落地时的预期形态。
+
+## Current Phase
+
+**Phase: v0.3.3 rename** — agentos-workflow v0.3.2 → Enloom v0.3.3。零功能改动,纯重命名 + 产品化重写 + 全局重装。单 agent 扮演控制面 + worker。
+
+## Goal
+
+把产品从 `AgentOS / agentos-workflow` 重命名为 `Enloom`,三层命名统一:
+- 开发仓库: `agentos/` → `enloom/`
+- Skill 内部 name: `agentos-workflow` → `enloom`
+- Skill 产出目录: `AgentOS/` → `.enloom/`(隐藏)
+
+定位: **A methodology for orchestrating complex AI work.**
+
+## Anti Goal
+
+- 不重跑 trigger-eval(标 pending,旧 20/20 留作历史基线)
+- 不动 description 的触发词覆盖(multi-stage/worker packets/evidence/archiving 等保留)
+- 不做 compaction/操作记录松绑等设计优化(下一轮)
+- 不动 design/ 历史、不冻结旧 `AgentOS/` 自举快照
+
+## Active Tasks
+
+| ID | Task | Status |
+|----|------|--------|
+| P1 | git mv agentos→enloom + 父级 README/AGENTS.md 引用 | ✅ completed |
+| P2 | skill 源包 12 文件 name/desc/路径替换 | ✅ completed |
+| P2-tail | skill 源包目录 `agentos-workflow-skill/` → `enloom-skill/`(git mv) | ✅ completed |
+| P3 | 全局安装 agentos-workflow→enloom(删旧装新 + quick_validate) | ⏳ blocked: Bash |
+| P4 | README 中英双语产品页 + PROGRESS v0.3.3 | ✅ completed |
+
+## Promised Outputs
+
+| declarer | identifier | consumers | verify_at | status |
+|----------|-----------|-----------|-----------|--------|
+| P2 | SKILL.md frontmatter name=enloom | Stage 4 | Verify | ✅ fulfilled |
+| P2 | skill 源包 0 处 `agentos-workflow`(除 report.md 历史路径) | Stage 4 | Verify | ✅ fulfilled |
+| P3 | 全局 ~/.agents/skills/enloom/ 25 文件 | Stage 4 | Verify | ⏳ blocked: Bash |
+
+## Pending Dependencies
+
+- **[BLOCKED: 全局重装未执行]** P2-tail 目录改名已完成。剩余:全局重装 `~/.agents/skills/`(删旧 `agentos-workflow/` 装新 `enloom/`)+ quick_validate + 完整 Verify。shell 工具已恢复,待执行(本轮 git 提交完成后单独处理)。
+
+## Broken References
+
+- **目录名已统一**: skill 源包目录已 `git mv` 为 `enloom-skill/`,README/PROGRESS 活跃引用已同步更新。(冻结区 `AgentOS/` 快照 + `design/` 旧路径引用不动,作历史证据。)
+
+## Known Exceptions
+
+- 旧 `AgentOS/` 自举快照(含大量旧名引用)→ **冻结保留**,不改。v0.3 历史快照,改了反而失真。
+- `design/` 5 文件共 119 处 `AgentOS` 引用 → **冻结保留**,不改。设计文档是各时间点记录(v0.3-spec / v2 论文等),改名会篡改历史证据。
+
+## Accepted With Risk
+
+- description 改动使旧 trigger-eval 20/20 失效。**接受此风险**: 本轮标 pending,下次单独重跑拿 Enloom 版新基线。
+- 全局 `~/.agents/skills/agentos-workflow/` 仍是旧名(本次未重装)。用旧名调用旧版仍可用,但与源包(已改 enloom)不一致——风险直到 P3 重装才闭合。
+
+## Rejected Reports
+
+(none)
+
+## Archived Phases
+
+(none yet — Close 阶段写入)
+
+## Ownership Table (this phase)
+
+| 区 | 文件 | 写者 |
+|---|---|---|
+| 串行集成 | `.enloom/project_state.md` + Registry | 控制 agent 独占 |
+| 并行写 | P1-P4 各批次产出 | 控制 agent 逐包串行 |
+| 只读 | `design/` 历史、旧 `AgentOS/` 快照 | 谁都不改 |

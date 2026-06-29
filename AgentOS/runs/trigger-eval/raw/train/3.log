@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: INVOKE
+This request explicitly asks to "Run AgentOS" and involves complex multi-stage work (transforming an ad-hoc workflow into a reusable skill, testing on real tasks, evidence review, and archiving), all of which are explicit triggers in the skill description.

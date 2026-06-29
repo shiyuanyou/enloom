@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: BYPASS
+The user explicitly describes this as a throwaway spike with no need for overengineering, which falls squarely under "tasks that can be completed cleanly without state, review, or workers."

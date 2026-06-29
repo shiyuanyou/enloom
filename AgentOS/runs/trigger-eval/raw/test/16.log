@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: BYPASS
+This is a trivial one-file text change with no need for multi-stage workflows, workers, or state tracking.

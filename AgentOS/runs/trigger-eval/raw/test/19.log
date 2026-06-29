@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: BYPASS
+A simple checklist request is a direct Q&A task that requires no multi-stage work, workers, state tracking, or controlled boundaries.

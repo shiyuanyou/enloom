@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: BYPASS
+Fixing a simple typo in a single file is a trivial one-file edit that needs no state, review, or workers.

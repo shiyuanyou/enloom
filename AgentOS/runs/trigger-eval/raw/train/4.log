@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: INVOKE
+The request explicitly involves multi-session state governance, worker report reconciliation, project_state updates, and context management across multiple roles—all core triggers listed in the skill description.

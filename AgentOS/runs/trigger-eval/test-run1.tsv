@@ -1,0 +1,9 @@
+id	category	split	expected_invoke	actual_invoke	verdict	rationale
+13	should-AGENTOS	test	true	true	PASS	The request describes exactly the multi-phase, worker-driven, evidence-reviewed, cross-session workflow with archiving that the skill is designed for.
+14	should-AGENTOS	test	true	true	PASS	The request demands multi-stage work with explicit evidence collection, audit-level verification, and structured reporting—all matching the skill's signal for complex, evidence-first, review-oriented workflows.
+15	should-AGENTOS	test	true	true	PASS	Dispatching parallel workers with controlled ownership tracking and serial merging is a multi-stage workflow with worker boundaries, state coordination, and review—exactly the kind of task the skill is designed for.
+16	should-DIRECT	test	false	false	PASS	This is a trivial one-file text change with no need for multi-stage workflows, workers, or state tracking.
+17	should-DIRECT	test	false	false	PASS	This is a straightforward null-check fix in one file—an obvious, small-scope bug that needs no multi-role coordination, report, or state tracking.
+18	near-miss	test	false	false	PASS	The user describes three independent test fixes that are each a small assertion tweak—straightforward bug fixes that don't require multi-stage workflow, report-first review, or cross-session state.
+19	near-miss	test	false	false	PASS	A simple checklist request is a direct Q&A task that requires no multi-stage work, workers, state tracking, or controlled boundaries.
+20	near-miss	test	false	false	PASS	A bulk find-and-replace is a straightforward, one-shot mechanical operation that can be done cleanly without multi-stage work, workers, or persistent state.

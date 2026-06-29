@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: BYPASS
+This is a straightforward null-check fix in one file—an obvious, small-scope bug that needs no multi-role coordination, report, or state tracking.

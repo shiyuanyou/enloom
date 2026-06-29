@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: INVOKE
+Dispatching parallel workers with controlled ownership tracking and serial merging is a multi-stage workflow with worker boundaries, state coordination, and review—exactly the kind of task the skill is designed for.

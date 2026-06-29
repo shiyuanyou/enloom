@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: BYPASS
+Simple one-line bug fix in a known file with clear cause and fix — no need for multi-stage workflow, workers, or state management.

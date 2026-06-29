@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: INVOKE
+The request involves dispatching multiple workers for independent research, report-first review merging their outputs, and archiving a decision record — all matching the skill's complex multi-stage, worker, review, and archive triggers.

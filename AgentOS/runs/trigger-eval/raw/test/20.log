@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: BYPASS
+A bulk find-and-replace is a straightforward, one-shot mechanical operation that can be done cleanly without multi-stage work, workers, or persistent state.

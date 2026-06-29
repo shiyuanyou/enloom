@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: BYPASS
+The user frames the refactor as small and straightforward ("nothing too involved"), which fits the exception for tasks that can be completed cleanly without state, review, or workers.

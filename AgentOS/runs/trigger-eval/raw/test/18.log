@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: BYPASS
+The user describes three independent test fixes that are each a small assertion tweak—straightforward bug fixes that don't require multi-stage workflow, report-first review, or cross-session state.

@@ -1,0 +1,13 @@
+id	category	split	expected_invoke	actual_invoke	verdict	rationale
+1	should-AGENTOS	train	true	true	PASS	The user explicitly requests cross-session state tracking, worker task packets with acceptance gating, and a running state file for resuming, all of which directly match the skill's trigger conditions.
+2	should-AGENTOS	train	true	true	PASS	The request involves dispatching multiple workers for independent research, report-first review merging their outputs, and archiving a decision record — all matching the skill's complex multi-stage, worker, review, and archive triggers.
+3	should-AGENTOS	train	true	true	PASS	This request explicitly asks to "Run AgentOS" and involves complex multi-stage work (transforming an ad-hoc workflow into a reusable skill, testing on real tasks, evidence review, and archiving), all of which are explicit triggers in the skill description.
+4	should-AGENTOS	train	true	true	PASS	The request explicitly involves multi-session state governance, worker report reconciliation, project_state updates, and context management across multiple roles—all core triggers listed in the skill description.
+5	should-DIRECT	train	false	false	PASS	Fixing a simple typo in a single file is a trivial one-file edit that needs no state, review, or workers.
+6	should-DIRECT	train	false	false	PASS	This is a simple direct Q&A about a single function's behavior, requiring no multi-stage planning, workers, or state management.
+7	should-DIRECT	train	false	false	PASS	Simple one-line bug fix in a known file with clear cause and fix — no need for multi-stage workflow, workers, or state management.
+8	should-DIRECT	train	false	false	PASS	This is a straightforward one-file formatting fix that requires no multi-stage workflow, workers, review, or state management.
+9	near-miss	train	false	false	PASS	The user explicitly describes this as a throwaway spike with no need for overengineering, which falls squarely under "tasks that can be completed cleanly without state, review, or workers."
+10	near-miss	train	false	false	PASS	This is a simple one-time mechanical batch rename with no multi-stage complexity, cross-session state, or review needed.
+11	near-miss	train	false	false	PASS	The user frames the refactor as small and straightforward ("nothing too involved"), which fits the exception for tasks that can be completed cleanly without state, review, or workers.
+12	near-miss	train	false	false	PASS	The user explicitly frames this as a single, self-contained deliverable with no multi-stage workflow, worker coordination, or cross-session state needed.

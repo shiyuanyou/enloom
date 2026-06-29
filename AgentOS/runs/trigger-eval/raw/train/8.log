@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: BYPASS
+This is a straightforward one-file formatting fix that requires no multi-stage workflow, workers, review, or state management.
