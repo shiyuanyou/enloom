@@ -29,7 +29,7 @@
 | P1 | git mv agentos→enloom + 父级 README/AGENTS.md 引用 | ✅ completed |
 | P2 | skill 源包 12 文件 name/desc/路径替换 | ✅ completed |
 | P2-tail | skill 源包目录 `agentos-workflow-skill/` → `enloom-skill/`(git mv) | ✅ completed |
-| P3 | 全局安装 agentos-workflow→enloom(删旧装新 + quick_validate) | ⏳ blocked: Bash |
+| P3 | 全局安装 agentos-workflow→enloom(删旧装新 + quick_validate) | ✅ completed |
 | P4 | README 中英双语产品页 + PROGRESS v0.3.3 | ✅ completed |
 
 ## Promised Outputs
@@ -38,11 +38,11 @@
 |----------|-----------|-----------|-----------|--------|
 | P2 | SKILL.md frontmatter name=enloom | Stage 4 | Verify | ✅ fulfilled |
 | P2 | skill 源包 0 处 `agentos-workflow`(除 report.md 历史路径) | Stage 4 | Verify | ✅ fulfilled |
-| P3 | 全局 ~/.agents/skills/enloom/ 25 文件 | Stage 4 | Verify | ⏳ blocked: Bash |
+| P3 | 全局 ~/.agents/skills/enloom/ 25 文件 | Stage 4 | Verify | ✅ fulfilled |
 
 ## Pending Dependencies
 
-- **[BLOCKED: 全局重装未执行]** P2-tail 目录改名已完成。剩余:全局重装 `~/.agents/skills/`(删旧 `agentos-workflow/` 装新 `enloom/`)+ quick_validate + 完整 Verify。shell 工具已恢复,待执行(本轮 git 提交完成后单独处理)。
+- (无)P2-tail 目录改名 + P3 全局重装均已完成。全局 `~/.agents/skills/` 现仅 `enloom/`(name: enloom,25 文件,evals/ 按设计剥离),旧 `agentos-workflow/` 已删,源/装逐字节一致(diff 仅 evals/ 之差)。
 
 ## Broken References
 
@@ -56,7 +56,7 @@
 ## Accepted With Risk
 
 - description 改动使旧 trigger-eval 20/20 失效。**接受此风险**: 本轮标 pending,下次单独重跑拿 Enloom 版新基线。
-- 全局 `~/.agents/skills/agentos-workflow/` 仍是旧名(本次未重装)。用旧名调用旧版仍可用,但与源包(已改 enloom)不一致——风险直到 P3 重装才闭合。
+- 全局重装已闭合:旧 `~/.agents/skills/agentos-workflow/` 已删,新 `~/.agents/skills/enloom/`(name: enloom)已装,源/装一致。源/装不一致风险消除。
 
 ## Rejected Reports
 

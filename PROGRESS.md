@@ -6,7 +6,7 @@
 
 ## 当前状态
 
-**v0.3.3 进行中**（2026-06-29）。**纯重命名 + 产品化,零功能改动**：把产品从 `AgentOS / agentos-workflow` 重命名为 **Enloom**。三层命名统一——开发仓库 `agentos/` → `enloom/`、skill 内部 `name` `agentos-workflow` → `enloom`、skill 产出目录 `AgentOS/` → `.enloom/`（隐藏,用户项目里默认看不到）、skill 源包目录 `agentos-workflow-skill/` → `enloom-skill/`。**用 Enloom 自己的生命周期 6 阶段跑这次重命名**（dogfood）,过程留痕在 `.enloom/`。Verify: 12 skill 源包文件 name/desc/路径全替换、`AgentOS`→`Enloom` / 分类结果码 `agentos`→`enloom` / 路径 `AgentOS/`→`.enloom/`,README 重写为中英双语产品页。诚实盲区:**description 改动使旧 trigger-eval 20/20 失效,本轮标 pending**,旧 20/20 留作 v0.3.2 历史基线,下次单独重跑拿 Enloom 版新基线。遗留:全局重装 `~/.agents/skills/`(删旧 `agentos-workflow/` 装新 `enloom/`)——shell 工具已恢复,待执行。
+**v0.3.3 进行中**（2026-06-29）。**纯重命名 + 产品化,零功能改动**：把产品从 `AgentOS / agentos-workflow` 重命名为 **Enloom**。三层命名统一——开发仓库 `agentos/` → `enloom/`、skill 内部 `name` `agentos-workflow` → `enloom`、skill 产出目录 `AgentOS/` → `.enloom/`（隐藏,用户项目里默认看不到）、skill 源包目录 `agentos-workflow-skill/` → `enloom-skill/`。**用 Enloom 自己的生命周期 6 阶段跑这次重命名**（dogfood）,过程留痕在 `.enloom/`。Verify: 12 skill 源包文件 name/desc/路径全替换、`AgentOS`→`Enloom` / 分类结果码 `agentos`→`enloom` / 路径 `AgentOS/`→`.enloom/`,README 重写为中英双语产品页。诚实盲区:**description 改动使旧 trigger-eval 20/20 失效,本轮标 pending**,旧 20/20 留作 v0.3.2 历史基线,下次单独重跑拿 Enloom 版新基线。全局重装已完成:`~/.agents/skills/` 删旧 `agentos-workflow/`、装新 `enloom/`(25 文件,evals/ 按设计剥离,quick_validate PASS,源/装逐字节一致)。
 
 - 旧 `AgentOS/` 自举快照（含大量旧名引用）→ **冻结保留**,不改,作 v0.3 历史快照
 
