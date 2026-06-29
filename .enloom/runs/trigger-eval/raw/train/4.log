@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: INVOKE
+The user describes a cross-session, multi-worker workflow requiring report reconciliation, state compression, registry updates, and cross-reference logging—all of which directly match the skill's purpose for complex multi-stage work with worker task packets, report-first review, project_state updates, and context governance.

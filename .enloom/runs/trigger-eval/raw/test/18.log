@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: BYPASS
+Three small independent assertion tweaks to fix flaky tests are straightforward bug fixes that can be completed cleanly without the multi-stage workflow, state tracking, or review boundaries described in the skill.

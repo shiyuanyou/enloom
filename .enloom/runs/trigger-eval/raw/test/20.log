@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: BYPASS
+A one-time bulk find-and-replace with a trivial verification across a repo is explicitly a "tasks that can be completed cleanly without state, review, or workers" case.

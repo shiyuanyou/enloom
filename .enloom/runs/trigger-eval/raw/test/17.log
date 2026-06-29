@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: BYPASS
+This is a straightforward single-file null check fix that can be completed cleanly without multi-stage workflow, workers, or cross-session state.

@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: INVOKE
+The request involves dispatching parallel workers with serial merge dependencies and ownership tracking, which directly matches the Enloom skill's purpose for complex multi-stage work with controlled worker boundaries.

@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: BYPASS
+This is a simple direct Q&A request for a quick deploy checklist, not a complex multi-stage task needing workers or cross-session state.

@@ -17,7 +17,7 @@
 
 ## Anti Goal
 
-- 不重跑 trigger-eval(标 pending,旧 20/20 留作历史基线)
+- ~~不重跑 trigger-eval~~ → **已执行**(用户指示):trigger-eval re-run 完成,新 description 20/20,验证 rename 在 trigger 层面零功能改动。原 pending 闭合。
 - 不动 description 的触发词覆盖(multi-stage/worker packets/evidence/archiving 等保留)
 - 不做 compaction/操作记录松绑等设计优化(下一轮)
 - 不动 design/ 历史、不冻结旧 `AgentOS/` 自举快照
@@ -31,6 +31,7 @@
 | P2-tail | skill 源包目录 `agentos-workflow-skill/` → `enloom-skill/`(git mv) | ✅ completed |
 | P3 | 全局安装 agentos-workflow→enloom(删旧装新 + quick_validate) | ✅ completed |
 | P4 | README 中英双语产品页 + PROGRESS v0.3.3 | ✅ completed |
+| P5 | trigger-eval re-run(用户指示,原 Anti Goal 待办已闭合)| ✅ completed |
 
 ## Promised Outputs
 

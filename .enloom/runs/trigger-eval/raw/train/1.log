@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: INVOKE
+The request involves multi-service migration across sessions with worker task packets, cross-session state tracking, and test-verified acceptance—all explicitly matching the enloom skill's described scope.

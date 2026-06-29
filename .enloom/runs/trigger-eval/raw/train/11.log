@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: BYPASS
+The refactor is described as small and straightforward (two or three tiny commits), which falls under tasks that can be completed cleanly without the multi-role, cross-session state machinery Enloom requires.

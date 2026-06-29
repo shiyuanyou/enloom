@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: INVOKE
+The request involves dispatching multiple independent workers, merging their reports through a reviewer, and archiving a decision record — all classic enloom workflow patterns.

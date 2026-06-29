@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: BYPASS
+The user explicitly wants a quick, throwaway spike without overengineering, which is the opposite of Enloom's multi-stage, stateful, worker-driven workflow.

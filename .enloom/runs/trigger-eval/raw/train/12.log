@@ -1,0 +1,5 @@
+[0m
+> build · deepseek-v4-pro
+[0m
+VERDICT: BYPASS
+The user frames this as a single, self-contained analysis report that can be completed cleanly without multi-stage orchestration, workers, or cross-session state.
