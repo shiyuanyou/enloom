@@ -6,7 +6,7 @@ The core insight from a real large-scale task: state that records only "what was
 
 ## 1. Registry — Seven Sections
 
-The Registry is a fixed structure of `project_state.md`, not a separate file. Seven sections, in this order:
+The Registry is a fixed structure of `project_state.md`, not a separate file. v0.4: `project_state.md` lives **inside a project directory** (`.enloom/<created>-<project>/project_state.md`), so the Registry is per-project — each project keeps its own unclosed-risk list, and cross-project risks are never co-mingled. The Compaction Protocol (§4) likewise operates within a single project's state. Seven sections, in this order:
 
 | Section | Meaning |
 |---------|---------|

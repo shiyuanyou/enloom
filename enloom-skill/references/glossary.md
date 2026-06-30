@@ -14,7 +14,7 @@
 | **Report** | Worker 给 verify 的压缩结论。固定结构对齐 Evidence Contract 四要素。 |
 | **Raw Notes** | 可追溯但默认不读的过程材料。仅当证据不足 / 失败 / 高风险 / 复盘时读。 |
 | **Review Budget** | verify 方允许读取的材料与成本。路由规则,不只是长度限制。 |
-| **Project State** | 当前项目压缩状态(`project_state.md`)。目标 3 分钟读完,<200 行触发 compaction。含 Registry 七区段。 |
+| **Project State** | 当前项目压缩状态(`project_state.md`)。目标 3 分钟读完,<200 行触发 compaction。含 Registry 七区段。v0.4 起 `project_state.md` 住在**项目目录内**(`.enloom/<project>/`),不再全局唯一。 |
 | **Decisions** | 影响后续工作的关键决策记录(`decisions.md`)。 |
 | **Archive** | 已闭合任务的过程材料 + 归档条目。 |
 | **Done Signal** | Worker 完成后的明确标记:`done` / `blocked` / `failed`。 |
@@ -33,6 +33,15 @@
 | **Compaction** | 压缩协议。压缩已闭合的过程细节,绝不压缩未闭合风险。四步:扫描 → 迁移 → 收口 → 校验。 |
 | **check_item** | Audit Packet 的标准检查项,5 元组:id / command / pass_condition / fail_signal / named_list。 |
 
+## v0.4 新增术语(命名空间 + 落盘)
+
+| 术语 | 含义 |
+|------|------|
+| **Project** | 顶层命名空间单元。`.enloom/` 下一个 `<创建时间>-<项目名>` 目录 = 一个 Project,内含自己的 project_state / Registry / tasks / runs / archive。跨 Project 状态不混。同名 Project 第二次进入复用已有目录(时间戳=创建日,固定)。 |
+| **task_board** | 唯一入口表(`.enloom/task_board.md`)。一行一 Project,字段 project/created/updated/phase/desc。Orient 第一步读它定位目标 Project。只索引项目,不索引任务。 |
+| **Gate / 闸门** | Stage 转移的机械检查 = 文件存在性。每个 Stage 有入口/出口闸门(如 Stage 3 入口:`runs/<TASK>/task.md` 必存在)。control 自检 + health-check 硬闸门双保险。完整表见 [landing-contract.md](landing-contract.md)。 |
+| **Landing / 落盘** | worker 产出必须落盘成文件(output.md/report.md),不能只留对话上下文。dispatch 交的是 task.md 路径,非口头描述。是闸门表成立的物理前提,也是铁律 2/5 机械化的基础。 |
+
 ## 不要混用的词
 
 - 不要把「Prompt Asset」叫「常驻 Agent」——它是素材。
@@ -41,6 +50,7 @@
 - 不要把「Audit Packet」叫「Task Packet」——前者约束验证,后者约束行为。正交但不同。
 - 不要把「Verdict」和 review 结论混用——Verdict(PASS/ISSUES/FAIL)是 verify 阶段的机械化判定;review 结论(accepted/needs-rework/...)是 control agent 的整合决策。
 - 不要把「Registry」叫「状态」——Registry 是 project_state 的固定七区段结构,是状态里的活性真相部分。
+- 不要把「task_board」叫「任务列表」——task_board 是**项目级**索引表(一行一项目),不索引任务;任务留在各项目的 project_state。v0.4 新增。
 
 ## 版本对象
 

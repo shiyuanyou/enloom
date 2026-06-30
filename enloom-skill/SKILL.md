@@ -80,29 +80,42 @@ Read these on demand — do not load them all into context at once:
 
 ## File Protocol
 
-Recommended project-local layout. Enloom writes its working files under a **hidden `.enloom/` directory** so they stay out of the user's way by default:
+Recommended project-local layout. Enloom writes its working files under a **hidden `.enloom/` directory** so they stay out of the user's way by default. v0.4 organizes `.enloom/` as a **project-level namespace**: a single `task_board.md` entry table at the root, and one directory per project:
 
 ```text
 .enloom/
-  project_state.md          # current truth (<200 lines) — includes Registry seven sections
-  decisions.md
-  tasks/
-    T001.md
-  runs/
-    T001/
-      task.md
-      output.md
-      report.md
-      raw-notes.md
-  archive/
-    task-history.md
-  prompt-assets/
-    researcher.md
-    coder.md
-    reviewer.md
+  task_board.md                       # the single entry table — one row per project
+  2026-06-29-<projectName>/           # a project directory; timestamp = creation date; name dedupes
+    project_state.md                  # that project's truth (<200 lines) — includes Registry seven sections
+    decisions.md
+    tasks/
+      phase-plan-<phase>.md
+    runs/
+      <TASK>/
+        task.md
+        output.md
+        report.md
+        raw-notes.md
+    archive/
+      <phase>-entry.md
+    prompt-assets/
+      researcher.md
+      coder.md
+      reviewer.md
 ```
 
-For first use, create only `project_state.md`, `tasks/`, and `runs/` unless the current phase needs more.
+`task_board.md` is the namespace entry point — the first thing Orient reads to locate the target project. Each project keeps its own `project_state.md`, Registry, tasks, runs, and archive; cross-project state is never co-mingled. A same-named project entered a second time **reuses** its existing directory (timestamp = creation date, fixed) and only updates the `updated` column — it does not create a new one.
+
+For first use, create `.enloom/task_board.md` and the current project's directory (`<today>-<projectName>/`) with its `project_state.md`; add the rest (`tasks/`, `runs/`, `archive/`) as the current phase needs them.
+
+## Landing Discipline
+
+Templates and stages define *what* artifacts exist; the Landing Contract defines *when, by whom*, they must exist **on disk**. It exists because a real run left `tasks/` and `runs/` entirely empty while `project_state.md` claimed completed phases — every packet and report lived only in the agent's context and vanished at session end.
+
+Two load-bearing rules:
+
+- **Every stage crossing is a file-existence gate.** Entry/exit gates per stage are mechanical checks (e.g. Stage 3 entry: `runs/<TASK>/task.md` must exist; exit: `output.md` + `report.md` must exist). The control agent self-checks at each entry; health-check hard-verifies at each transition. Full table + control↔worker handshake sequence: [references/landing-contract.md](references/landing-contract.md).
+- **Worker output must land as files, not chat replies.** Dispatch hands the worker a *path* to `task.md`; the worker writes `output.md` / `report.md` to disk. This mechanizes Law 2 (no dispatch before `task.md` exists) and Law 5 (no archive before every report's Review Result is filled), bringing them to the same standard Law 4 already held.
 
 ## Review Posture
 

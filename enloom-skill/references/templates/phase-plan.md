@@ -57,3 +57,4 @@ Reference-layer decision: does this task's deliverable reference layer tolerate 
 - Acceptance criteria are clear: yes | no
 - Parallel ownership is defined if needed: yes | no | not-needed
 - Promise Registry drafted if forward declarations exist: yes | no | not-needed
+- **Landing gate confirmed**: this phase-plan is written to `tasks/phase-plan-<phase>.md` (Stage 2 exit gate — see [landing-contract.md](../landing-contract.md) §1): yes | no

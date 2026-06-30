@@ -12,6 +12,8 @@ Enloom is a lifecycle-driven control-plane protocol for complex agent work. The 
 6. Close    (archive and exit) → archive + closure check + user report
 ```
 
+**Landing gates**: every stage crossing is a file-existence gate — see [landing-contract.md](landing-contract.md) §1 for the full gate table (entry/exit per stage) and §2 for the control↔worker handshake. Stages reference it inline below. The control agent self-checks at each entry; health-check hard-verifies at each transition (double insurance — landing-contract §3–4).
+
 ## Five Laws
 
 The laws constrain the lifecycle, not individual operations. All five carry into v0.3:
@@ -37,9 +39,12 @@ Goal: decide whether this request should enter Enloom.
 
 Sub-action: `triage`.
 
+- **Entry gate**: — (triage is the entry decision itself).
+- **Exit gate**: triage result decided; `enloom` → proceed to Stage 1.
+
 Inputs:
 - User request.
-- Existing `.enloom/project_state.md`, if already known and cheap to read.
+- Existing `.enloom/<project>/project_state.md` (located via `task_board.md`), if already known and cheap to read.
 
 Outputs:
 - `direct`: do the work normally.
@@ -60,19 +65,24 @@ Gate: single-file edits, clear bug fixes, one-off scripts, and direct Q&A defaul
 
 Goal: restore enough state for the control agent to make a good next decision — thin orchestrator, but never blind.
 
-Sub-action: `health-check` (periodic, to detect drift).
+Sub-action: `health-check` (now also the stage-transition hard gate — see [landing-contract.md](landing-contract.md) §4).
+
+- **Entry gate**: `task_board.md` exists (create on first use).
+- **Exit gate**: 5–10 line state summary written into the located project's `project_state.md` Current Phase (or confirmed unnecessary).
 
 Read in this order:
-1. `.enloom/project_state.md` — **must scan the Registry risk sections**: Pending Dependencies / Broken References / Accepted With Risk / Rejected Reports. The value of a thin orchestrator is holding the global invariants.
-2. Current task in `.enloom/tasks/`.
-3. `.enloom/decisions.md`.
-4. Latest relevant `.enloom/runs/*/report.md`.
+1. **`.enloom/task_board.md`** — locate the target project (user-named / sole active / most-recently-updated). This is the namespace entry point; it is read *before* any project file. If no matching row exists, this is a new project → create the `<created>-<project>/` directory and add a task_board row.
+2. **`.enloom/<project>/project_state.md`** (inside the located project directory) — **must scan the Registry risk sections**: Pending Dependencies / Broken References / Accepted With Risk / Rejected Reports. The value of a thin orchestrator is holding the global invariants.
+3. Current task in `.enloom/<project>/tasks/`.
+4. `.enloom/<project>/decisions.md`.
+5. Latest relevant `.enloom/<project>/runs/*/report.md`.
 
 Default not to read:
 - raw logs
 - raw notes
 - full Worker transcripts
 - unrelated old tasks
+- other projects' directories (task_board gives the index; cross-project state is not co-mingled)
 
 Output: a 5-10 line current state summary.
 
@@ -83,6 +93,9 @@ Gate: if state is missing or contradictory, summarize the gap before planning. I
 Goal: define only the next phase of work.
 
 Sub-action: `plan`.
+
+- **Entry gate**: project located — `<created>-<project>/` directory exists (from Orient).
+- **Exit gate**: `tasks/phase-plan-<phase>.md` exists; phase goal clear (gate check passes).
 
 Output: use [templates/phase-plan.md](templates/phase-plan.md).
 
@@ -105,9 +118,12 @@ Goal: make the work executable and reviewable without expanding the control cont
 
 Sub-actions: `make-prompt` (build task packet) + `dispatch` (run worker).
 
+- **Entry gate (per task, Law 2 mechanized)**: `runs/<TASK>/task.md` exists. Missing → fall back to Plan and write the packet; never dispatch without it. See [landing-contract.md](landing-contract.md) §3.
+- **Exit gate (per task)**: `runs/<TASK>/output.md` exists + `runs/<TASK>/report.md` exists + report has a Result section (done/blocked/failed). Missing → route the worker back; the task is not complete until both files land.
+
 These were separate steps before (Step 3 Make Packet + Step 4 Dispatch); they are continuous and now merged into one stage. Splitting them was an artificial seam.
 
-Output: use [templates/task-packet.md](templates/task-packet.md) for ordinary work, [templates/audit-task-packet.md](templates/audit-task-packet.md) for verification work.
+Output: use [templates/task-packet.md](templates/task-packet.md) for ordinary work, [templates/audit-task-packet.md](templates/audit-task-packet.md) for verification work. The packet is written to `runs/<TASK>/task.md` *before* dispatch — dispatch hands the worker the path to that file, not a verbal description ([landing-contract.md](landing-contract.md) §2).
 
 Mode selection (ordinary packet):
 - `emergent`: quick exploration; intermediate material may be discarded.
@@ -134,10 +150,13 @@ Goal: decide whether Worker output can be integrated — on evidence, not on ass
 
 Sub-actions: `review` (every worker) + `audit` (periodic, every N workers, or pre-release).
 
-Read in this order:
-1. `runs/TASK_ID/report.md` — required.
-2. `runs/TASK_ID/output.md` — only if report evidence is insufficient.
-3. `runs/TASK_ID/raw-notes.md` — only for failure, high risk, or retrospective work.
+- **Entry gate**: `runs/<TASK>/report.md` exists with the Evidence Contract four elements.
+- **Exit gate**: `runs/<TASK>/report.md`'s Review Result section is filled (verdict + conclusion).
+
+Read in this order (all under `.enloom/<project>/runs/<TASK>/`):
+1. `report.md` — required.
+2. `output.md` — only if report evidence is insufficient.
+3. `raw-notes.md` — only for failure, high risk, or retrospective work.
 
 The report must satisfy the [Evidence Contract](evidence-contract.md) (four elements). The verdict is three-state:
 
@@ -157,7 +176,10 @@ Gate: required verification not run means no `accepted`. High-severity unexplain
 
 Goal: compress accepted results into durable state instead of carrying process material.
 
-Update:
+- **Entry gate**: every task of this phase has its `report.md` Review Result section filled (from Stage 4).
+- **Exit gate**: `project_state.md` + Registry updated; compaction trigger check run.
+
+Update (all paths project-relative under `.enloom/<project>/`):
 - `project_state.md`
 - `decisions.md`, if a decision affects future work
 - `tasks/`, for open and completed task status
@@ -176,6 +198,9 @@ Gate: do not integrate rejected or unreviewed work as project truth.
 Goal: close the current phase and leave the control window small.
 
 Sub-action: `archive`.
+
+- **Entry gate**: Stage 5 Integrate exit gates all pass (project_state + Registry updated).
+- **Exit gate (Law 5 mechanized)**: `archive/<phase>-entry.md` exists; every task's `report.md` Review Result section was filled + project_state/Registry updated (health-check hard-verifies); old `runs/` content archived or declared discarded. See [landing-contract.md](landing-contract.md) §3.
 
 Archive conditions (all must hold — see [archive-policy.md](archive-policy.md)):
 - task packet exists
@@ -213,13 +238,17 @@ Worker failed twice:
 Same phase failed three times:
 - Stop dispatch and create an assumption review before continuing.
 
-## Health Check (periodic)
+## Health Check (stage-transition hard gate + periodic drift)
 
-`health-check` is no longer a top-level operation. It is a periodic sub-action triggered in:
-- **Stage 1 Orient** — drift detection (state over threshold but not compacted; packets/reports missing).
-- **Stage 4 Verify** — periodic risk-section sanity.
+`health-check` is no longer a top-level operation. v0.4 promotes it to two roles:
+
+1. **Stage-transition hard gate** (primary, v0.4 new) — run at every stage boundary (1→2→3→4→5→6). It verifies the previous stage's exit-gate files exist (the gate table in [landing-contract.md](landing-contract.md) §1). A missing file → drift finding (a Law violation signal); the control agent must fill the gap before advancing. This is the second insurance layer on top of the control agent's own self-check (double insurance — landing-contract §3).
+2. **Periodic drift detection** (retained from v0.3) — triggered in:
+   - **Stage 1 Orient** — state over threshold but not compacted; packets/reports missing.
+   - **Stage 4 Verify** — periodic risk-section sanity.
 
 Run read-only checks for:
+- **gate files present** at each stage crossing (the landing gates — primary v0.4 check)
 - active tasks without task packets
 - runs without reports
 - reports without review results
@@ -229,4 +258,4 @@ Run read-only checks for:
 - temporary prompts that should become prompt assets
 - registry risk sections that grew without a corresponding resolved/closed marker
 
-Health check reports findings and next actions. It does not auto-fix.
+Health check reports findings and next actions. It does not auto-fix. A stage-transition gate finding blocks advancement until the control agent closes the gap.
