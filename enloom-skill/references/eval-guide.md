@@ -112,7 +112,7 @@ Only **after** the skill body is stable. Editing `SKILL.md` body mid-tuning inva
 
 ### Acceptance
 
-Train 12/12 PASS **and** test 8/8 PASS = description trigger accuracy validated. Anything else = iterate. Record results in `.enloom/runs/trigger-eval/` (project-local, not inside the skill package — see "Recording results" below).
+Train 12/12 PASS **and** test 8/8 PASS = description trigger accuracy validated. Anything else = iterate. Record results in `.enloom/<project>/runs/trigger-eval/` (project-local, under that project's directory — see "Recording results" below).
 
 ## Before either path: structural check
 
@@ -125,4 +125,4 @@ Both paths assume the skill is well-formed. Run a frontmatter structural check f
 
 ## Recording results
 
-Keep eval run results under `.enloom/runs/<TASK>/` (project-local), not inside the skill package. The skill package ships the prompts; the runs are workflow state.
+Keep eval run results under `.enloom/<project>/runs/<TASK>/` (project-local, inside that project's directory), not inside the skill package. The skill package ships the prompts; the runs are workflow state.
