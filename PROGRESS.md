@@ -6,7 +6,17 @@
 
 ## 当前状态
 
-**v0.3.3 进行中**（2026-06-29）。**纯重命名 + 产品化,零功能改动**：把产品从 `AgentOS / agentos-workflow` 重命名为 **Enloom**。三层命名统一——开发仓库 `agentos/` → `enloom/`、skill 内部 `name` `agentos-workflow` → `enloom`、skill 产出目录 `AgentOS/` → `.enloom/`（隐藏,用户项目里默认看不到）、skill 源包目录 `agentos-workflow-skill/` → `enloom-skill/`。**用 Enloom 自己的生命周期 6 阶段跑这次重命名**（dogfood）,过程留痕在 `.enloom/`。Verify: 12 skill 源包文件 name/desc/路径全替换、`AgentOS`→`Enloom` / 分类结果码 `agentos`→`enloom` / 路径 `AgentOS/`→`.enloom/`,README 重写为中英双语产品页。全局重装已完成:`~/.agents/skills/` 删旧 `agentos-workflow/`、装新 `enloom/`(25 文件,evals/ 按设计剥离,quick_validate PASS,源/装逐字节一致)。**trigger-eval re-run 完成**(`.enloom/runs/trigger-eval/run-002.md`):新 description 20/20(train 12/12 + test 8/8,description 零修改即通过,near-miss 7/7 全对),Enloom 版新基线确立;与 run-001 旧基线一致,验证 rename 在 trigger 层面确为零功能改动。
+**v0.4 进行中**（2026-06-30）。**双腿功能改动**,均来自实跑诊断:
+
+1. **项目级命名空间** —— `.enloom/` 从单一全局状态改为 `task_board.md` 入口表 + 每项目一目录(`<created>-<project>/`)。同名项目第二次进入复用目录(时间戳=创建日,固定)。解决"第二次进来路径不一致、跨任务状态全挤一个文件"。
+2. **落盘时序契约** —— 每个生命周期 Stage 加入口/出口**闸门**(文件存在性检查)+ 主流程↔worker 握手时序图,逼 worker 产出落盘成文件而非只留上下文。**铁律 2/5 机械化**(dispatch 前 task.md 必存 / archive 前 Review Result 必填),对齐铁律 4 标准。根因:art_lab 实跑 `.enloom/tasks runs` 全空,90 分钟工作的 task packet/worker report 从未落盘。
+
+落地范围:新增 `landing-contract.md` + `task-board` 模板;改 SKILL.md(File Protocol 新树 + Landing Discipline 段)/ workflow-steps(7 Stage 全闸门 + Orient task_board 定位 + health-check 硬闸门升级)/ glossary(4 术语)/ phase-plan(落盘 gate)/ registry+archive(项目目录 + Review Result 闸门)/ eval-guide(项目前缀)。**用 Enloom 自己的生命周期跑这次开发**(dogfood),落在新结构 `.enloom/2026-06-30-enloom-v04/`——且 **P1 的 6 任务 task.md/output.md/report.md 全真实落盘**,成为落盘契约的首个活样本(正是 art_lab 缺口的反面)。P1 契约层 + P2 引用层完成,待 P3 产物层(README/PROGRESS/冻结确认/全局重装)。
+
+- 设计输入：[`design/v0.4-project-namespace-spec.md`](design/v0.4-project-namespace-spec.md)（brainstorming 9 决策逐项确认）
+- 旧 `.enloom/project_state.md`(v0.3.3 单状态 dogfood)→ **冻结保留**,不迁移,作历史证据
+
+**v0.3.3 已归档**（2026-06-29）。**纯重命名 + 产品化,零功能改动**：把产品从 `AgentOS / agentos-workflow` 重命名为 **Enloom**。三层命名统一——开发仓库 `agentos/` → `enloom/`、skill 内部 `name` `agentos-workflow` → `enloom`、skill 产出目录 `AgentOS/` → `.enloom/`（隐藏,用户项目里默认看不到）、skill 源包目录 `agentos-workflow-skill/` → `enloom-skill/`。**用 Enloom 自己的生命周期 6 阶段跑这次重命名**（dogfood）,过程留痕在 `.enloom/`。Verify: 12 skill 源包文件 name/desc/路径全替换、`AgentOS`→`Enloom` / 分类结果码 `agentos`→`enloom` / 路径 `AgentOS/`→`.enloom/`,README 重写为中英双语产品页。全局重装已完成:`~/.agents/skills/` 删旧 `agentos-workflow/`、装新 `enloom/`(25 文件,evals/ 按设计剥离,quick_validate PASS,源/装逐字节一致)。**trigger-eval re-run 完成**(`.enloom/runs/trigger-eval/run-002.md`):新 description 20/20(train 12/12 + test 8/8,description 零修改即通过,near-miss 7/7 全对),Enloom 版新基线确立;与 run-001 旧基线一致,验证 rename 在 trigger 层面确为零功能改动。
 
 - 旧 `AgentOS/` 自举快照（含大量旧名引用）→ **冻结保留**,不改,作 v0.3 历史快照
 

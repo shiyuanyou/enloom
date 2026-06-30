@@ -46,10 +46,10 @@ A markdown-based methodology that keeps the orchestrator **thin but never blind*
 
 **The Five Laws · 五条铁律**
 1. No Enloom without trigger. / 无触发器不进入。
-2. No Worker without Task Packet. / 无任务包不派 worker。
+2. No Worker without Task Packet. (v0.4 mechanized: dispatch gate requires `task.md` to exist) / 无任务包不派 worker。
 3. No Parallel without Ownership Table. (three-tier model) / 无所有权表不并行。
 4. No PASS without Evidence. (Evidence Contract hard constraint) / 无证据不得 PASS。
-5. No Archive without State Update. (Registry risk sections processed) / 无状态更新不归档。
+5. No Archive without State Update. (v0.4 mechanized: archive gate requires every report's Review Result filled) / 无状态更新不归档。
 
 ## Core mechanisms · 核心机制
 
@@ -64,6 +64,13 @@ A markdown-based methodology that keeps the orchestrator **thin but never blind*
 ---
 
 ## Status · 状态
+
+**v0.4** (2026-06-30) — two legs, both from real-run diagnosis:
+
+1. **Project-level namespace** — `.enloom/` reorganized from a single global state into a `task_board.md` entry table + one directory per project (`<created>-<project>/`). Same-named projects reuse their directory on second entry (timestamp = creation date, fixed). Solves "second run can't find the task, state from all tasks piled in one file."
+2. **Landing time contract** — every lifecycle stage now has entry/exit **gates** (file-existence checks); a control↔worker handshake sequence makes worker output land as files, not chat replies. Mechanizes Laws 2 & 5 (dispatch needs `task.md`; archive needs every `report.md`'s Review Result filled) to the same standard Law 4 already held. Diagnosis: a real run left `tasks/` and `runs/` entirely empty while `project_state.md` claimed completed phases.
+
+See [design/v0.4-project-namespace-spec.md](design/v0.4-project-namespace-spec.md).
 
 **v0.3.3** — renamed `AgentOS / agentos-workflow` → **Enloom**. Zero functional change; pure rename + productization rewrite. The skill's internal `name` is now `enloom`, and its runtime working files now write to a hidden `.enloom/` directory (out of the user's way by default).
 
@@ -93,7 +100,7 @@ See [enloom-skill/](enloom-skill/) for the runnable skill package. See [referenc
 | Directory / 目录 | What it holds / 装什么 | Who sees it / 谁看 |
 |---|---|---|
 | `enloom/` (this repo) | The skill source, design docs, progress — the development repo. / skill 源码、设计文档、进度——开发仓库。 | You (the developer) / 你(开发者) |
-| `.enloom/` (in a user's project) | Runtime working files: `project_state.md`, `tasks/`, `runs/`, `archive/`. Hidden by default. / 运行时工作文件,默认隐藏。 | The end user (hidden) / 终端用户(默认看不到) |
+| `.enloom/` (in a user's project) | Runtime working files, organized as a **project-level namespace** (v0.4): `task_board.md` (the entry table) + one `<created>-<project>/` directory per project, each holding that project's `project_state.md`, `tasks/`, `runs/`, `archive/`. Worker output **lands as files** through stage gates (landing contract). Hidden by default. / 运行时工作文件;v0.4 起按项目隔离 + 落盘时序契约。默认隐藏。 | The end user (hidden) / 终端用户(默认看不到) |
 
 ## Directory · 目录
 
@@ -101,20 +108,23 @@ See [enloom-skill/](enloom-skill/) for the runnable skill package. See [referenc
 enloom/
 ├── README.md                          this file / 本文件
 ├── PROGRESS.md                        progress, next steps, roadmap / 进度、下一步
-├── .enloom/                           ★ dogfood workspace (this rename run) / 自举工作区
-│   ├── project_state.md                 current truth (Registry seven sections)
+├── .enloom/                           ★ dogfood workspace (v0.4 namespace: task_board + per-project dirs) / 自举工作区
+│   ├── task_board.md                    project-level entry table (v0.4)
+│   ├── project_state.md                 frozen v0.3.3 single-state dogfood (historical)
+│   ├── 2026-06-30-enloom-v04/           v0.4 dogfood project (namespace + landing-contract self-trial)
 │   └── archive/
 ├── enloom-skill/                      ★ runnable skill package
-│   ├── SKILL.md                         skill entry (name: enloom, lifecycle-driven)
+│   ├── SKILL.md                         skill entry (name: enloom, lifecycle-driven + landing discipline)
 │   ├── references/                      lifecycle + contracts + templates + examples
-│   │   ├── workflow-steps.md            6-stage lifecycle + five laws
+│   │   ├── workflow-steps.md            6-stage lifecycle + five laws + stage gates
+│   │   ├── landing-contract.md          ★ v0.4 stage gates + control↔worker handshake + Law 2/5 mechanization
 │   │   ├── trigger-contract.md          when to enter / bypass / ambiguous
 │   │   ├── evidence-contract.md         ★ evidence four elements + three-state verdict
 │   │   ├── registry-and-compaction.md   ★ Registry/Ownership/Promise/Compaction state governance
 │   │   ├── prompt-control.md            orchestration technique (route pre-fill, dispatch, pitfalls)
 │   │   ├── scheduler-rules.md           serial/parallel (three-tier ownership)
 │   │   ├── review-checklist.md · archive-policy.md · eval-guide.md · validation.md · glossary.md
-│   │   ├── templates/                   fill-in contracts (phase-plan, task-packet, audit, worker-report, ...)
+│   │   ├── templates/                   fill-in contracts (phase-plan, task-packet, audit, worker-report, task-board, ...)
 │   │   └── examples/                    triage tree + manual trial + art-lab worked example
 │   ├── prompt-assets/                   worker role assets (researcher / coder / reviewer)
 │   ├── evals/                           9-case decision suite + 20-query trigger suite
@@ -122,6 +132,7 @@ enloom/
 ├── AgentOS/                           ★ frozen v0.3 self-bootstrap snapshot (legacy naming, intentionally preserved)
 └── design/                            design docs (exploration/reference, not runtime)
     ├── design-summary.md                V1→V2 evolution, degradation analysis (the design thesis)
+    ├── v0.4-project-namespace-spec.md   ★ v0.4 design spec (namespace + landing time contract)
     ├── v0.3-lifecycle-spec.md           v0.3 design spec (lifecycle + art_lab internalization)
     ├── art-lab-prompt-control-lessons.md prompt-control lessons mined from art_lab
     ├── skill-workflow-draft.md · skill-reference-notes.md
