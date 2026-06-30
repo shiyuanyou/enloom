@@ -5,4 +5,4 @@
 | project | created | updated | phase | desc |
 |---|---|---|---|---|
 | v033-rename | 2026-06-24 | 2026-06-30 | closed (frozen v0.3.3 structure) | agentos-workflow → enloom 重命名 + trigger-eval。旧单状态结构冻结留证。 |
-| enloom-v04 | 2026-06-30 | 2026-06-30 | planning | .enloom/ 改为项目级命名空间。新结构首个 dogfood。 |
+| enloom-v04 | 2026-06-30 | 2026-06-30 | P1 契约层 | .enloom/ 改为项目级命名空间 + 落盘时序契约。新结构首个 dogfood。 |
