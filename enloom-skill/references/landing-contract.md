@@ -89,7 +89,12 @@ This is the second insurance layer: even if the control agent forgets to self-ch
 
 In a single control-agent session (no real sub-processes), the worker is the same agent entering worker mode. The gates still apply unchanged: the agent must still write `task.md` before "dispatching to itself," and `output.md` / `report.md` before "returning." The hand-off being virtual does not relax the landing — the files must still exist on disk. This is exactly the failure art_lab hit: the agent played both roles and skipped the disk writes entirely. The gate table exists to prevent precisely that.
 
-The one honest blind spot to declare in worker reports under single-agent mode: "no independent runtime verified that the worker did not touch forbidden files" — real cross-worker isolation requires a separate process, which the file protocol cannot provide. The [worker-report template](templates/worker-report.md) already captures this.
+The honest blind spots to declare in worker reports under single-agent mode
+are three items now fully documented at
+[evidence-contract.md §The Honest Blind Spots](evidence-contract.md):
+(1) cross-worker real isolation, (2) cross-role verification,
+(3) virtual parallelism. The [worker-report template](templates/worker-report.md)
+already captures all three.
 
 ## See Also
 

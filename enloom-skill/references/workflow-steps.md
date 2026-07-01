@@ -76,6 +76,7 @@ Read in this order:
 3. Current task in `.enloom/<project>/tasks/`.
 4. `.enloom/<project>/decisions.md`.
 5. Latest relevant `.enloom/<project>/runs/*/report.md`.
+6. **若 `.clear-mind/<project>/review.md` 存在，可选读取**——在状态摘要中声明是否读取（读/未读都明说）。此文件是 Clear-Mind 的前置澄清产物；不存在则跳过。Clear-Mind 是可选 phase -1，不阻断 Orient。
 
 Default not to read:
 - raw logs

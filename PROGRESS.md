@@ -19,6 +19,16 @@
 - 设计输入：[`design/2026-07-01-enloom-v0.5-optimization-design.md`](design/2026-07-01-enloom-v0.5-optimization-design.md)（评审裁决版,逐条 ✅🟡⏸️❌ 标记）
 - 评审 meta-observation:dev-wiki 沉淀自 art_lab 真实多 sub-agent 并行,但 enloom 当前单 agent 串行——凡针对真实并行的建议(S1计数/S3分组)价值被高估,凡针对文档完整性/闸门机械化/诚实盲区的(S5/S4/X2)是真正结构性补课
 
+## 外部 review 待办（2026-07-01 · dev-wiki 交叉评审）
+
+来自对 enloom × clear-mind 组合的外部 review，逐条已核实为真漂移（非误报）。三条均属文档/接口对齐，不动五铁律/七段/闸门语义。
+
+- [x] **[接口·handoff] trigger-contract.md 加 Clear-Mind 建议句** —— 现状：`enloom-skill/` 全包 grep `clear-mind`/`.clear-mind` 零命中，「前向 handoff」目前是 clear-mind 单边声明，enloom 侧未承认。修法：triage 判定「新想法/范围不清」时加一句「可先跑 Clear-Mind」。**不强制**，保持 clear-mind 可选前置语义。
+- [x] **[接口·读端] Orient 承认可选读 `.clear-mind/<project>/review.md`** —— 现状：clear-mind README 声称产物「通过文件约定被 enloom 的 Orient 自然读入」，但 enloom 的 SKILL/references 未实现此读端，正好印证 clear-mind `honest-limitations.md` 的「下游是否读了不可保证」。修法：Orient 加约定——若该文件存在，可选读取并在摘要里**声明是否读取**（读/未读都明说）。
+- [x] **[文档·盲区漂移] landing-contract.md「one honest blind spot」对齐成三项** —— 现状：`landing-contract.md:92` 仍是 v0.5 前的旧单数说法「The one honest blind spot」，而 `evidence-contract.md` §Honest Blind Spots 在 v0.5 已扩为三项（cross-worker isolation / cross-role verification / virtual parallelism）。修法：把 landing-contract 该处对齐成三项并指向 evidence-contract 为 SSOT。
+
+**原则（非待办，不实现）**：保持 enloom × clear-mind 正交——不做正式双向失败降级协议，clear-mind 不变硬前置，维持文件边界交接。
+
 **v0.4 已归档**（2026-06-30）。**双腿功能改动**,均来自实跑诊断:
 
 1. **项目级命名空间** —— `.enloom/` 从单一全局状态改为 `task_board.md` 入口表 + 每项目一目录(`<created>-<project>/`)。同名项目第二次进入复用目录(时间戳=创建日,固定)。解决"第二次进来路径不一致、跨任务状态全挤一个文件"。
