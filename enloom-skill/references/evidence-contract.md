@@ -15,6 +15,16 @@ Any worker that claims completion must produce all four. Missing any one blocks 
 
 The distinction between elements 3 and 4 matters: element 3 names the gap, element 4 sizes the risk. A worker that silently skips a check (leaving element 3 empty when it should not be) is worse than one that declares the skip and explains it.
 
+## The Fifth Dimension — Report-vs-Output Claim Consistency (v0.5)
+
+The four elements cover "did the checks run + is the evidence non-empty," but leave a gap: a report can *claim* a countable quantity ("processed 107 entries", "12 checks passed", "5 files changed") that disagrees with the actual output file. The direction of the disagreement is not fixed — the report may under-count or over-count — so it cannot be calibrated away by a fudge factor. The four elements have no way to catch it, because the claim is written into the evidence section and the gate treats it as trusted.
+
+**Dimension 5 — Claim Consistency.** For any countable output a worker's report asserts (entry counts, pass rates, file counts, coverage numbers), the Verify stage compares the **claimed** number against an **independent recount** of the actual output (`grep -c`, `awk` line-count, `git diff --stat`). A mismatch > 0 is logged as an ISSUES finding (not an automatic PASS) and registered in `## Broken References` if it points at a structural defect.
+
+> **Single-agent degradation (boundary statement).** In a multi-sub-agent runtime this dimension is a genuine cross-runtime check — one process recounts what another process claimed. In single-agent mode (the current default — see `scheduler-rules.md` "单 agent 会话的现实") it degrades to "the agent recounts its own output file." That still catches *claim typos and drift* (the report says 107, the file has 130 — a real, common error), but it does **not** defend against systematic self-misreporting, because the counter and the claimer share one context. Systematic misreporting is covered instead by the Known Blind Spots (cross-role verification), not by this dimension. Name it "Claim Consistency," never "sub-agent count verification" — the latter overstates what single-agent mode can verify.
+
+This dimension attaches via the task packet's `Required Verification` → "Countable outputs" field (see [templates/task-packet.md](templates/task-packet.md)); it is **mandatory for `audited` mode** and optional otherwise.
+
 ## The Hard Constraint
 
 This is the mechanization of law 4 (No PASS without Evidence):
@@ -73,9 +83,15 @@ Evidence Contract 的 gate 能抓到下游症状(闭集约束违规、链接缺�
 
 这两类是 Integrate 阶段和审计脚本的常见坑。完整机制 + 诊断信号见 [prompt-control.md §3 Script-Execution Pitfalls](prompt-control.md)。判别:产物看着合理但 top-N 高度节点 degree 远超真实 grep 计数 → 子串伪阳性;dry-run 结构化命中数 < 预期或 live 报"already processed" → 全局替换先吃了精确匹配串。
 
-## The Honest Blind Spot
+## The Honest Blind Spots
 
-In a single-agent environment, worker isolation is enforced by packet field discipline (Writable / Forbidden), not by execution isolation — there is no independent subagent runtime. The Evidence Contract requires this to be declared, not hidden: a worker or audit should list under **Not Checked** something like *"cross-worker real isolation — single-agent environment, no independent runtime to verify workers did not touch forbidden files."* This is an already-recorded limitation (see decisions); v0.3 does not pretend to solve it, but it does require it to be visible.
+Enloom runs in a single-agent environment where the worker is the same agent entering worker mode. Several reliability properties that a multi-process system gets for free cannot be guaranteed here. The Evidence Contract requires these to be **declared, not hidden** — a worker or audit lists each under **Not Checked** with a one-liner. v0.5 expands this from one recorded limitation to three, because the original single statement did not cover the broader unreliability surface:
+
+1. **Cross-worker real isolation — no independent runtime.** Worker isolation is enforced by packet field discipline (Writable / Forbidden), not by execution isolation. There is no independent subagent runtime to verify a worker did not touch forbidden files. *(Recorded since v0.3.)*
+2. **Cross-role verification — verdict / review / audit may share one context.** In a single-agent run, the same model context that produced the output often also produces the verdict, the review conclusion, and the audit. Independent reasoning-chain verification (a second model genuinely re-deriving the conclusion) is **not guaranteed**. A PASS from the same context that did the work is weaker evidence than a PASS from a fresh one. *(v0.5 — fills the gap the original statement left.)*
+3. **Virtual parallelism — declared `strategy: parallel` is protocol form only.** In single-agent mode, a phase-plan may declare `parallel` with a full Ownership Table, but execution is actually serial (`scheduler-rules.md` "单 agent 会话的现实"). The Ownership Table still has value — it makes the intended ownership explicit and is what a real multi-sub-agent runtime would enforce — but no runtime parallelism is actually being executed. Declaring `parallel` without acknowledging this would overstate what happened. *(v0.5 — empirical basis: `scheduler-rules.md` already admits this, but the admission was buried in the rules, not surfaced as a named blind spot.)*
+
+These do not make Enloom unusable in single-agent mode — they make it honest. A control agent that proceeds knowing these limits makes better decisions than one that assumes isolation, independent review, and real parallelism are guaranteed.
 
 ## See Also
 

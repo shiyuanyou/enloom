@@ -29,6 +29,17 @@ Verify 阶段(阶段 4)的 gate 清单。v0.3 对齐 [Evidence Contract](evidenc
 - [ ] 无未解释的高严重问题。
 - [ ] Acceptance Criteria 逐条对照通过。
 
+## 计数自洽检查(v0.5·第 5 维 Claim Consistency)
+
+对 report 中任何**可数 claim**(条目数 / 通过率 / 文件数 / 覆盖率),Verify 阶段用独立脚本(`grep -c` / `awk` / `git diff --stat`)对 output 实际重数,比对 report 自报:
+
+- **偏差 = 0** → 通过(claim 一致)。
+- **偏差 > 0** → 记 ISSUES(非 PASS),偏差方向(低估/高报)一并登记。若偏差指向结构性缺陷,登记进 Registry `## Broken References`。
+
+> **单 agent 退化**:本检查在单 agent 串行模式下退化为「agent 复核自己 output 条数」,防的是 claim 笔误/漂移(report 写 107、文件实 130 是常见真实错误),**不防系统性谎报**(后者由 Known Blind Spots 的 cross-role verification 覆盖)。详见 [evidence-contract.md §The Fifth Dimension](evidence-contract.md)。
+>
+> 适用判据:`audited` 模式**必填**(packet 声明了 Countable outputs 就必须比对);`recorded`/`emergent` 可选。
+
 ## accepted-with-risk 的情形
 
 - verdict = ISSUES:核心达成,但有已知风险(medium/low severity)。

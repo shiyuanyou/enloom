@@ -6,7 +6,20 @@
 
 ## 当前状态
 
-**v0.4 进行中**（2026-06-30）。**双腿功能改动**,均来自实跑诊断:
+**v0.5 进行中**（2026-07-01）。**dev-wiki 知识库交叉评估,评审裁决版**——按"机制对、框架对、时机到"三轴逐条裁决 7 条建议,聚焦三块:
+
+1. **Compaction 强制闸门 (S5 高)** — 从可选「检查触发」升级为 Stage 5 Integrate 出口必执行闸门:超标→必执行不准 defer。阈值标注「启发式、非教条」。改动:registry-and-compaction §4 + workflow-steps Stage 5 出口 + landing-contract 闸门表。
+2. **盲区三项 (X2 高)** — 单 agent 诚实盲区从 1 项扩为 3 项:cross-worker isolation(已有)+ cross-role verification(verdict/review/audit 可能同 context)+ **virtual parallelism**(单 agent 下 strategy:parallel 只是协议形式,评审新增、实证依据)。改动:evidence-contract §Honest Blind Spots + scheduler-rules 回写 + worker-report 模板。
+3. **health-check 两档 (S4 中)** — 拆轻量档(Stage 转移只跑文件存在性,单行确认)+ 完整档(Orient + 定期 Verify,九项)。硬闸门语义不变,只降成本。
+
+低优先四项:S1(Evidence 第 5 维 = Claim Consistency,重定性非 sub-agent 计数验证)/ S6(phase-plan 引用容忍度决策表)/ S7(task-packet 三模式差异化)/ S2(降为 scheduler-rules recon 指引,无新阶段)。**Non-Goals**:S3 异质分组、X1 失败降级协议、Pre-flight 阶段。
+
+落地范围:改 9 文件(evidence-contract / registry-and-compaction / workflow-steps / landing-contract / scheduler-rules / review-checklist + 模板 task-packet/phase-plan/worker-report)+ glossary(6 新术语)+ SKILL.md + README/PROGRESS。**用 Enloom 自己的生命周期跑这次开发**(dogfood),落在 `.enloom/2026-07-01-enloom-v05/`。**零回归**:五铁律/七段/硬约束/闸门表语义全不变(S5 定向加强,S4 拆档不改语义,S1 加维不削硬约束)。
+
+- 设计输入：[`design/2026-07-01-enloom-v0.5-optimization-design.md`](design/2026-07-01-enloom-v0.5-optimization-design.md)（评审裁决版,逐条 ✅🟡⏸️❌ 标记）
+- 评审 meta-observation:dev-wiki 沉淀自 art_lab 真实多 sub-agent 并行,但 enloom 当前单 agent 串行——凡针对真实并行的建议(S1计数/S3分组)价值被高估,凡针对文档完整性/闸门机械化/诚实盲区的(S5/S4/X2)是真正结构性补课
+
+**v0.4 已归档**（2026-06-30）。**双腿功能改动**,均来自实跑诊断:
 
 1. **项目级命名空间** —— `.enloom/` 从单一全局状态改为 `task_board.md` 入口表 + 每项目一目录(`<created>-<project>/`)。同名项目第二次进入复用目录(时间戳=创建日,固定)。解决"第二次进来路径不一致、跨任务状态全挤一个文件"。
 2. **落盘时序契约** —— 每个生命周期 Stage 加入口/出口**闸门**(文件存在性检查)+ 主流程↔worker 握手时序图,逼 worker 产出落盘成文件而非只留上下文。**铁律 2/5 机械化**(dispatch 前 task.md 必存 / archive 前 Review Result 必填),对齐铁律 4 标准。根因:art_lab 实跑 `.enloom/tasks runs` 全空,90 分钟工作的 task packet/worker report 从未落盘。

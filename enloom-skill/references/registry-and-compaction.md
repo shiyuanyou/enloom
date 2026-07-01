@@ -101,6 +101,8 @@ Not all storage tolerates dangling references:
 
 The Plan stage decides "does this task's reference layer tolerate dangling references" — only if it does may promise + parallel be used. This makes the Obsidian constraint (which was implicit in the original task) an explicit, general decision point.
 
+> **v0.5**: the Plan stage no longer makes this decision from scratch each time — it fills the **Reference Tolerance Decision Table** in [templates/phase-plan.md](templates/phase-plan.md), which walks 3–5 common reference types (wikilinks / markdown links / code imports / file paths / schema `$ref`) as worked examples. The table is scaffolding, not a new gate; it saves the agent re-deriving the tolerance call per project.
+
 ## 4. Compaction Protocol
 
 ### Problem
@@ -113,9 +115,18 @@ State documents bloat. "Compress into state" without compaction discipline just 
 
 ### Trigger Conditions (any one)
 
+> **v0.5: these thresholds are heuristics, not dogma.** 200 lines / 10 results / ~3 minutes are tuned from one large-scale run, not derived from theory. If a project legitimately needs a longer state (e.g. a long risk-section list), compaction is about *drift*, not the raw number — apply judgment. The non-dogma note cuts the other way too: a state that reads fine at 250 lines is not a license to skip compaction when the risk sections have grown stale.
+
 - `project_state.md` exceeds ~200 lines.
 - The project_state `## Accepted Results` section crosses a threshold (e.g. 10 archived results) — note this is a top-level section, not one of the Registry seven.
 - A new session's Orient cannot read project_state in ~3 minutes (a subjective but important signal).
+
+### Mandatory vs Skipped (v0.5)
+
+Compaction at the Integrate exit gate is **no longer optional**. After every integrate:
+
+- **Threshold met → compaction is mandatory.** It must run before the stage exits; "check the trigger and defer" is no longer an acceptable outcome. This closes the loophole where an optional check lets the Registry balloon indefinitely — context bloat migrating from the chat window into the document system.
+- **Threshold not met → skip and record.** Log a one-liner ("compaction not triggered: state at N lines / M results") so the decision is auditable, not silent.
 
 ### Four Steps
 
@@ -134,7 +145,7 @@ The most dangerous compaction failure is "deleted an unclosed risk while compres
 
 ### Lifecycle Hooks
 
-- **Integrate stage (Stage 5)**: after every integrate, **check the trigger conditions**. If met, run compaction within the stage (it need not be its own stage).
+- **Integrate stage (Stage 5)**: after every integrate, **check the trigger conditions**. If a threshold is met, compaction is **mandatory** — it runs within the stage before the exit gate; deferring is not permitted (v0.5 upgrade from optional to enforced). If no threshold is met, record a one-liner ("compaction not triggered") so the skip is auditable.
 - **Orient stage (Stage 1)**: on session restore, if project_state is over threshold but not compacted, log a health-check finding (drift signal).
 - **Close stage (Stage 6)**: optionally trigger one compaction before archive so the state is clean on exit.
 

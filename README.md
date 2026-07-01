@@ -65,6 +65,18 @@ A markdown-based methodology that keeps the orchestrator **thin but never blind*
 
 ## Status · 状态
 
+**v0.5** (2026-07-01) — dev-wiki knowledge-base cross-evaluation, review-adjudicated. Seven changes scoped to three blocks, from the review's three-axis verdict (mechanism right / framework right / timing right):
+
+1. **Compaction mandatory gate (S5, HIGH)** — compaction upgraded from an optional "check the trigger" to a mandatory Integrate exit gate: threshold met → must run, no deferring. Closes the loophole where an optional check lets the Registry balloon. Thresholds labeled "heuristic, not dogma."
+2. **Three honest blind spots (X2, HIGH)** — the single "no independent runtime" blind spot expanded to three: cross-worker isolation, cross-role verification (verdict/review/audit may share one context), and **virtual parallelism** (single-agent `strategy: parallel` is protocol form only). The last is a review-discovered blind spot with empirical basis in `scheduler-rules.md`.
+3. **health-check two-tier (S4, MID)** — split into a light tier (stage transitions: file-existence check only, single-line confirmation) and full tier (Orient + periodic Verify: nine-item scan). Hard-gate semantics unchanged; execution cost drops.
+4. **Claim Consistency, 5th Evidence dimension (S1, MID)** — report-vs-output count consistency check (NOT "sub-agent count verification" — that misnames single-agent reality). `audited` mode mandatory.
+5. **Reference tolerance decision table (S6, LOW)** — phase-plan scaffolding (≥3 reference-type examples) so the dangling-reference tolerance call isn't re-derived per project.
+6. **Mode-differentiated field density (S7, LOW)** — task-packet fields vary by mode: `emergent` may skip Forbidden; `audited` requires Verification + Countable outputs or make-prompt self-check fails.
+7. **Recon scheduling guidance (S2, LOW)** — scheduler-rules guidance: unfamiliar domain → first task is a recon task. No new stage / field / term.
+
+**Non-Goals (review-added):** heterogeneous task grouping (S3); formal enloom↔clear-mind failure-downgrade protocol (X1); Pre-flight substage (S2 downgraded to guidance). See [design/2026-07-01-enloom-v0.5-optimization-design.md](design/2026-07-01-enloom-v0.5-optimization-design.md).
+
 **v0.4** (2026-06-30) — two legs, both from real-run diagnosis:
 
 1. **Project-level namespace** — `.enloom/` reorganized from a single global state into a `task_board.md` entry table + one directory per project (`<created>-<project>/`). Same-named projects reuse their directory on second entry (timestamp = creation date, fixed). Solves "second run can't find the task, state from all tasks piled in one file."

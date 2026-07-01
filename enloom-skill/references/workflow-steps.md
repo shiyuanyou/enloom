@@ -132,6 +132,8 @@ Mode selection (ordinary packet):
 
 Default to `recorded` for long-term projects and `audited` for risky shared changes.
 
+**make-prompt self-check (v0.5 · mode-differentiated density).** Constraint density must match the mode — do not apply the full audited-level constraint to an emergent exploration, and do not let an audited packet skip verification. Before dispatch, the control agent self-checks against the [mode-differentiated field table](templates/task-packet.md): an `audited` packet **missing Required Verification or Countable outputs fails the self-check and cannot dispatch** (the gap must be filled first). An `emergent` packet with Forbidden Files blank is still legal. This closes the loophole where all modes were held to one undifferentiated constraint density.
+
 Ownership discipline (from the Ownership Table):
 - Each packet derives its `Writable Files` and `Forbidden Files` from the table.
 - **Forbidden must explicitly enumerate the serial-integration files** (project_state, decisions, registry-bearing files), not just say "don't touch shared files." See [registry-and-compaction.md](registry-and-compaction.md).
@@ -177,7 +179,7 @@ Gate: required verification not run means no `accepted`. High-severity unexplain
 Goal: compress accepted results into durable state instead of carrying process material.
 
 - **Entry gate**: every task of this phase has its `report.md` Review Result section filled (from Stage 4).
-- **Exit gate**: `project_state.md` + Registry updated; compaction trigger check run.
+- **Exit gate**: `project_state.md` + Registry updated; **compaction enforced** — if a trigger threshold is met, the Compaction Protocol must run before this gate passes (v0.5: upgraded from "trigger check run" to mandatory execution); if no threshold is met, a one-liner records the skip.
 
 Update (all paths project-relative under `.enloom/<project>/`):
 - `project_state.md`
@@ -187,8 +189,9 @@ Update (all paths project-relative under `.enloom/<project>/`):
 
 Project state should stay short and current. Use [templates/project-state.md](templates/project-state.md). Registry update is a precondition for archive (law 5 extended).
 
-**Compaction check** (run after every integrate):
-- If project_state exceeds ~200 lines, or the `## Accepted Results` section crosses a threshold (e.g. 10 archived results), or a new session's Orient cannot read it in ~3 minutes → run the Compaction Protocol (four steps: scan → migrate → closeout → verify). See [registry-and-compaction.md](registry-and-compaction.md).
+**Compaction check** (v0.5: mandatory gate, run after every integrate):
+- If project_state exceeds ~200 lines, or the `## Accepted Results` section crosses a threshold (e.g. 10 archived results), or a new session's Orient cannot read it in ~3 minutes → **compaction is mandatory** — run the Compaction Protocol (four steps: scan → migrate → closeout → verify) *before* this stage exits; deferring is not permitted. The thresholds are heuristics, not dogma (see [registry-and-compaction.md](registry-and-compaction.md) §4). See [registry-and-compaction.md](registry-and-compaction.md).
+- If no threshold is met → skip compaction, but record a one-liner ("compaction not triggered: N lines / M results") so the decision is auditable rather than silent.
 - Compaction compresses resolved/closed process detail; it **never** removes unresolved risk. The four risk sections (Pending Dependencies / Broken References / Accepted With Risk / Rejected Reports) must not shrink unless an item is genuinely resolved — if they do, the compaction misdeleted and must roll back.
 
 Gate: do not integrate rejected or unreviewed work as project truth.
@@ -240,12 +243,18 @@ Same phase failed three times:
 
 ## Health Check (stage-transition hard gate + periodic drift)
 
-`health-check` is no longer a top-level operation. v0.4 promotes it to two roles:
+`health-check` is no longer a top-level operation. v0.4 promotes it to two roles; **v0.5 splits its execution into two tiers** so that the cheap, high-frequency case (stage transitions) does not pay the cost of the full nine-item scan every time. The hard-gate *semantics* are unchanged — only the execution cost drops.
+
+### Two Tiers (v0.5)
 
 1. **Stage-transition hard gate** (primary, v0.4 new) — run at every stage boundary (1→2→3→4→5→6). It verifies the previous stage's exit-gate files exist (the gate table in [landing-contract.md](landing-contract.md) §1). A missing file → drift finding (a Law violation signal); the control agent must fill the gap before advancing. This is the second insurance layer on top of the control agent's own self-check (double insurance — landing-contract §3).
+   - **v0.5 light tier at transitions**: at a stage crossing, run **only the file-existence check** for that transition's gate (e.g. `ls runs/<TASK>/task.md`, `ls runs/<TASK>/output.md runs/<TASK>/report.md`). This is one or two mechanical confirmations, not the full scan. On pass, emit a single-line confirmation ("Gates OK: Stage 2→3, files present") — do not expand the full nine-item report. 95% of stage transitions only need "does the gate file exist?"; the light tier pays exactly that cost.
 2. **Periodic drift detection** (retained from v0.3) — triggered in:
    - **Stage 1 Orient** — state over threshold but not compacted; packets/reports missing.
    - **Stage 4 Verify** — periodic risk-section sanity.
+   - **v0.5 full tier here**: the complete nine-item scan below runs at Orient entry and at periodic Verify drift checks — *not* at every stage transition. This is where the attention budget for a full read is justified.
+
+### The nine checks (full tier — run at Orient + periodic Verify, not at every transition)
 
 Run read-only checks for:
 - **gate files present** at each stage crossing (the landing gates — primary v0.4 check)
@@ -258,4 +267,4 @@ Run read-only checks for:
 - temporary prompts that should become prompt assets
 - registry risk sections that grew without a corresponding resolved/closed marker
 
-Health check reports findings and next actions. It does not auto-fix. A stage-transition gate finding blocks advancement until the control agent closes the gap.
+Health check reports findings and next actions. It does not auto-fix. A stage-transition gate finding (light tier) blocks advancement until the control agent closes the gap; a periodic finding (full tier) is logged for the next Orient/Integrate.

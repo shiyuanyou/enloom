@@ -2,6 +2,8 @@
 
 串行是默认。并行是例外优化,不是策略。
 
+> **Mode 与约束密度(v0.5)**:task packet 的三种 mode(emergent / recorded / audited)不只是语义标签,还决定**约束密度**——见 [templates/task-packet.md](templates/task-packet.md) 的 mode-differentiated field 表。调度时:探索/侦察 task 用 `emergent`(Forbidden 可空,降低 make-prompt 负担);长期产物用 `recorded`;共享文件/高风险/需独立校验的用 `audited`(Required Verification + Countable outputs 必填,缺则 make-prompt 自检不通过、不准 dispatch)。约束密度匹配复杂度,而非一刀切。
+
 ## 默认 strategy: serial
 
 共享集成、project_state 更新、decisions 写入、archive 写入——一律串行。
@@ -48,6 +50,16 @@ Ownership Table 管「**谁**能写哪个文件」(防写冲突);但 split / mig
 
 并行 split/migrate/merge 批处理:Ownership Table + 路由预填**两者都要**。
 
+## 新 domain 的侦察调度(v0.5 指引)
+
+踩坑实录(art_lab #16):对**不熟的门类 / 不熟的代码库**直接按 Plan 阶段的切分派执行 worker,常因实际规模与规划偏差(原规划 3 agent ~100 条,预研后发现 ~180 条)导致返工。Plan 阶段读的是已有 Registry 风险段,**不是对新任务的领域预研**。
+
+**调度指引(非新阶段、非新字段、非新术语)**:Plan 遇到不熟领域时,把**第一个 task 设为侦察 task**——用现有 task-packet(`mode: emergent`,`Allowed Tools: Read / Grep / Web`),它的 output 喂回 Plan 修正切分。这吃下约 80% 的「预研前置」价值,且零结构改动(无需 Pre-flight 子阶段、无需 `pre_flight_needed` 字段)。
+
+判据:Plan 阶段若对目标 domain 的规模 / 结构 / 边界没有把握,首 task 应为 recon;已有把握则跳过。recon 的 done signal 是「一份可读的规模/结构素描」,不是产物本身。
+
 ## 单 agent 会话的现实
+
+> ⚠️ **架构盲区(v0.5 回写)**:本段承认的事实 ——「在单个 control agent 会话里,无法真正并行 dispatch 多个写 worker……执行实际串行」—— 是一项 **明示的架构盲区**,不只是埋在调度规则里的一句话。phase-plan 里声明的 `strategy: parallel` + Ownership Table 在单 agent 下只是**协议形式**,没有任何运行时并行被真正执行。该盲区已纳入 Evidence Contract 的 **Known Blind Spots** 第 3 项(virtual parallelism),见 [evidence-contract.md §The Honest Blind Spots](evidence-contract.md)。Ownership Table 仍有价值——它把意图写明,是真实多 sub-agent 运行时会执行的契约——但不得用 `parallel` 标签暗示已发生真实并行。
 
 在单个 control agent 会话里,无法真正并行 dispatch 多个写 worker。此时 task packet 仍应声明所有权表(满足协议形式),但执行实际串行。这本身是协议的真实表现,不是绕过——在能并行的环境(sub-agent 调度)里所有权表才真正生效。

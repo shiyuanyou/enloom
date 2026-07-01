@@ -67,11 +67,12 @@ Read these on demand — do not load them all into context at once:
 - [references/trigger-contract.md](references/trigger-contract.md) — when to enter Enloom, when to bypass, and how to handle ambiguous cases.
 - [references/glossary.md](references/glossary.md) — fixed terminology; every reference and template uses these terms.
 - [references/scheduler-rules.md](references/scheduler-rules.md) — serial is default; parallel is an exception requiring an Ownership Table (three-tier model).
-- [references/evidence-contract.md](references/evidence-contract.md) — the four evidence elements, the "no PASS without evidence" hard constraint, and the three-state verdict.
+- [references/evidence-contract.md](references/evidence-contract.md) — the four evidence elements, the "no PASS without evidence" hard constraint, the three-state verdict, and the v0.5 fifth dimension (Claim Consistency) + three honest blind spots.
 - [references/prompt-control.md](references/prompt-control.md) — orchestration technique (route pre-fill, multi-layer dispatch distortion, script-execution pitfalls) — how to build a task packet that survives hand-off.
 - [references/registry-and-compaction.md](references/registry-and-compaction.md) — Registry seven sections, Ownership Table, Promise Registry, and the Compaction Protocol (state governance in one place).
 - [references/review-checklist.md](references/review-checklist.md) — the gate conditions for `accepted` / `needs-rework` / `rejected`.
 - [references/archive-policy.md](references/archive-policy.md) — the mechanical closure conditions; no archive without state update.
+- [references/landing-contract.md](references/landing-contract.md) — the stage gate table, control↔worker handshake, and health-check as the stage-transition gate (v0.5: light tier at transitions, full tier at Orient + Verify).
 - [references/eval-guide.md](references/eval-guide.md) — how to run the eval suite (manual and automated paths).
 - [references/validation.md](references/validation.md) — language-neutral structural validation (bash / node / python, no PyYAML).
 - [references/templates/](references/templates/) — the fill-in contracts (phase-plan, task-packet, audit-task-packet, worker-report, project-state, archive-entry).
@@ -116,6 +117,7 @@ Two load-bearing rules:
 
 - **Every stage crossing is a file-existence gate.** Entry/exit gates per stage are mechanical checks (e.g. Stage 3 entry: `runs/<TASK>/task.md` must exist; exit: `output.md` + `report.md` must exist). The control agent self-checks at each entry; health-check hard-verifies at each transition. Full table + control↔worker handshake sequence: [references/landing-contract.md](references/landing-contract.md).
 - **Worker output must land as files, not chat replies.** Dispatch hands the worker a *path* to `task.md`; the worker writes `output.md` / `report.md` to disk. This mechanizes Law 2 (no dispatch before `task.md` exists) and Law 5 (no archive before every report's Review Result is filled), bringing them to the same standard Law 4 already held.
+- **Compaction is a mandatory gate, not an optional check (v0.5).** At the Integrate exit, if a compaction trigger threshold is met, the Compaction Protocol *must* run before the stage passes — "check the trigger and defer" is no longer acceptable. This closes the loophole where an optional check lets the Registry balloon indefinitely. See [references/registry-and-compaction.md](references/registry-and-compaction.md) §4.
 
 ## Review Posture
 

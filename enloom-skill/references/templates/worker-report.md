@@ -26,7 +26,12 @@ done | blocked | failed
 
 ## Known Blind Spots
 
-> Evidence Contract element 4 — for each Not Checked item: why it was not checked, and how large the risk is. (Including, in a single-agent environment: "cross-worker real isolation — no independent runtime to verify workers did not touch forbidden files.")
+> Evidence Contract element 4 — for each Not Checked item: why it was not checked, and how large the risk is. In a single-agent environment, three structural blind spots should be reflected here where relevant (see [evidence-contract.md §The Honest Blind Spots](../evidence-contract.md)):
+> 1. **cross-worker real isolation** — no independent runtime to verify the worker did not touch forbidden files.
+> 2. **cross-role verification** — verdict / review / audit may come from the same model context; independent reasoning-chain verification is not guaranteed.
+> 3. **virtual parallelism** — declared `strategy: parallel` is protocol form only; execution is actually serial in single-agent mode.
+>
+> Not every report needs all three — list the ones that actually apply to this task's risk surface.
 
 
 ## Risks

@@ -17,7 +17,7 @@ A gate is a **file-existence check** — mechanical, verifiable, no judgment. Th
 | **2 Plan** | project located — `<created>-<project>/` directory exists | `tasks/phase-plan-<phase>.md` exists; phase goal is clear (gate check passes) |
 | **3 Execute** (per task) | **`runs/<TASK>/task.md` exists** ← Law 2 gate | **`runs/<TASK>/output.md` exists** + **`runs/<TASK>/report.md` exists** + report has a Result section (done/blocked/failed) |
 | **4 Verify** | `runs/<TASK>/report.md` exists with Evidence Contract four elements | `runs/<TASK>/report.md`'s Review Result section is filled (verdict + conclusion) |
-| **5 Integrate** | every task of this phase has its report's Review Result section filled | `project_state.md` + Registry updated; compaction trigger check run |
+| **5 Integrate** | every task of this phase has its report's Review Result section filled | `project_state.md` + Registry updated; **compaction run or threshold not met** (v0.5: upgraded from "trigger check run" — exceeding a threshold now *forces* compaction before exit; a non-triggered skip must be recorded as a one-liner) |
 | **6 Close** | Integrate exit gates all pass | `archive/<phase>-entry.md` exists; old `runs/` content archived or declared discarded |
 
 All paths are project-relative: `.enloom/<project>/runs/<TASK>/...` — see [File Protocol](../SKILL.md) for the namespace layer.
@@ -79,10 +79,11 @@ The Five Laws become uniformly mechanical: Law 2 governs dispatch entry, Law 4 g
 `health-check` is no longer just a periodic drift detector (its v0.3 role). v0.4 promotes it to the **stage-transition gate executor**: at every stage boundary, it verifies the previous stage's exit-gate files and reports drift findings on any gap.
 
 - Run on Stage transition (1→2→3→4→5→6), not only periodically.
+- **v0.5 light tier at transitions**: at a stage boundary, health-check runs **only the file-existence check for that transition's gate** — a one/two-line mechanical confirmation (e.g. `ls runs/<TASK>/task.md`), emitting a single-line "Gates OK" on pass. It does *not* expand the full nine-item scan at every transition. The full tier runs at Orient entry and periodic Verify drift checks (see [workflow-steps.md §Health Check](workflow-steps.md)). The hard-gate semantics are unchanged; only the execution cost drops.
 - It reports findings; it does not auto-fix (control agent fills the gap).
 - A drift finding is a Law violation signal — the control agent must resolve it before advancing.
 
-This is the second insurance layer: even if the control agent forgets to self-check, health-check catches the missing file at the boundary. Two independent checks (self-check + health-check) make a skipped landing far harder than either alone.
+This is the second insurance layer: even if the control agent forgets to self-check, health-check catches the missing file at the boundary. Two independent checks (self-check + health-check) make a skipped landing far harder than either alone. The v0.5 light tier keeps this insurance while respecting the attention budget — 95% of transitions only need the existence check.
 
 ## 5. Single-agent reality
 

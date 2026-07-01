@@ -30,6 +30,21 @@ Tiers:
 
 Selection constraint: serial-integration zone defaults to single-threaded. It may parallelize only if the Plan stage explicitly argues the state is append-only and conflict-free.
 
+## Reference Tolerance Decision Table (v0.5)
+
+> Before drafting the Promise Registry, decide whether this phase's deliverable reference layer **tolerates dangling references** — that decision gates whether promise + parallel is even available. Fill the table by analogy to the project's actual reference types. See [registry-and-compaction.md §3](../registry-and-compaction.md).
+
+| Reference type in this project | Tolerates dangling? | Handling | Forces serial? |
+|--------------------------------|---------------------|----------|----------------|
+| _e.g. Obsidian wikilinks `[[x]]`_ | yes | write ref first, verify at end | no |
+| _e.g. markdown links `[x](path)`_ | yes | grep target exists at verify | no |
+| _e.g. code `import` / strongly-typed symbol_ | **no** | worker B must finish before A references | **yes** |
+| _e.g. file-system path (build expects it)_ | **no** | promise mechanism unusable; serial | **yes** |
+| _e.g. JSON schema `$ref`_ | depends | if validator runs at build, no; if runtime-only, yes | depends |
+| _(add project-specific rows)_ |  |  |  |
+
+**Decision**: does this phase's deliverable reference layer tolerate dangling references? (yes → promise + parallel allowed; no → relevant tasks forced serial)
+
 ## Promise Registry Draft
 
 Fill when any worker will forward-declare an output another references. Skip if no forward declarations. See [registry-and-compaction.md §3](../registry-and-compaction.md).
@@ -37,8 +52,6 @@ Fill when any worker will forward-declare an output another references. Skip if 
 | declarer | identifier | consumers | verify_at | status |
 |----------|-----------|-----------|-----------|--------|
 |  |  |  | Verify | promised |
-
-Reference-layer decision: does this task's deliverable reference layer tolerate dangling references? (yes → promise + parallel allowed; no → relevant tasks forced serial)
 
 
 ## Tasks
