@@ -9,7 +9,7 @@
 | **Control Skill** | 按需触发的控制流程,走生命周期 6 阶段编排(triage → orient → plan → execute → verify → integrate → close)。不编码、不深读 raw。 |
 | **Lifecycle Stage** | v0.3 的主架。6 阶段:0 Triage / 1 Orient / 2 Plan / 3 Execute / 4 Verify / 5 Integrate / 6 Close。操作降级为阶段内的子动作。 |
 | **Task Packet** | 给 Worker 的任务契约。版本化(当前 0.2)。最小字段见 [templates/task-packet.md](templates/task-packet.md)。约束 worker **行为**(该做什么)。 |
-| **Worker** | 短生命周期执行单元。可以是 sub-agent、Pi、或当前 agent 进入 worker mode。在 packet 边界内发挥智能。 |
+| **Worker** | 短生命周期执行单元,是**独立的 sub-agent 执行单元**(sub-agent / Pi / 其他支持 sub-agent dispatch 的运行时)。主窗口(control agent)不进入 worker mode——Stage 3 task 必须 dispatch 给独立 sub-agent;运行时无 sub-agent 能力 → 中断,提示换支持工具(opencode / pi / codex 等),不退化自执行。在 packet 边界内发挥智能。 |
 | **Prompt Asset** | 可复用的 Worker prompt 模板(如 researcher.md / coder.md)。素材,不是常驻 agent。 |
 | **Report** | Worker 给 verify 的压缩结论。固定结构对齐 Evidence Contract 四要素。 |
 | **Raw Notes** | 可追溯但默认不读的过程材料。仅当证据不足 / 失败 / 高风险 / 复盘时读。 |

@@ -58,8 +58,8 @@ Ownership Table 管「**谁**能写哪个文件」(防写冲突);但 split / mig
 
 判据:Plan 阶段若对目标 domain 的规模 / 结构 / 边界没有把握,首 task 应为 recon;已有把握则跳过。recon 的 done signal 是「一份可读的规模/结构素描」,不是产物本身。
 
-## 单 agent 会话的现实
+## 并行调度的真实时序(virtual parallelism 盲区)
 
-> ⚠️ **架构盲区(v0.5 回写)**:本段承认的事实 ——「在单个 control agent 会话里,无法真正并行 dispatch 多个写 worker……执行实际串行」—— 是一项 **明示的架构盲区**,不只是埋在调度规则里的一句话。phase-plan 里声明的 `strategy: parallel` + Ownership Table 在单 agent 下只是**协议形式**,没有任何运行时并行被真正执行。该盲区已纳入 Evidence Contract 的 **Known Blind Spots** 第 3 项(virtual parallelism),见 [evidence-contract.md §The Honest Blind Spots](evidence-contract.md)。Ownership Table 仍有价值——它把意图写明,是真实多 sub-agent 运行时会执行的契约——但不得用 `parallel` 标签暗示已发生真实并行。
+> ⚠️ **架构盲区**:即使每个 task 都真 dispatch 给独立 sub-agent,control agent 在单个会话里**顺序发起**这些 dispatch——phase-plan 里声明的 `strategy: parallel` + Ownership Table 是**协议形式**,不代表运行时真并发执行。该盲区纳入 Evidence Contract 的 **Known Blind Spots** 第 3 项(virtual parallelism),见 [evidence-contract.md §The Honest Blind Spots](evidence-contract.md)。Ownership Table 仍有价值——它把意图写明,是真实并发运行时会执行的契约——但不得用 `parallel` 标签暗示已发生真实并行。
 
-在单个 control agent 会话里,无法真正并行 dispatch 多个写 worker。此时 task packet 仍应声明所有权表(满足协议形式),但执行实际串行。这本身是协议的真实表现,不是绕过——在能并行的环境(sub-agent 调度)里所有权表才真正生效。
+(注:无 sub-agent 能力的运行时,Enloom 直接中断,见 [landing-contract.md §5](landing-contract.md)。本段只讨论"有 sub-agent 但顺序发起"的情况。)

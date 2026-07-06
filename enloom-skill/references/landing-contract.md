@@ -85,16 +85,11 @@ The Five Laws become uniformly mechanical: Law 2 governs dispatch entry, Law 4 g
 
 This is the second insurance layer: even if the control agent forgets to self-check, health-check catches the missing file at the boundary. Two independent checks (self-check + health-check) make a skipped landing far harder than either alone. The v0.5 light tier keeps this insurance while respecting the attention budget — 95% of transitions only need the existence check.
 
-## 5. Single-agent reality
+## 5. Sub-agent requirement
 
-In a single control-agent session (no real sub-processes), the worker is the same agent entering worker mode. The gates still apply unchanged: the agent must still write `task.md` before "dispatching to itself," and `output.md` / `report.md` before "returning." The hand-off being virtual does not relax the landing — the files must still exist on disk. This is exactly the failure art_lab hit: the agent played both roles and skipped the disk writes entirely. The gate table exists to prevent precisely that.
+Stage 3 dispatch hands the worker a path to `task.md`; the worker is an **independent sub-agent** that writes `output.md` / `report.md` to disk. If the runtime cannot dispatch a sub-agent, Enloom **halts** — it does not degrade to the control agent executing the task itself. The control agent's job is orchestration (triage / orient / plan / review / integrate / archive) and serial-integration writes, not worker execution. Halting is the honest failure: prompt contamination (main window absorbing worker context) is worse than not running.
 
-The honest blind spots to declare in worker reports under single-agent mode
-are three items now fully documented at
-[evidence-contract.md §The Honest Blind Spots](evidence-contract.md):
-(1) cross-worker real isolation, (2) cross-role verification,
-(3) virtual parallelism. The [worker-report template](templates/worker-report.md)
-already captures all three.
+When dispatch fails (no sub-agent runtime / tool error), the control agent surfaces the failure and suggests switching to a runtime with sub-agent support (opencode / pi / codex, etc.). There is no self-execution fallback.
 
 ## See Also
 
