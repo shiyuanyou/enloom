@@ -48,6 +48,10 @@ done | blocked | failed
 ## Next
 
 
+## Return To Caller (trim rule)
+
+The control agent receives only: **Result + Checks Run summary + verdict-level Evidence + named risks**. Do not paste full raw output, full command logs, or worker process narrative back into the main window — detail sinks into `output.md` / `raw-notes.md` on disk, where the control agent reads only on evidence-shortfall or failure. This mirrors [audit-task-packet.md §Return To Caller](audit-task-packet.md).
+
 ## Review Result
 
 > Verdict (PASS / ISSUES / FAIL) + review conclusion (accepted | accepted-with-risk | needs-rework | rejected). See [review-checklist.md](../review-checklist.md).

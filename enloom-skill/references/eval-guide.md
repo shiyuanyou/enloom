@@ -22,13 +22,13 @@ The most important cases are 2, 3, 6, 7, and 9 — over-triggering, over-reading
 
 For each case:
 
-1. In a fresh agent turn, hand the model the `prompt`.
+1. In a fresh agent turn, hand the worker the `prompt`.
 2. Either let the skill's `description` trigger it, or force-load it.
 3. Observe the trace: what did triage return? What did review return? Did it create files it shouldn't have? Did it read raw transcripts?
 4. Score each `expectations[]` item as pass/fail against what actually happened.
 5. Record results (pass/fail per expectation + notes).
 
-This path needs no external tooling. It is the honest default when no headless subagent dispatch is available. **Known bias**: in a single-agent session the same agent that wrote the skill also grades it — this is a self-graded upper bound, not a validated number. Flag it in the results; do not pretend it is independent.
+This path needs no external tooling. It is the honest default when no headless subagent dispatch is available. **Known bias**: when the control agent itself runs the eval (not a fresh sub-agent), the same context that wrote the skill also grades it — this is a self-graded upper bound, not a validated number. Flag it in the results; do not pretend it is independent. Path B (fresh sub-agent per query) is the way to remove this bias.
 
 ## Path B — Automated eval (needs headless subagent dispatch)
 

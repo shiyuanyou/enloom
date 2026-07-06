@@ -4,7 +4,7 @@ Task Packet Version: 0.2
 Mode: emergent | recorded | audited
 Role: researcher | coder | reviewer | integrator | tester
 
-> **Mode-differentiated field requirements (v0.5).** Not every field is mandatory for every mode — constraint density should match task complexity. Pick the row for this packet's mode and fill accordingly. The `make-prompt` self-check (workflow-steps Stage 3) enforces the **required** cells; optional cells may be left blank without blocking dispatch.
+> **Mode-differentiated field requirements (v0.5).** Not every field is mandatory for every mode — constraint density should match task complexity. Pick the row for this packet's mode and fill accordingly. The control agent's `make-prompt` self-check (workflow-steps Stage 3) enforces the **required** cells; optional cells may be left blank without blocking dispatch.
 >
 > | Field | `emergent` | `recorded` | `audited` |
 > |-------|-----------|-----------|-----------|
@@ -16,7 +16,7 @@ Role: researcher | coder | reviewer | integrator | tester
 > | Required Verification | optional | optional | **required** (with check_item list) |
 > | Countable outputs (Claim Consistency) | optional | optional | **required** |
 >
-> **Self-check rule**: an `audited` packet missing Required Verification or Countable outputs fails `make-prompt` and cannot dispatch (Stage 3 gate). An `emergent` packet with Forbidden blank is still legal.
+> **Self-check rule**: the control agent's `make-prompt` step rejects an `audited` packet missing Required Verification or Countable outputs — it cannot dispatch (Stage 3 gate). An `emergent` packet with Forbidden blank is still legal.
 
 ## Goal
 

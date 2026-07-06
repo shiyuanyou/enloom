@@ -35,12 +35,12 @@
 
 ### Pending Dependencies
 
-> Unmet cross-task / cross-phase dependencies. ← Orient scans this.
+> Unmet cross-task / cross-phase dependencies. ← control agent scans this on Orient.
 
 
 ### Broken References
 
-> Discovered broken references: source → target, status, note. (Dead links, failed imports, dangling symbol refs, stale TODO pointers.) ← Orient scans this.
+> Discovered broken references: source → target, status, note. (Dead links, failed imports, dangling symbol refs, stale TODO pointers.) ← control agent scans this on Orient.
 
 
 ### Known Exceptions
@@ -50,12 +50,12 @@
 
 ### Accepted With Risk
 
-> Accepted items that carry risk and need re-checking. ← Orient scans this.
+> Accepted items that carry risk and need re-checking. ← control agent scans this on Orient.
 
 
 ### Rejected Reports
 
-> Index of rejected reports — failure signals, prevent retrying the same path. ← Orient scans this.
+> Index of rejected reports — failure signals, prevent retrying the same path. ← control agent scans this on Orient.
 
 
 ## Archived Phases
