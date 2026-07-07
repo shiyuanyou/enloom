@@ -8,6 +8,8 @@ The task behind this example: a large wiki/civilization-map build with many para
 
 In the original task, a state file recorded completed batches. After a context reset, the agent could not recover: the file said "X done" but did not record the 16+ broken references those batches had left behind. Recovery required re-scanning everything.
 
+> **Naming note:** "the agent" above refers to the **operator of the original art_lab task** (a real external wiki/civilization-map build), not Enloom's control agent or worker. This example is a faithful historical record; the wording is preserved as-is rather than re-mapped onto Enloom role names.
+
 The generalization: record the **unclosed-risk list**, not the completed-work list. This is why the [Registry](../registry-and-compaction.md) has seven sections, four of them risk-bearing (Pending Dependencies / Broken References / Accepted With Risk / Rejected Reports). What lets you recover is the risk list.
 
 ## Lesson 2 — An all-PASS audit that still left 16+ dead links (→ Evidence Contract)

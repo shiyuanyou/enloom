@@ -13,7 +13,7 @@ Fix the typo in a single markdown heading and tell me what changed.
 Expected behavior:
 - Triage returns `direct`.
 - No Enloom files are created.
-- The agent completes the tiny edit normally.
+- The control agent completes the tiny edit normally.
 
 ## Trial 2: Enloom Entry
 
@@ -25,9 +25,9 @@ Turn this rough multi-agent research workflow into a reusable project asset. It 
 
 Expected behavior:
 - Triage returns `enloom`.
-- The agent reads only minimal state.
-- The agent produces a current phase plan.
-- The agent produces at least one complete Task Packet.
+- The control agent reads only minimal state.
+- The control agent produces a current phase plan.
+- The control agent produces at least one complete Task Packet.
 - The plan does not promise a scheduler, automatic model selection, or background daemon.
 
 ## Trial 3: Evidence Gate
