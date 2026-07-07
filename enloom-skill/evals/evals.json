@@ -95,6 +95,18 @@
         "the response cites the anti-error rule: risk sections (Pending/Broken/Accepted-with-Risk/Rejected) must not shrink unless genuinely resolved",
         "the agent does NOT accept the compacted state as correct"
       ]
+    },
+    {
+      "id": 10,
+      "prompt": "I have to add a multi-stage migration to a codebase I've never seen before — I don't know its structure, its file types, or roughly how big it is. Set up the project and run the first phase. Be careful: I don't want to commit to a decomposition before I understand the scale.",
+      "expected_output": "triage returns enloom. The phase-plan's Human Decisions section contains an explicit recon decision line (one of yes / no / recommended) — Plan surfaces recon as a decision rather than silently skipping it. Because the prompt signals an unfamiliar domain (no prior coverage) and unknown scale, the recon decision is marked recommended.",
+      "expectations": [
+        "triage conclusion is enloom",
+        "phase-plan Human Decisions section contains a recon decision line",
+        "recon decision is one of: yes / no / recommended (not silently skipped)",
+        "if a recommended signal is present (new domain / new file type / unclear scale), the recon decision is marked recommended",
+        "no automatic recon dispatch without the Human Decision being present (reframe: decision is explicit, not silent)"
+      ]
     }
   ]
 }

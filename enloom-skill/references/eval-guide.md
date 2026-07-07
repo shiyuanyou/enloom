@@ -1,6 +1,6 @@
 # Eval Guide
 
-How to run the Enloom eval suite. The suite lives at [evals/evals.json](../evals/evals.json) and covers nine cases spanning the triage, review, and verification decisions.
+How to run the Enloom eval suite. The suite lives at [evals/evals.json](../evals/evals.json) and covers ten cases spanning the triage, review, and verification decisions.
 
 ## What the evals test
 
@@ -15,8 +15,9 @@ How to run the Enloom eval suite. The suite lives at [evals/evals.json](../evals
 | 7 | Audit PASS with empty evidence | downgrade to FAIL / needs-rework | Does the Evidence Contract hard constraint hold? (v0.3) |
 | 8 | Unfulfilled promised output | broken ref logged + resolution path | Does the Promise Registry cycle work? (v0.3) |
 | 9 | Compaction that dropped risk items | rollback | Does the Compaction anti-error rule hold? (v0.3) |
+| 10 | Unfamiliar-domain complex task | enloom + recon Human Decision present | Does Plan surface recon as an explicit decision (not silently skip)? (v0.6 P2 reframe) |
 
-The most important cases are 2, 3, 6, 7, and 9 — over-triggering, over-reading, evidence-free PASS, and risk-loss on compaction are the failure modes that hurt most.
+The most important cases are 2, 3, 6, 7, and 9 — over-triggering, over-reading, evidence-free PASS, and risk-loss on compaction are the failure modes that hurt most. Case 10 tests the v0.6 P2 reframe: recon must surface as an explicit Human Decision (and be marked `recommended` when a signal fires), not be auto-dispatched or silently skipped.
 
 ## Path A — Manual eval (works anywhere)
 
@@ -58,9 +59,9 @@ The point of Path B is **independence**: the subagent grading the case has no me
 
 ## Trigger Eval — tuning the description field
 
-The nine-case suite above (Path A / Path B) tests **decisions**: once the skill is loaded, does triage / review / verification decide correctly? It does **not** test **triggering** — given only the `description` field, does the model decide to invoke or bypass? That is a different question and has its own suite: [evals/trigger-evals.json](../evals/trigger-evals.json) (20 queries, 60/40 train/test split).
+The ten-case suite above (Path A / Path B) tests **decisions**: once the skill is loaded, does triage / review / verification decide correctly? It does **not** test **triggering** — given only the `description` field, does the model decide to invoke or bypass? That is a different question and has its own suite: [evals/trigger-evals.json](../evals/trigger-evals.json) (20 queries, 60/40 train/test split).
 
-Do not conflate the two. The 9-case suite always feeds the full skill as context; the trigger suite deliberately withholds the body to isolate the description's effect. Running the 9-case suite tells you nothing about trigger accuracy, and vice versa.
+Do not conflate the two. The 10-case suite always feeds the full skill as context; the trigger suite deliberately withholds the body to isolate the description's effect. Running the 10-case suite tells you nothing about trigger accuracy, and vice versa.
 
 ### Why this matters most
 
@@ -108,7 +109,7 @@ The one-shot test is the whole point of the holdout: it catches descriptions tun
 
 ### When to run this
 
-Only **after** the skill body is stable. Editing `SKILL.md` body mid-tuning invalidates the description test (the description must describe the current behavior). The 9-case Path B suite validates the body; the trigger suite validates the entry door. Body first, then door.
+Only **after** the skill body is stable. Editing `SKILL.md` body mid-tuning invalidates the description test (the description must describe the current behavior). The 10-case Path B suite validates the body; the trigger suite validates the entry door. Body first, then door.
 
 ### Acceptance
 
@@ -121,7 +122,7 @@ Both paths assume the skill is well-formed. Run a frontmatter structural check f
 ## What is NOT an eval
 
 - A frontmatter structural check validates the skill is well-formed, not that it triggers or decides correctly. Always run it as a baseline, but never treat its pass as "the skill works." See [validation.md](validation.md).
-- The three manual trials in [examples/manual-trial.md](examples/manual-trial.md) are v0.1 acceptance checks, narrower than this nine-case suite.
+- The three manual trials in [examples/manual-trial.md](examples/manual-trial.md) are v0.1 acceptance checks, narrower than this ten-case suite.
 
 ## Recording results
 

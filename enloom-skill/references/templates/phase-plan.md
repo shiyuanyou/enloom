@@ -63,6 +63,10 @@ Fill when any worker will forward-declare an output another references. Skip if 
 
 ## Human Decisions Needed
 
+- **recon decision (v0.6 P2 reframe)**: 该 phase 域是否需要先 recon？规模/结构/边界是否已明？（机制 a — Plan 把决策摆出来，不自动派。信号规则见 [scheduler-rules.md §recon](../scheduler-rules.md)。）
+  - [ ] yes — 派 recon task（普通 emergent task，Goal 写明产物=规模素描，喂回 Plan 修正切分）
+  - [ ] no — 已有把握，跳过
+  - [ ] recommended（若 Plan 触发三信号之一：新 domain / 新文件类型 / 规模边界不明）—— agent 标 salience，人定决策
 
 ## Gate Check
 
@@ -70,4 +74,5 @@ Fill when any worker will forward-declare an output another references. Skip if 
 - Acceptance criteria are clear: yes | no
 - Parallel ownership is defined if needed: yes | no | not-needed
 - Promise Registry drafted if forward declarations exist: yes | no | not-needed
+- recon considered (v0.6 P2): yes | no
 - **Landing gate confirmed**: this phase-plan is written to `tasks/phase-plan-<phase>.md` (Stage 2 exit gate — see [landing-contract.md](../landing-contract.md) §1): yes | no

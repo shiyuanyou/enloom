@@ -50,13 +50,25 @@ Ownership Table 管「**谁**能写哪个文件」(防写冲突);但 split / mig
 
 并行 split/migrate/merge 批处理:Ownership Table + 路由预填**两者都要**。
 
-## 新 domain 的侦察调度(v0.5 指引)
+## recon 调度(v0.6 P2 reframe:人机决策门 + recommended 信号)
+
+> v0.5 的"一段调度指引"在 v0.6 升格为**人机决策门 + recommended 信号**——零结构改动(不新增 stage / 顶层字段 / Role 枚举值 / Pre-flight 子阶段),只复用既有 phase-plan Human Decision 机制。
 
 踩坑实录(art_lab #16):对**不熟的门类 / 不熟的代码库**直接按 Plan 阶段的切分派执行 worker,常因实际规模与规划偏差(原规划 3 agent ~100 条,预研后发现 ~180 条)导致返工。Plan 阶段读的是已有 Registry 风险段,**不是对新任务的领域预研**。
 
-**调度指引(非新阶段、非新字段、非新术语)**:Plan 遇到不熟领域时,把**第一个 task 设为侦察 task**——用现有 task-packet(`mode: emergent`,`Allowed Tools: Read / Grep / Web`),它的 output 喂回 Plan 修正切分。这吃下约 80% 的「预研前置」价值,且零结构改动(无需 Pre-flight 子阶段、无需 `pre_flight_needed` 字段)。
+**recon 决策现在是 phase-plan Human Decision 的一行**(机制 a),不再是"Plan 自觉派"——每个 phase 的 phase-plan 都把 recon 摆成显式 Human Decision([templates/phase-plan.md](templates/phase-plan.md) §Human Decisions Needed 的 recon decision 行,P2-A);用户也可在 triage 时直接声明要/不要 recon(机制 b,见 [trigger-contract.md](trigger-contract.md) §recon 偏好)。Plan 不自动派,只把决策摆出来等人定。**P2-C(本段) ↔ P2-A(phase-plan Human Decision)双向交叉引用。**
 
-判据:Plan 阶段若对目标 domain 的规模 / 结构 / 边界没有把握,首 task 应为 recon;已有把握则跳过。recon 的 done signal 是「一份可读的规模/结构素描」,不是产物本身。
+**recommended 三信号规则(机制 c,P2 第一版核心——salience 层)**:Plan 在以下**任一**信号出现时,把该 phase 的 recon Human Decision 标 `recommended`,否则作为 standing option(不标 recommended、不强制):
+
+1. **Registry 无该域风险段(新 domain)**—— Orient 读 project_state.md Registry 段(Pending Dependencies / Broken References / Accepted With Risk)时的副产物,无相关项即触发。
+2. **出现新文件类型(扩展名/结构未见过)**—— Plan 读 input 时的自然观察。
+3. **Plan 读 input 时规模/边界不明**—— Plan 本来就要做的判断。
+
+> recommended 是"salience(agent 廉价可错)与决策(人)分离"——agent 只判"要不要标 recommended",不判"做不做 recon"。**已知裂缝**:新项目 Registry 空时 false positive 多,第一个用户可接受,记为 Known Limitation。
+
+**recon task 仍是普通 emergent task**(非新 Role/Mode):用现有 task-packet(`mode: emergent`,`Allowed Tools: Read / Grep / Web`),Goal/Anti-Goal 写明产物=规模素描,recon 的 done signal 是「一份可读的规模/结构素描」。researcher 拿到这种 task 时按 [prompt-assets/researcher.md](../prompt-assets/researcher.md) How-to-work 第 6 条产出素描(非完整 research)。
+
+**诚实边界(跨方案恒定)**:recon 升格防的是"**决策被静默跳过**"(从可能跳过变成有结构位提醒),**不防**"决策做错"(用户可能说不要 recon 然后撞规模偏差),也不防"覆盖不完整"(recon task 读的也是 packet 列出的 input,packet 外的东西它照样会漏)。art_lab #16 的根因(人没预研)在所有方案里都存在,P2 不假装能解。recon 升格的卖点是"**给 Plan 一个结构化的预研位置 + 降低主窗口 prompt 污染**",不是"防漏扫"。
 
 ## 并行调度的真实时序(virtual parallelism 盲区)
 
