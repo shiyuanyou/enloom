@@ -65,6 +65,17 @@ A markdown-based methodology that keeps the orchestrator **thin but never blind*
 
 ## Status · 状态
 
+**v0.6** (2026-07-07) — dispatch-default 翻转 + recon 升格,review-adjudicated. Four changes from a real-run diagnosis (worker tasks done by the main window instead of dispatched):
+
+1. **Dispatch-default 翻转 (P0+P0.5)** — Stage 3 task 默认必须 dispatch 给 sub-agent;无 sub-agent 能力则中断(提示换 opencode/pi/codex),不退化、不自执行、不污染 prompt。主窗口职责限定为 triage/orient/plan/review/integrate/archive + 串行集成区写入。六处叙事同批改(glossary / evidence-contract / landing-contract / scheduler-rules / worker-report)。
+2. **命名硬化 + trim rule (P1)** — 7 处措辞硬化(eval-guide / coder / worker-report / project-state / task-board / task-packet)。worker-report 新增 trim rule:control agent 收 worker 回报只收 Result + Checks summary + verdict-level evidence + named risks,raw output 落 output.md。
+3. **recon 升格 (P2)** — recon 从「主窗口顺手做」升格为 Plan 阶段的第一个 sub-agent task packet;phase-plan 加 Human Decision、triage 偏好透传、scheduler-rules 三信号、researcher 分支、eval case 10。
+4. **清理 (P3)** — archive-entry Raw Material Handling 锁注释 + art-lab/manual-trial 措辞对齐。
+
+**Non-Goals**: virtual parallelism 盲区保留(声明 parallel ≠ 真并发);六阶段骨架/五铁律/Evidence Contract 四要素不变。
+
+See dogfood traces in `.enloom/2026-07-06-enloom-v06/`.
+
 **v0.5** (2026-07-01) — dev-wiki knowledge-base cross-evaluation, review-adjudicated. Seven changes scoped to three blocks, from the review's three-axis verdict (mechanism right / framework right / timing right):
 
 1. **Compaction mandatory gate (S5, HIGH)** — compaction upgraded from an optional "check the trigger" to a mandatory Integrate exit gate: threshold met → must run, no deferring. Closes the loophole where an optional check lets the Registry balloon. Thresholds labeled "heuristic, not dogma."

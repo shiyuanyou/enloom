@@ -6,7 +6,18 @@
 
 ## 当前状态
 
-**v0.5 进行中**（2026-07-01）。**dev-wiki 知识库交叉评估,评审裁决版**——按"机制对、框架对、时机到"三轴逐条裁决 7 条建议,聚焦三块:
+**v0.6 已完成**（2026-07-07）。**dispatch-default 翻转 + recon 升格**——来自实跑诊断(worker task 被主窗口直接做,而非 dispatch 给 sub-agent):
+
+1. **Dispatch-default 翻转 (P0+P0.5)** — Stage 3 task 默认 dispatch 给 sub-agent;无能力即中断不退化。六处叙事翻转:glossary / evidence-contract ×2 / landing-contract §5 / scheduler-rules / worker-report。
+2. **命名硬化 + trim rule (P1)** — 7 处措辞硬化。worker-report trim rule:control agent 只收 Result + Checks summary + verdict-level evidence + named risks。
+3. **recon 升格 (P2)** — recon 从主窗口顺手做 → Plan 第一个 sub-agent task packet。phase-plan Human Decision + triage 偏好透传 + scheduler-rules 三信号 + researcher 分支 + eval case 10。
+4. **清理 (P3)** — archive-entry Raw Material Handling 锁注释 + art-lab/manual-trial 措辞。
+
+dogfood 落在 `.enloom/2026-07-06-enloom-v06/`。**零回归**:六阶段骨架/五铁律/Evidence Contract 四要素/virtual parallelism 盲区全保留。
+
+- git: `e71f686`(P0+P0.5) → `b675c30`(P1) → `5dc33d8`(P2) → `e43f6d1`(P3)
+
+**v0.5 已完成**（2026-07-01）。**dev-wiki 知识库交叉评估,评审裁决版**——按"机制对、框架对、时机到"三轴逐条裁决 7 条建议,聚焦三块:
 
 1. **Compaction 强制闸门 (S5 高)** — 从可选「检查触发」升级为 Stage 5 Integrate 出口必执行闸门:超标→必执行不准 defer。阈值标注「启发式、非教条」。改动:registry-and-compaction §4 + workflow-steps Stage 5 出口 + landing-contract 闸门表。
 2. **盲区三项 (X2 高)** — 单 agent 诚实盲区从 1 项扩为 3 项:cross-worker isolation(已有)+ cross-role verification(verdict/review/audit 可能同 context)+ **virtual parallelism**(单 agent 下 strategy:parallel 只是协议形式,评审新增、实证依据)。改动:evidence-contract §Honest Blind Spots + scheduler-rules 回写 + worker-report 模板。
