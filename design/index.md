@@ -29,5 +29,6 @@ live skill 对 `design/` 的引用数为 0（已 `grep -rl 'design/' enloom-skil
 | `v0.3-lifecycle-spec.md` | 458 | v0.3 生命周期重组规格；已实现，被 v0.4/v0.5 超越。 |
 | `2026-07-01-enloom-v0.5-optimization-design.md` | 301 | v0.5 评审裁决版（✅🟡⏸️❌ 逐条标记）；已实现。 |
 | `v0.4-project-namespace-spec.md` | 247 | v0.4 项目级命名空间 + 落盘时序契约；已实现，被 v0.5 引用为既定事实。 |
+| `2026-06-15-v01-acceptance-report.md` | 63 | v0.1 验收报告（非设计文档）；历史归档，从 `enloom-skill/report.md` 移入。 |
 
-共 7 文件，3,552 行。归档日期：2026-07-09。
+共 8 文件，3,615 行。归档日期：2026-07-09（v0.1 验收报告 2026-07-09 追加）。

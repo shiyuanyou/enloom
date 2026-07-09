@@ -1,14 +1,8 @@
 # Prompt Control — Route Pre-fill, Multi-Layer Dispatch, Script Pitfalls
 
-Three orchestration lessons that the five core mechanisms (Registry / Evidence Contract / Ownership+Promise / Compaction / Audit) do not cover. All three were distilled from a real large-scale task *after* v0.3 was internalized (2026-06-24 → 06-28), so they are recorded here rather than retro-fitted into the v0.3 references. Each follows the same shape as the other references: a concrete failure observed in the field, the general mechanism it reveals, and when to apply it.
-
-These are **prompt-construction technique**, not new law. They refine *how* the control agent builds and hands off a task packet — they sit one layer above the [task-packet template](templates/task-packet.md) fields.
+Orchestration technique that the five core mechanisms (Registry / Evidence Contract / Ownership+Promise / Compaction / Audit) do not cover. These are **prompt-construction technique**, not new law. They refine *how* the control agent builds and hands off a task packet — they sit one layer above the [task-packet template](templates/task-packet.md) fields.
 
 ## 1. Route Pre-fill — main window decides routing, worker only executes
-
-### The failure
-
-A batch split/migrate operation was dispatched to workers with the instruction "split these canon lines and redirect the rest." Workers independently *decided* the routing (which line goes to which file, what redirects where). Result: each worker re-derived routing from its local bundle, routes contradicted across workers, and a global redirect one worker applied ate the exact strings another worker's structured edits needed — every structured edit missed.
 
 ### The mechanism
 
@@ -42,10 +36,6 @@ A parallel batch with an Ownership Table but without route pre-fill can still pr
 
 ## 2. Multi-Layer Dispatch Distortion — the telephone game in closed-set constraints
 
-### The failure
-
-An orchestration was structured in three layers: control agent → a "pre-read" agent (summarizes a reference page and the rules) → execution agent (writes pages from the pre-read agent's summary). The pre-read agent returned a *summary of the rules*. That summary became the execution agent's **only** rule source. A closed-set constraint — a 29-item whitelist of concepts, plus a required "reason sentence" format for non-whitelist links — was summarized rather than copied. The summary dropped some whitelist items and loosened the format. Every execution agent then produced non-whitelist links missing the reason sentence, failing the gate.
-
 ### The mechanism
 
 Constraints come in two kinds, and they must propagate differently through a multi-layer dispatch:
@@ -76,19 +66,15 @@ A gate that checks a closed-set constraint (e.g. "every non-whitelist link has a
 
 ## 3. Script-Execution Pitfalls — derived-output matching and edit ordering
 
-Two field failures from scripts that generate derived analysis or batch-edit files. Both are general beyond their origin domain.
+Two pitfalls for scripts that generate derived analysis or batch-edit files. Both are general.
 
 ### 3a. Substring matching produces phantom links
-
-**Failure.** A script generated an "influence network" by checking `if token in title` — substring containment. Single-character and short tokens matched almost every title: `假名` hit all Japanese titles, `家` hit nearly everything, a long filename matched many substrings. In-degrees inflated from ~22 to 89. The derived view looked plausible and was nearly shipped.
 
 **Mechanism.** When a script builds a relationship/links/symbol graph by matching names, **use exact parsing, never substring containment.** Extract the real link/symbol syntax with a precise regex (e.g. `\[\[([^\]]+)\]\]` for wikilinks, or the language's actual symbol resolver for code) and match on the parsed identifier. Substring matching manufactures false edges that look structurally valid.
 
 **Check.** After generating any derived relationship view, manually spot-check the **top-N highest-degree nodes** — compare the script's count against a real `grep -c` count of the source. A node whose derived degree is many× its real count is a substring false-positive signature.
 
 ### 3b. Structured rewrites must run before global text replacement
-
-**Failure.** A batch script had two kinds of edits over the same files: (a) structured, exact-string rewrites (split a specific canon line, edit a specific frontmatter field) and (b) a global wikilink text replacement (redirect all `[[old]]` → `[[new]]`). The script ran (b) before (a). The global replacement ate the exact strings that (a) needed to match, so every structured edit missed and fell back to "already processed." The batch reported success (no errors) while doing nothing.
 
 **Mechanism.** When a script mixes **structured exact-string matching** with **global text replacement** over the same files, **structured edits must run first.** A global replacement will, by definition, alter the strings a later structured match is looking for. Ordering matters because the two operate on the same text but at different specificity.
 
@@ -108,10 +94,6 @@ Two field failures from scripts that generate derived analysis or batch-edit fil
 These bite whenever the workflow **generates derived analysis** (influence graphs, dependency maps, cross-reference indexes — §3a) or **batch-edits files with mixed edit types** (refactors, migrations, renames — §3b). Both are common in the Integrate stage (Stage 5) and in audit scripts.
 
 ## 4. Epistemic Discipline — separating fact from AI synthesis in research output
-
-### The failure
-
-A research/exploration round produced a set of open "question seeds." Every seed was written up as a **closed conclusion** with `confidence: high`. On review, a large fraction of each conclusion was AI synthesis — philosophical leaps, invented terminology, and extrapolations — dressed up as if they were sourced facts. The conclusions then *closed* questions that should have stayed open, and the fabricated terms propagated downstream as if citable.
 
 ### The mechanism
 
@@ -152,10 +134,6 @@ The Evidence Contract (§"no PASS without evidence") enforces that a *verificati
 
 ## 5. Repair-Plan Discipline — a fix plan must verify its own problem statements
 
-### The failure
-
-A repair plan was written to fix a list of alleged defects. On execution, several "defects" turned out not to exist: one item claimed a concept was mis-categorized, but it was in the correct section all along (wrong line number recalled from memory); the plan's verification command used a flag (`grep -P`) the host's BSD grep did not support, so it would have errored regardless. The plan had enumerated problems and fix steps confidently, but **none of its problem statements or verification commands had been re-run against reality** — they were written from recall.
-
 ### The mechanism
 
 A repair / remediation / audit-fix plan is itself a kind of assertion, and it is subject to the same evidence rule as the work it critiques:
@@ -180,4 +158,3 @@ This is the Evidence Contract applied *to the plan itself*, not just to the work
 - [registry-and-compaction.md](registry-and-compaction.md) — §2 Ownership Table, the sibling concept to route pre-fill.
 - [evidence-contract.md](evidence-contract.md) — catches the *symptoms* of these failures (gate violations); this reference prevents the *causes*.
 - [templates/task-packet.md](templates/task-packet.md) — the packet these techniques shape.
-- [examples/art-lab-worked-example.md](examples/art-lab-worked-example.md) — the real task these lessons came from (wiki ingest at scale).

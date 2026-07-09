@@ -43,21 +43,19 @@ Read [references/workflow-steps.md](references/workflow-steps.md) for the full s
 | `make-prompt` | 3 Execute | build the task packet (contract) |
 | `dispatch` | 3 Execute | run the worker inside the packet boundary |
 | `review` | 4 Verify | accept every worker on evidence |
-| `audit` | 4 Verify | periodic / pre-release verification (new) |
+| `audit` | 4 Verify | periodic / pre-release verification |
 | `archive` | 6 Close | close the phase after state update |
 | `health-check` | 1 Orient + 4 Verify | periodic drift / risk-section check |
 
-health-check is no longer a top-level operation; it is a periodic trigger in Orient and Verify.
-
 ## The Five Laws
 
-The laws constrain the lifecycle. v0.3 hardens laws 3–5:
+The laws constrain the lifecycle:
 
 1. **No Enloom without trigger.**
 2. **No Worker without Task Packet.**
-3. **No Parallel without Ownership Table.** (upgraded: three-tier model)
-4. **No PASS without Evidence.** (mechanized: Evidence Contract hard constraint)
-5. **No Archive without State Update.** (extended: Registry risk sections processed)
+3. **No Parallel without Ownership Table.** (three-tier model)
+4. **No PASS without Evidence.** (Evidence Contract hard constraint)
+5. **No Archive without State Update.** (Registry risk sections processed)
 
 ## References
 
@@ -67,20 +65,19 @@ Read these on demand — do not load them all into context at once:
 - [references/trigger-contract.md](references/trigger-contract.md) — when to enter Enloom, when to bypass, and how to handle ambiguous cases.
 - [references/glossary.md](references/glossary.md) — fixed terminology; every reference and template uses these terms.
 - [references/scheduler-rules.md](references/scheduler-rules.md) — serial is default; parallel is an exception requiring an Ownership Table (three-tier model).
-- [references/evidence-contract.md](references/evidence-contract.md) — the four evidence elements, the "no PASS without evidence" hard constraint, the three-state verdict, and the v0.5 fifth dimension (Claim Consistency) + three honest blind spots.
+- [references/evidence-contract.md](references/evidence-contract.md) — the four evidence elements, the "no PASS without evidence" hard constraint, the three-state verdict, Claim Consistency (5th dimension), and three honest blind spots.
 - [references/prompt-control.md](references/prompt-control.md) — orchestration technique (route pre-fill, multi-layer dispatch distortion, script-execution pitfalls) — how to build a task packet that survives hand-off.
 - [references/registry-and-compaction.md](references/registry-and-compaction.md) — Registry seven sections, Ownership Table, Promise Registry, and the Compaction Protocol (state governance in one place).
 - [references/review-checklist.md](references/review-checklist.md) — the gate conditions for `accepted` / `needs-rework` / `rejected`.
 - [references/archive-policy.md](references/archive-policy.md) — the mechanical closure conditions; no archive without state update.
-- [references/landing-contract.md](references/landing-contract.md) — the stage gate table, control↔worker handshake, and health-check as the stage-transition gate (v0.5: light tier at transitions, full tier at Orient + Verify).
+- [references/landing-contract.md](references/landing-contract.md) — the stage gate table, control↔worker handshake, and health-check as the stage-transition gate (light tier at transitions, full tier at Orient + Verify).
 - [references/validation.md](references/validation.md) — language-neutral structural validation (bash / node / python, no PyYAML).
 - [references/templates/](references/templates/) — the fill-in contracts (phase-plan, task-packet, audit-task-packet, worker-report, project-state, archive-entry).
 - [references/examples/triage-decision-tree.md](references/examples/triage-decision-tree.md) — worked triage examples.
-- [references/examples/art-lab-worked-example.md](references/examples/art-lab-worked-example.md) — how the generic structures fill in on a real large-scale task (reference, not main trunk).
 
 ## File Protocol
 
-Recommended project-local layout. Enloom writes its working files under a **hidden `.enloom/` directory** so they stay out of the user's way by default. v0.4 organizes `.enloom/` as a **project-level namespace**: a single `task_board.md` entry table at the root, and one directory per project:
+Recommended project-local layout. Enloom writes its working files under a **hidden `.enloom/` directory** so they stay out of the user's way by default. `.enloom/` is a **project-level namespace**: a single `task_board.md` entry table at the root, and one directory per project:
 
 ```text
 .enloom/
@@ -110,13 +107,13 @@ For first use, create `.enloom/task_board.md` and the current project's director
 
 ## Landing Discipline
 
-Templates and stages define *what* artifacts exist; the Landing Contract defines *when, by whom*, they must exist **on disk**. It exists because a real run left `tasks/` and `runs/` entirely empty while `project_state.md` claimed completed phases — every packet and report lived only in the agent's context and vanished at session end.
+Templates and stages define *what* artifacts exist; the Landing Contract defines *when, by whom*, they must exist **on disk**.
 
 Two load-bearing rules:
 
 - **Every stage crossing is a file-existence gate.** Entry/exit gates per stage are mechanical checks (e.g. Stage 3 entry: `runs/<TASK>/task.md` must exist; exit: `output.md` + `report.md` must exist). The control agent self-checks at each entry; health-check hard-verifies at each transition. Full table + control↔worker handshake sequence: [references/landing-contract.md](references/landing-contract.md).
-- **Worker output must land as files, not chat replies.** Dispatch hands the worker a *path* to `task.md`; the worker writes `output.md` / `report.md` to disk. This mechanizes Law 2 (no dispatch before `task.md` exists) and Law 5 (no archive before every report's Review Result is filled), bringing them to the same standard Law 4 already held.
-- **Compaction is a mandatory gate, not an optional check (v0.5).** At the Integrate exit, if a compaction trigger threshold is met, the Compaction Protocol *must* run before the stage passes — "check the trigger and defer" is no longer acceptable. This closes the loophole where an optional check lets the Registry balloon indefinitely. See [references/registry-and-compaction.md](references/registry-and-compaction.md) §4.
+- **Worker output must land as files, not chat replies.** Dispatch hands the worker a *path* to `task.md`; the worker writes `output.md` / `report.md` to disk. This mechanizes Law 2 (no dispatch before `task.md` exists) and Law 5 (no archive before every report's Review Result is filled).
+- **Compaction is a mandatory gate, not an optional check.** At the Integrate exit, if a compaction trigger threshold is met, the Compaction Protocol *must* run before the stage passes — "check the trigger and defer" is not acceptable. See [references/registry-and-compaction.md](references/registry-and-compaction.md) §4.
 
 ## Review Posture
 
@@ -124,4 +121,4 @@ Prefer report-first review. The control agent should keep worker context out of 
 
 ## Manual Trial
 
-Before promoting this skill globally, run the manual checks in [references/examples/manual-trial.md](references/examples/manual-trial.md). The acceptance target is practical behavior on real tasks, not an automated benchmark.
+Run the manual checks in [references/examples/manual-trial.md](references/examples/manual-trial.md) to validate behavior. The acceptance target is practical behavior on real tasks, not an automated benchmark.

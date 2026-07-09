@@ -2,7 +2,7 @@
 
 State governance, in one place. These four mechanisms all answer the same question — how does the control agent keep `project_state.md` a live, recoverable truth instead of a write-only log that balloons until it is unreadable. They share one reference because they share one subject.
 
-The core insight from a real large-scale task: state that records only "what was completed" leaves systematic gaps. What actually lets you recover a project is the **list of unclosed risks**. The Registry is that list. Ownership, Promise, and Compaction are the disciplines that keep it honest.
+The core insight: state that records only "what was completed" leaves systematic gaps. What actually lets you recover a project is the **list of unclosed risks**. The Registry is that list. Ownership, Promise, and Compaction are the disciplines that keep it honest.
 
 ## 1. Registry — Seven Sections
 
@@ -41,7 +41,7 @@ The Registry is the live part of project_state. At compaction, Registry sections
 
 ## 2. Ownership Table — Three Tiers
 
-Parallel safety rests on file ownership. The lesson: parallel work is not a strategy, it is an exception optimization that becomes possible once ownership is explicit. The universal root is "globally unique mutable state cannot be parallelized."
+Parallel safety rests on file ownership. Parallel work is not a strategy, it is an exception optimization that becomes possible once ownership is explicit. The universal root is "globally unique mutable state cannot be parallelized."
 
 ### Three-Tier Model
 
@@ -105,7 +105,7 @@ Not all storage tolerates dangling references:
 - **Storage tolerates dangling references** (e.g. wiki / filesystem dangling links) → write the reference first, verify fulfillment at the end. Promise mechanism + parallel allowed.
 - **Storage does not tolerate** (e.g. code imports, strongly-typed symbols) → the promise mechanism cannot be used; the relevant tasks are forced serial (worker B must finish before worker A can reference).
 
-The Plan stage decides "does this task's reference layer tolerate dangling references" — only if it does may promise + parallel be used. This makes the Obsidian constraint (which was implicit in the original task) an explicit, general decision point.
+The Plan stage decides "does this task's reference layer tolerate dangling references" — only if it does may promise + parallel be used. This makes an implicit storage constraint an explicit, general decision point.
 
 > The Plan stage does not make this decision from scratch each time — it fills the **Reference Tolerance Decision Table** in [templates/phase-plan.md](templates/phase-plan.md), which walks 3–5 common reference types (wikilinks / markdown links / code imports / file paths / schema `$ref`) as worked examples. The table is scaffolding, not a new gate; it saves the agent re-deriving the tolerance call per project.
 
@@ -129,9 +129,9 @@ State documents bloat. "Compress into state" without compaction discipline just 
 
 ### Mandatory vs Skipped
 
-Compaction at the Integrate exit gate is **no longer optional**. After every integrate:
+Compaction at the Integrate exit gate is **mandatory**. After every integrate:
 
-- **Threshold met → compaction is mandatory.** It must run before the stage exits; "check the trigger and defer" is no longer an acceptable outcome. This closes the loophole where an optional check lets the Registry balloon indefinitely — context bloat migrating from the chat window into the document system.
+- **Threshold met → compaction must run** before the stage exits; deferring is not acceptable. This prevents the Registry from ballooning indefinitely — context bloat migrating from the chat window into the document system.
 - **Threshold not met → skip and record.** Log a one-liner ("compaction not triggered: state at N lines / M results") so the decision is auditable, not silent.
 
 ### Four Steps
@@ -162,4 +162,3 @@ The most dangerous compaction failure is "deleted an unclosed risk while compres
 - [templates/task-packet.md](templates/task-packet.md) — Writable/Forbidden derived from the Ownership Table.
 - [evidence-contract.md](evidence-contract.md) — how the Promise Registry's `verify_at` check is enforced.
 - [archive-policy.md](archive-policy.md) — the closure conditions that include "registry risk sections processed."
-- [examples/art-lab-worked-example.md](examples/art-lab-worked-example.md) — how the Ownership Table and Promise Registry filled in on a real task.

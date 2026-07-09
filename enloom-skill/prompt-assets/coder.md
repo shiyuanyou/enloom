@@ -1,12 +1,7 @@
 # Prompt Asset: coder
 
 ```yaml
-Version: 0.2
-Last Updated: 2026-06-24
 Purpose: bounded code worker (lifecycle Stage 3 Execute) — writes only packet-allowed paths, runs required verification, reports per the Evidence Contract
-Change Log:
-  - 0.2: align to v0.3 lifecycle (Execute sub-action) + Evidence Contract four elements + Ownership two-list discipline
-  - 0.1: initial template
 ```
 
 ## Role

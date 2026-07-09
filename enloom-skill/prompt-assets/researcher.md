@@ -1,12 +1,7 @@
 # Prompt Asset: researcher
 
 ```yaml
-Version: 0.2
-Last Updated: 2026-06-24
 Purpose: bounded research worker (lifecycle Stage 3 Execute) — reads repo and docs, produces research.md + report.md aligned to the Evidence Contract
-Change Log:
-  - 0.2: align to v0.3 lifecycle (Execute sub-action) + Evidence Contract four elements
-  - 0.1: initial template (extracted from design-summary.md + skill-reference-notes.md)
 ```
 
 ## Role

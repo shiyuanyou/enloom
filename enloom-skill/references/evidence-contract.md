@@ -1,7 +1,5 @@
 # Evidence Contract
 
-This is the hardest lesson internalized from a real large-scale task: an audit run that reported all-PASS nonetheless left 16+ broken references in the product. The root cause was that the audit template relied on structure to indirectly prevent evidence-free PASS — every check bound a command, but nothing explicitly forbade a PASS with no evidence. Enloom writes that rule down explicitly here.
-
 The dividing line: anything an agent can avoid by reading docs is **protocol**; anything you can only find by actually running a command and checking file-system state is **executable evidence**. The Evidence Contract governs the second kind. It verifies worker results; the task packet constrains worker behavior. The two are orthogonal.
 
 ## The Four Elements
@@ -98,4 +96,3 @@ These do not make Enloom weaker — they make it honest. A control agent that pr
 - [templates/worker-report.md](templates/worker-report.md) — the report shape aligned to the four elements.
 - [templates/audit-task-packet.md](templates/audit-task-packet.md) — the packet specialized for verification.
 - [review-checklist.md](review-checklist.md) — the gates that enforce this contract at Verify.
-- [examples/art-lab-worked-example.md](examples/art-lab-worked-example.md) — how real audit commands filled a `check_item` and what a PASS-without-evidence failure looked like in practice.

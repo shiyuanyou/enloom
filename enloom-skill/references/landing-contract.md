@@ -1,8 +1,6 @@
 # Landing Contract — 落盘时序契约
 
-State governance lives in [registry-and-compaction.md](registry-and-compaction.md); evidence in [evidence-contract.md](evidence-contract.md). This reference is the **landing discipline** — the third leg of state governance: *when*, *by whom*, a workflow artifact must exist on disk. It exists because a real large-scale run left `tasks/` and `runs/` entirely empty while `project_state.md` claimed three completed phases — every packet, every worker report, every mid-run decision lived only in the agent's runtime context and vanished at session end.
-
-The core failure: templates exist (task-packet / worker-report have complete fields), the lifecycle names the stages, but **nothing commanded which file gets written at which stage boundary**. An agent could "complete" all six stages touching the disk zero times. The Landing Contract closes that gap by making every stage crossing a **file-existence gate**.
+State governance lives in [registry-and-compaction.md](registry-and-compaction.md); evidence in [evidence-contract.md](evidence-contract.md). This reference is the **landing discipline** — the third leg of state governance: *when*, *by whom*, a workflow artifact must exist on disk. Templates exist (task-packet / worker-report have complete fields) and the lifecycle names the stages, but without an explicit rule for which file gets written at which stage boundary, an agent could "complete" all six stages touching the disk zero times. The Landing Contract closes that gap by making every stage crossing a **file-existence gate**.
 
 > **铁则**：worker 的产出和报告必须落盘成文件，不能只留在对话上下文。dispatch 不是「把任务说给 worker 听」，是「把 `task.md` 路径交给 worker，worker 写 `output.md` / `report.md`」。这是闸门表能成立的物理前提。
 

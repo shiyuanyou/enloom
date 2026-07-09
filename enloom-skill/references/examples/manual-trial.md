@@ -1,6 +1,6 @@
 # Manual Trial Guide
 
-Use these checks before promoting Enloom v0.1 beyond the project-local draft.
+Three checks for validating Enloom behavior — run as a health check or after a skill change.
 
 ## Trial 1: Direct Bypass
 
@@ -42,13 +42,3 @@ Expected behavior:
 - Review returns `needs-rework`.
 - The report cannot be accepted because required verification and evidence are missing.
 - The reviewer asks for specific evidence or a narrowed task.
-
-## Result Log
-
-Fill this in after the first manual run.
-
-| Date | Trial | Result | Evidence |
-|------|-------|--------|----------|
-| 2026-06-15 | Direct Bypass | pass | Triage returns `direct` because the prompt is a single small edit with no durable state, Worker, review, or archive trigger. |
-| 2026-06-15 | Enloom Entry | pass | Triage returns `enloom` because the prompt has a long-term asset, task packets, report-first review, project_state, archive, and context-governance triggers. |
-| 2026-06-15 | Evidence Gate | pass | Review returns `needs-rework` because verification is `not run` and evidence is only "trust me, it works". |

@@ -12,6 +12,7 @@
 | 证据契约 / 验收三态 | [enloom-skill/references/evidence-contract.md](enloom-skill/references/evidence-contract.md) |
 | 状态治理（Registry/Ownership/Promise/Compaction） | [enloom-skill/references/registry-and-compaction.md](enloom-skill/references/registry-and-compaction.md) |
 | 进度 / 下一步 / 未闭合风险 Registry | [PROGRESS.md](PROGRESS.md) |
+| 版本历史 / 变更细节 | [CHANGELOG.md](CHANGELOG.md) |
 | 设计文档（已归档） | [design/index.md](design/index.md) → `design/_archive/` |
 
 进入仓库先读 README + PROGRESS § Registry（未闭合风险清单，Orient 必扫），再动手。
@@ -23,14 +24,13 @@
 - **`AgentOS/`** — v0.3 自举冻结快照（legacy 命名故意保留）。重命名或整理会破坏它作为「v0.3 前真实跑过」的凭据。
 - **`.enloom/2026-06-30-*` / `2026-07-01-*` / `2026-07-06-*` 等 dogfood 项目目录** — 每个版本的自举痕迹。它们是各自版本的 dogfood 证据，保留为过程凭据。
 - **`.clear-mind/`** — clear-mind skill 的分析过程产物，独立项目的工作痕迹。
-- **`enloom-skill/report.md`** — v0.1 验收报告（历史），不改。
 
-可以改的是：`enloom-skill/SKILL.md`、`enloom-skill/references/`、`enloom-skill/prompt-assets/`、`README.md`、`PROGRESS.md`、`AGENTS.md`、新建 `.enloom/<today>-<project>/`。
+可以改的是：`enloom-skill/SKILL.md`、`enloom-skill/references/`、`enloom-skill/prompt-assets/`、`README.md`、`PROGRESS.md`、`CHANGELOG.md`、`AGENTS.md`、新建 `.enloom/<today>-<project>/`。
 
 ## 改 skill 的纪律
 
 1. **源 / 副本同步**。`enloom-skill/` 是源，`~/.agents/skills/enloom/` 是已安装副本。改了源必须同步到副本（`cp` 改动文件），否则 host 加载的是旧版。这是 Law 5 之外的工程纪律——archive 不校验它，但不同步 = 改了个寂寞。
-2. **改 `description` 字段前先想 trigger 影响**。description 是 skill 的触发门，改措辞可能改变 host 是否调用 enloom。历史上有 trigger-eval 20/20 基线（单模型、description-only），套件已删除（2026-07-09，跟不上 v0.6 后的迭代复杂度）。现在 trigger 行为靠真实任务 dogfood 验证。
+2. **改 `description` 字段前先想 trigger 影响**。description 是 skill 的触发门，改措辞可能改变 host 是否调用 enloom。trigger 行为靠真实任务 dogfood 验证。
 3. **改 references 时查交叉引用**。references 间用 `§Section Title`（人读形式）引用，不用 `.md#slug` 锚点。改段标题前 `grep -r '<旧标题>' enloom-skill/` 确认引用方。被引最多的：`evidence-contract.md`（13 文件引）、`landing-contract.md`、`registry-and-compaction.md`。
 4. **不改铁律 / 阶段骨架 / Evidence Contract 四要素**。这些是方法论不变量。改前先问：这是修订史 bloat（可去），还是规则本身（不可动）。
 

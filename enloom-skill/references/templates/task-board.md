@@ -1,7 +1,7 @@
 # Task Board
 
 > 项目级入口表。一行一 Project。control agent 在 Orient 第一步读本表定位目标项目;任务详情进各项目的 `project_state.md`,不在此索引。
-> v0.4 命名空间层的唯一全局文件——位于 `.enloom/task_board.md`(项目目录之外)。
+> 命名空间层的唯一全局文件——位于 `.enloom/task_board.md`(项目目录之外)。
 
 | project | created | updated | phase | desc |
 |---|---|---|---|---|

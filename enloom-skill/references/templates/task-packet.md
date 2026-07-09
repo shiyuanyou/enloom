@@ -4,7 +4,7 @@ Task Packet Version: 0.2
 Mode: emergent | recorded | audited
 Role: researcher | coder | reviewer | integrator | tester
 
-> **Mode-differentiated field requirements (v0.5).** Not every field is mandatory for every mode — constraint density should match task complexity. Pick the row for this packet's mode and fill accordingly. The control agent's `make-prompt` self-check (workflow-steps Stage 3) enforces the **required** cells; optional cells may be left blank without blocking dispatch.
+> **Mode-differentiated field requirements.** Not every field is mandatory for every mode — constraint density should match task complexity. Pick the row for this packet's mode and fill accordingly. The control agent's `make-prompt` self-check (workflow-steps Stage 3) enforces the **required** cells; optional cells may be left blank without blocking dispatch.
 >
 > | Field | `emergent` | `recorded` | `audited` |
 > |-------|-----------|-----------|-----------|
@@ -55,7 +55,7 @@ Role: researcher | coder | reviewer | integrator | tester
 
 > Each item aligns with a `check_item` (id / command / pass_condition / fail_signal / named_list — see [audit-task-packet.md](audit-task-packet.md)). May be inline or a reference to an audit packet. The report must answer each with the [Evidence Contract](../evidence-contract.md) four elements.
 >
-> **Countable outputs (v0.5 · Claim Consistency, 5th Evidence dimension)**: list any countable quantity this task's report will assert — entry counts, pass rates, file counts, coverage numbers. The Verify stage independently recounts these against the actual output (`grep -c` / `awk` / `git diff --stat`); a mismatch > 0 → ISSUES. **Mandatory in `audited` mode; optional in `recorded`/`emergent`.** See [evidence-contract.md §The Fifth Dimension](../evidence-contract.md).
+> **Countable outputs (Claim Consistency, 5th Evidence dimension)**: list any countable quantity this task's report will assert — entry counts, pass rates, file counts, coverage numbers. The Verify stage independently recounts these against the actual output (`grep -c` / `awk` / `git diff --stat`); a mismatch > 0 → ISSUES. **Mandatory in `audited` mode; optional in `recorded`/`emergent`.** See [evidence-contract.md §The Fifth Dimension](../evidence-contract.md).
 
 Countable outputs:
 

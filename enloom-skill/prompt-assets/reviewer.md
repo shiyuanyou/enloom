@@ -1,12 +1,7 @@
 # Prompt Asset: reviewer
 
 ```yaml
-Version: 0.2
-Last Updated: 2026-06-24
 Purpose: bounded review worker (lifecycle Stage 4 Verify) — reads only report (report-first), applies the Evidence Contract, outputs a three-state verdict + review conclusion
-Change Log:
-  - 0.2: align to v0.3 lifecycle (Verify sub-action) + Evidence Contract hard constraint + three-state verdict (PASS/ISSUES/FAIL) + Registry logging obligation
-  - 0.1: initial template
 ```
 
 ## Role

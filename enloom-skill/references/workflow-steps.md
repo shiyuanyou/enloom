@@ -1,6 +1,6 @@
 # Enloom Lifecycle
 
-Enloom is a lifecycle-driven control-plane protocol for complex agent work. The work proceeds through six stages; the operations that earlier versions listed as a flat menu (triage / plan / make-prompt / review / archive / health-check) are now sub-actions that belong to specific stages.
+Enloom is a lifecycle-driven control-plane protocol for complex agent work. The work proceeds through six stages; operations are sub-actions that belong to specific stages.
 
 ```
 0. Triage   (entry decision)   → direct / light-plan / enter lifecycle
@@ -122,8 +122,6 @@ Sub-actions: `make-prompt` (build task packet) + `dispatch` (run worker).
 - **Entry gate (per task, Law 2 mechanized)**: `runs/<TASK>/task.md` exists. Missing → fall back to Plan and write the packet; never dispatch without it. See [landing-contract.md](landing-contract.md) §3.
 - **Exit gate (per task)**: `runs/<TASK>/output.md` exists + `runs/<TASK>/report.md` exists + report has a Result section (done/blocked/failed). Missing → route the worker back; the task is not complete until both files land.
 
-These were separate steps before (Step 3 Make Packet + Step 4 Dispatch); they are continuous and now merged into one stage. Splitting them was an artificial seam.
-
 Output: use [templates/task-packet.md](templates/task-packet.md) for ordinary work, [templates/audit-task-packet.md](templates/audit-task-packet.md) for verification work. The packet is written to `runs/<TASK>/task.md` *before* dispatch — dispatch hands the worker the path to that file, not a verbal description ([landing-contract.md](landing-contract.md) §2).
 
 Mode selection (ordinary packet):
@@ -244,7 +242,7 @@ Same phase failed three times:
 
 ## Health Check (stage-transition hard gate + periodic drift)
 
-`health-check` is no longer a top-level operation. It plays two roles, and its execution is split into two tiers so that the cheap, high-frequency case (stage transitions) does not pay the cost of the full nine-item scan every time. The hard-gate *semantics* are unchanged — only the execution cost drops.
+`health-check` plays two roles, and its execution is split into two tiers so that the cheap, high-frequency case (stage transitions) does not pay the cost of the full nine-item scan every time. The hard-gate *semantics* are unchanged — only the execution cost drops.
 
 ### Two Tiers
 
