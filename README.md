@@ -68,7 +68,7 @@ A markdown-based methodology that keeps the orchestrator **thin but never blind*
 **v0.6** (2026-07-07) — dispatch-default 翻转 + recon 升格,review-adjudicated. Four changes from a real-run diagnosis (worker tasks done by the main window instead of dispatched):
 
 1. **Dispatch-default 翻转 (P0+P0.5)** — Stage 3 task 默认必须 dispatch 给 sub-agent;无 sub-agent 能力则中断(提示换 opencode/pi/codex),不退化、不自执行、不污染 prompt。主窗口职责限定为 triage/orient/plan/review/integrate/archive + 串行集成区写入。六处叙事同批改(glossary / evidence-contract / landing-contract / scheduler-rules / worker-report)。
-2. **命名硬化 + trim rule (P1)** — 7 处措辞硬化(eval-guide / coder / worker-report / project-state / task-board / task-packet)。worker-report 新增 trim rule:control agent 收 worker 回报只收 Result + Checks summary + verdict-level evidence + named risks,raw output 落 output.md。
+2. **命名硬化 + trim rule (P1)** — 7 处措辞硬化(references / coder / worker-report / project-state / task-board / task-packet)。worker-report 新增 trim rule:control agent 收 worker 回报只收 Result + Checks summary + verdict-level evidence + named risks,raw output 落 output.md。
 3. **recon 升格 (P2)** — recon 从「主窗口顺手做」升格为 Plan 阶段的第一个 sub-agent task packet;phase-plan 加 Human Decision、triage 偏好透传、scheduler-rules 三信号、researcher 分支、eval case 10。
 4. **清理 (P3)** — archive-entry Raw Material Handling 锁注释 + art-lab/manual-trial 措辞对齐。
 
@@ -88,24 +88,11 @@ See dogfood traces in `.enloom/2026-07-06-enloom-v06/`.
 
 **Non-Goals (review-added):** heterogeneous task grouping (S3); formal enloom↔clear-mind failure-downgrade protocol (X1); Pre-flight substage (S2 downgraded to guidance). See [design/2026-07-01-enloom-v0.5-optimization-design.md](design/2026-07-01-enloom-v0.5-optimization-design.md).
 
-**v0.4** (2026-06-30) — two legs, both from real-run diagnosis:
+**v0.4** (2026-06-30) — two legs from real-run diagnosis: (1) **project-level namespace** (`.enloom/` → `task_board.md` + per-project dir), (2) **landing time contract** (every stage gains entry/exit gates; mechanizes Laws 2 & 5 so worker output lands as files). See [design/v0.4-project-namespace-spec.md](design/v0.4-project-namespace-spec.md).
 
-1. **Project-level namespace** — `.enloom/` reorganized from a single global state into a `task_board.md` entry table + one directory per project (`<created>-<project>/`). Same-named projects reuse their directory on second entry (timestamp = creation date, fixed). Solves "second run can't find the task, state from all tasks piled in one file."
-2. **Landing time contract** — every lifecycle stage now has entry/exit **gates** (file-existence checks); a control↔worker handshake sequence makes worker output land as files, not chat replies. Mechanizes Laws 2 & 5 (dispatch needs `task.md`; archive needs every `report.md`'s Review Result filled) to the same standard Law 4 already held. Diagnosis: a real run left `tasks/` and `runs/` entirely empty while `project_state.md` claimed completed phases.
+**v0.3.3 / v0.3.2 / v0.3.1 / v0.3 / v0.2 / v0.1** — full per-version detail (rename to Enloom, prompt-control lessons, lifecycle rewrite, eval suite bootstrap, initial doc skill) lives in [PROGRESS.md](PROGRESS.md) version-history table, or `git log --oneline`. Each version preserved as a one-line conclusion + commit hash.
 
-See [design/v0.4-project-namespace-spec.md](design/v0.4-project-namespace-spec.md).
-
-**v0.3.3** — renamed `AgentOS / agentos-workflow` → **Enloom**. Zero functional change; pure rename + productization rewrite. The skill's internal `name` is now `enloom`, and its runtime working files now write to a hidden `.enloom/` directory (out of the user's way by default).
-
-**v0.3.2** — absorbed epistemic-discipline + repair-plan-discipline lessons from art_lab `.research/`.
-
-**v0.3.1** — absorbed P7/P8 prompt-control lessons + script-execution pitfalls.
-
-**v0.3** (2026-06-24) — rewrote SKILL.md from a 6-operation menu to a lifecycle of 6 stages; deeply internalized five art_lab hard lessons (Registry / Evidence Contract / Ownership+Promise / Compaction / Audit) as a generic file protocol. Self-bootstrapped: built v0.3 using its own lifecycle, leaving traces in `AgentOS/` (frozen v0.3 snapshot).
-
-**v0.2 / v0.1** — see [PROGRESS.md](PROGRESS.md).
-
-> Honest blind spot / 诚实盲区: the lessons come from art_lab's single domain (wiki ingest); generalization to a second domain is **unverified**. The trigger-eval 20/20 baseline was scored against the pre-rename name+description — Enloom's trigger accuracy is **pending re-run**.
+> Honest blind spot / 诚实盲区: the lessons come from art_lab's single domain (wiki ingest); generalization to a second domain is **unverified**. The historical trigger-eval 20/20 baseline (the eval suite has since been retired — it was a pre-dogfood description-only test that could not keep up with the iteration cadence after v0.6) was scored on a **single model** (deepseek-v4-pro) and was **not** a host-native trigger integration test. Behavior is now validated on real tasks via dogfood, not a standalone suite. The full unclosed-risk list is centralized in [PROGRESS.md § Registry — 未闭合风险](PROGRESS.md) (cross-model trigger, second-domain generalization, prompt-assets load-bearing, virtual parallelism, compaction first-real-run).
 
 ## Install · 安装
 
@@ -113,10 +100,9 @@ Skill name: `enloom`. Installed globally at `~/.agents/skills/enloom/`. It trigg
 
 ```bash
 # from this repo, package + install (uses skill-creator tooling)
-# package_skill.py auto-strips root evals/ on install
 ```
 
-See [enloom-skill/](enloom-skill/) for the runnable skill package. See [references/eval-guide.md](enloom-skill/references/eval-guide.md) for the eval suite.
+See [enloom-skill/](enloom-skill/) for the runnable skill package.
 
 ## Two directories, two audiences · 两个目录,两个"看见"主体
 
@@ -130,6 +116,7 @@ See [enloom-skill/](enloom-skill/) for the runnable skill package. See [referenc
 ```
 enloom/
 ├── README.md                          this file / 本文件
+├── AGENTS.md                          agent working guide (what to touch, what's frozen)
 ├── PROGRESS.md                        progress, next steps, roadmap / 进度、下一步
 ├── .enloom/                           ★ dogfood workspace (v0.4 namespace: task_board + per-project dirs) / 自举工作区
 │   ├── task_board.md                    project-level entry table (v0.4)
@@ -146,19 +133,15 @@ enloom/
 │   │   ├── registry-and-compaction.md   ★ Registry/Ownership/Promise/Compaction state governance
 │   │   ├── prompt-control.md            orchestration technique (route pre-fill, dispatch, pitfalls)
 │   │   ├── scheduler-rules.md           serial/parallel (three-tier ownership)
-│   │   ├── review-checklist.md · archive-policy.md · eval-guide.md · validation.md · glossary.md
+│   │   ├── review-checklist.md · archive-policy.md · validation.md · glossary.md
 │   │   ├── templates/                   fill-in contracts (phase-plan, task-packet, audit, worker-report, task-board, ...)
 │   │   └── examples/                    triage tree + manual trial + art-lab worked example
 │   ├── prompt-assets/                   worker role assets (researcher / coder / reviewer)
-│   ├── evals/                           9-case decision suite + 20-query trigger suite
 │   └── report.md                        v0.1 acceptance report (historical)
 ├── AgentOS/                           ★ frozen v0.3 self-bootstrap snapshot (legacy naming, intentionally preserved)
-└── design/                            design docs (exploration/reference, not runtime)
-    ├── design-summary.md                V1→V2 evolution, degradation analysis (the design thesis)
-    ├── v0.4-project-namespace-spec.md   ★ v0.4 design spec (namespace + landing time contract)
-    ├── v0.3-lifecycle-spec.md           v0.3 design spec (lifecycle + art_lab internalization)
-    ├── art-lab-prompt-control-lessons.md prompt-control lessons mined from art_lab
-    ├── skill-workflow-draft.md · skill-reference-notes.md
+└── design/                            design archive (closed, not runtime — see design/index.md)
+    ├── index.md                         archive index (7 closed docs, 3552 lines)
+    └── _archive/                        v0.3/v0.4/v0.5 specs + design-summary + art-lab lessons + skill notes
 ```
 
 > Note: `AgentOS/` keeps its legacy name on purpose — it's a frozen v0.3 self-bootstrap snapshot; renaming it would falsify the historical evidence. The runnable skill package lives in `enloom-skill/`.

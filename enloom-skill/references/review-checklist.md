@@ -1,6 +1,6 @@
 # Review Checklist
 
-Verify 阶段(阶段 4)的 gate 清单。v0.3 对齐 [Evidence Contract](evidence-contract.md) 四要素 + 三态 verdict。逐条核对。
+Verify 阶段(阶段 4)的 gate 清单。对齐 [Evidence Contract](evidence-contract.md) 四要素 + 三态 verdict。逐条核对。
 
 ## 读什么(report-first)
 
@@ -29,7 +29,7 @@ Verify 阶段(阶段 4)的 gate 清单。v0.3 对齐 [Evidence Contract](evidenc
 - [ ] 无未解释的高严重问题。
 - [ ] Acceptance Criteria 逐条对照通过。
 
-## 计数自洽检查(v0.5·第 5 维 Claim Consistency)
+## 计数自洽检查(第 5 维 Claim Consistency)
 
 对 report 中任何**可数 claim**(条目数 / 通过率 / 文件数 / 覆盖率),Verify 阶段用独立脚本(`grep -c` / `awk` / `git diff --stat`)对 output 实际重数,比对 report 自报:
 
@@ -55,7 +55,7 @@ Verify 阶段(阶段 4)的 gate 清单。v0.3 对齐 [Evidence Contract](evidenc
 
 - verdict = FAIL 且不可修复:产物不可用、方向错误。
 - 归档为失败样本,不合并状态。
-- **必须登记进 registry 的 `## Rejected Reports`**——失败信号,防重试相同路径(v0.3 新增)。
+- **必须登记进 registry 的 `## Rejected Reports`**——失败信号,防重试相同路径。
 
 ## Registry 更新义务(阶段 4)
 

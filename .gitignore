@@ -3,3 +3,6 @@
 
 # Build artifacts
 enloom-skill/dist/
+
+# Editor / tooling byproducts
+.zcode/

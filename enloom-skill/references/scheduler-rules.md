@@ -2,7 +2,7 @@
 
 串行是默认。并行是例外优化,不是策略。
 
-> **Mode 与约束密度(v0.5)**:task packet 的三种 mode(emergent / recorded / audited)不只是语义标签,还决定**约束密度**——见 [templates/task-packet.md](templates/task-packet.md) 的 mode-differentiated field 表。调度时:探索/侦察 task 用 `emergent`(Forbidden 可空,降低 make-prompt 负担);长期产物用 `recorded`;共享文件/高风险/需独立校验的用 `audited`(Required Verification + Countable outputs 必填,缺则 make-prompt 自检不通过、不准 dispatch)。约束密度匹配复杂度,而非一刀切。
+> **Mode 与约束密度**:task packet 的三种 mode(emergent / recorded / audited)不只是语义标签,还决定**约束密度**——见 [templates/task-packet.md](templates/task-packet.md) 的 mode-differentiated field 表。调度时:探索/侦察 task 用 `emergent`(Forbidden 可空,降低 make-prompt 负担);长期产物用 `recorded`;共享文件/高风险/需独立校验的用 `audited`(Required Verification + Countable outputs 必填,缺则 make-prompt 自检不通过、不准 dispatch)。约束密度匹配复杂度,而非一刀切。
 
 ## 默认 strategy: serial
 
@@ -26,7 +26,7 @@
 
 ## Ownership Table(三阶所有权模型)
 
-v0.3 把「ownership 概念」升级为显式的 **Ownership Table**(铁律 3 升级:No Parallel without Ownership Table)。完整纪律见 [registry-and-compaction.md §2](registry-and-compaction.md)。
+「ownership 概念」在此升级为显式的 **Ownership Table**(铁律 3:No Parallel without Ownership Table)。完整纪律见 [registry-and-compaction.md §2](registry-and-compaction.md)。
 
 三阶所有权模型:
 
@@ -50,9 +50,9 @@ Ownership Table 管「**谁**能写哪个文件」(防写冲突);但 split / mig
 
 并行 split/migrate/merge 批处理:Ownership Table + 路由预填**两者都要**。
 
-## recon 调度(v0.6 P2 reframe:人机决策门 + recommended 信号)
+## recon 调度(人机决策门 + recommended 信号)
 
-> v0.5 的"一段调度指引"在 v0.6 升格为**人机决策门 + recommended 信号**——零结构改动(不新增 stage / 顶层字段 / Role 枚举值 / Pre-flight 子阶段),只复用既有 phase-plan Human Decision 机制。
+> recon 调度走**人机决策门 + recommended 信号**——零结构改动(不新增 stage / 顶层字段 / Role 枚举值 / Pre-flight 子阶段),只复用既有 phase-plan Human Decision 机制。
 
 踩坑实录(art_lab #16):对**不熟的门类 / 不熟的代码库**直接按 Plan 阶段的切分派执行 worker,常因实际规模与规划偏差(原规划 3 agent ~100 条,预研后发现 ~180 条)导致返工。Plan 阶段读的是已有 Registry 风险段,**不是对新任务的领域预研**。
 

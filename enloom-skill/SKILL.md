@@ -73,7 +73,6 @@ Read these on demand — do not load them all into context at once:
 - [references/review-checklist.md](references/review-checklist.md) — the gate conditions for `accepted` / `needs-rework` / `rejected`.
 - [references/archive-policy.md](references/archive-policy.md) — the mechanical closure conditions; no archive without state update.
 - [references/landing-contract.md](references/landing-contract.md) — the stage gate table, control↔worker handshake, and health-check as the stage-transition gate (v0.5: light tier at transitions, full tier at Orient + Verify).
-- [references/eval-guide.md](references/eval-guide.md) — how to run the eval suite (manual and automated paths).
 - [references/validation.md](references/validation.md) — language-neutral structural validation (bash / node / python, no PyYAML).
 - [references/templates/](references/templates/) — the fill-in contracts (phase-plan, task-packet, audit-task-packet, worker-report, project-state, archive-entry).
 - [references/examples/triage-decision-tree.md](references/examples/triage-decision-tree.md) — worked triage examples.

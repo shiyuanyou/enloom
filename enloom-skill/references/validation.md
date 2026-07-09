@@ -83,9 +83,9 @@ echo "Skill is valid!"
 
 ## What this is NOT
 
-- Not a behavior eval. Passing this means the skill is *well-formed*, not that it triggers or decides correctly. That's what [eval-guide.md](eval-guide.md) is for.
+- Not a behavior eval. Passing this means the skill is *well-formed*, not that it triggers or decides correctly. Behavior is judged on real tasks, not a structural check.
 - Not tied to skill-creator's `quick_validate.py`. That script (needs Python + PyYAML) implements the *same* checks and is fine when available — but it is **one implementation**, not the canonical one. This guide is the environment-neutral contract; `quick_validate.py` is a convenient instance of it for Python environments. Use whichever your environment has.
 
 ## Why not ship one script?
 
-Enloom is a zero-code, pure-document skill by design (see PROGRESS.md Non-Goals: no CLI, no runtime). Hard-coding a `validate.sh` or `validate.py` in `scripts/` would make the package depend on one runtime and contradict that stance — the same reason the skill does not bind to a specific eval CLI (see [eval-guide.md](eval-guide.md) Path B). Describing the checks + letting the agent implement them in-situ keeps the package portable and the validation honest — the agent can only validate what its environment can actually run.
+Enloom is a zero-code, pure-document skill by design (see PROGRESS.md Non-Goals: no CLI, no runtime). Hard-coding a `validate.sh` or `validate.py` in `scripts/` would make the package depend on one runtime and contradict that stance. Describing the checks + letting the agent implement them in-situ keeps the package portable and the validation honest — the agent can only validate what its environment can actually run.

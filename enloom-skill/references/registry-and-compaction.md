@@ -6,7 +6,7 @@ The core insight from a real large-scale task: state that records only "what was
 
 ## 1. Registry — Seven Sections
 
-The Registry is a fixed structure of `project_state.md`, not a separate file. v0.4: `project_state.md` lives **inside a project directory** (`.enloom/<created>-<project>/project_state.md`), so the Registry is per-project — each project keeps its own unclosed-risk list, and cross-project risks are never co-mingled. The Compaction Protocol (§4) likewise operates within a single project's state. Seven sections, in this order:
+The Registry is a fixed structure of `project_state.md`, not a separate file. `project_state.md` lives **inside a project directory** (`.enloom/<created>-<project>/project_state.md`), so the Registry is per-project — each project keeps its own unclosed-risk list, and cross-project risks are never co-mingled. The Compaction Protocol (§4) likewise operates within a single project's state. Seven sections, in this order:
 
 | Section | Meaning |
 |---------|---------|
@@ -25,7 +25,7 @@ The wiki-domain words (dead link, promise page) become domain-neutral:
 - **Broken References** covers anything where "a product declared a pointer, but the target is missing or broken" — dead links, failed imports, references to non-existent functions, dangling TODO pointers.
 - **Promised Outputs** covers anything where "worker A declared it will produce X, and worker B already references X" — a forward declaration.
 
-`## Rejected Reports` is new to v0.3: failure reports leave an index so the same failed path is not retried blindly.
+`## Rejected Reports` exists so failure reports leave an index — the same failed path is not retried blindly.
 
 ### Update Discipline
 
@@ -62,7 +62,7 @@ The failure mode this prevents: a worker casually edits the global index/log and
 
 ### Selection Constraint
 
-The serial-integration zone exists on the premise that "global state cannot be append-only parallel." If a task's global state can be designed as an append-only log (conflict-free merge), the integration zone could in theory parallelize — but v0.3 conservatively **defaults the serial-integration zone to single-threaded** unless the Plan stage explicitly argues it can parallelize. This holds the "parallel is the exception" law.
+The serial-integration zone exists on the premise that "global state cannot be append-only parallel." If a task's global state can be designed as an append-only log (conflict-free merge), the integration zone could in theory parallelize — but the default is to **keep the serial-integration zone single-threaded** unless the Plan stage explicitly argues it can parallelize. This holds the "parallel is the exception" law.
 
 ### Lifecycle Hooks
 
@@ -92,6 +92,12 @@ promised_output:
 2. **Execute stage**: worker A may reference an output worker B will create (write a dangling reference), non-blocking; each reference logs into `## Promised Outputs`.
 3. **Verify stage**: an audit check verifies all promised outputs are fulfilled. Unfulfilled = broken, logged into `## Broken References`, triggering point-fix or downgrade.
 
+### Scope — Promise Registry vs. dangling references by convention
+
+The Promise Registry is scoped to **forward declarations made within one phase by one worker that another worker already references** (worker A declares it will produce X; worker B has already written a reference to X). It is the cross-worker, in-phase contract surface.
+
+A dangling reference that a deliverable carries **by convention** is a different animal: a canon page that forward-declares `[[Djembe]]` because the wiki tolerates dangling links is not promising anything to a sibling worker — it is just exercising the storage format's tolerance. Such convention-borne dangling references do **not** enter the Promise Registry. They are tracked as risk: logged in `## Known Exceptions` if intentionally retained, or in `## Accepted With Risk` if they carry a re-check obligation. The dividing question is "did a *worker* promise this to another *worker* in this phase?" — if not, it is convention, not a Promise Registry entry.
+
 ### Degradation Mechanism
 
 Not all storage tolerates dangling references:
@@ -101,13 +107,13 @@ Not all storage tolerates dangling references:
 
 The Plan stage decides "does this task's reference layer tolerate dangling references" — only if it does may promise + parallel be used. This makes the Obsidian constraint (which was implicit in the original task) an explicit, general decision point.
 
-> **v0.5**: the Plan stage no longer makes this decision from scratch each time — it fills the **Reference Tolerance Decision Table** in [templates/phase-plan.md](templates/phase-plan.md), which walks 3–5 common reference types (wikilinks / markdown links / code imports / file paths / schema `$ref`) as worked examples. The table is scaffolding, not a new gate; it saves the agent re-deriving the tolerance call per project.
+> The Plan stage does not make this decision from scratch each time — it fills the **Reference Tolerance Decision Table** in [templates/phase-plan.md](templates/phase-plan.md), which walks 3–5 common reference types (wikilinks / markdown links / code imports / file paths / schema `$ref`) as worked examples. The table is scaffolding, not a new gate; it saves the agent re-deriving the tolerance call per project.
 
 ## 4. Compaction Protocol
 
 ### Problem
 
-State documents bloat. "Compress into state" without compaction discipline just moves context bloat from the chat into the document. v0.2 had a compaction *concept* (<200 lines triggers) but no *protocol* — when to trigger, what to compress, where it goes, how to guarantee no unclosed risk is lost.
+State documents bloat. "Compress into state" without compaction discipline just moves context bloat from the chat into the document. A bare trigger threshold is not enough — without a *protocol* (when to trigger, what to compress, where it goes, how to guarantee no unclosed risk is lost) the compaction concept does not protect the Registry.
 
 ### Core Principle
 
@@ -115,13 +121,13 @@ State documents bloat. "Compress into state" without compaction discipline just 
 
 ### Trigger Conditions (any one)
 
-> **v0.5: these thresholds are heuristics, not dogma.** 200 lines / 10 results / ~3 minutes are tuned from one large-scale run, not derived from theory. If a project legitimately needs a longer state (e.g. a long risk-section list), compaction is about *drift*, not the raw number — apply judgment. The non-dogma note cuts the other way too: a state that reads fine at 250 lines is not a license to skip compaction when the risk sections have grown stale.
+> **These thresholds are heuristics, not dogma.** 200 lines / 10 results / ~3 minutes are tuned from one large-scale run, not derived from theory. If a project legitimately needs a longer state (e.g. a long risk-section list), compaction is about *drift*, not the raw number — apply judgment. The non-dogma note cuts the other way too: a state that reads fine at 250 lines is not a license to skip compaction when the risk sections have grown stale.
 
 - `project_state.md` exceeds ~200 lines.
 - The project_state `## Accepted Results` section crosses a threshold (e.g. 10 archived results) — note this is a top-level section, not one of the Registry seven.
 - A new session's Orient cannot read project_state in ~3 minutes (a subjective but important signal).
 
-### Mandatory vs Skipped (v0.5)
+### Mandatory vs Skipped
 
 Compaction at the Integrate exit gate is **no longer optional**. After every integrate:
 
@@ -145,7 +151,7 @@ The most dangerous compaction failure is "deleted an unclosed risk while compres
 
 ### Lifecycle Hooks
 
-- **Integrate stage (Stage 5)**: after every integrate, **check the trigger conditions**. If a threshold is met, compaction is **mandatory** — it runs within the stage before the exit gate; deferring is not permitted (v0.5 upgrade from optional to enforced). If no threshold is met, record a one-liner ("compaction not triggered") so the skip is auditable.
+- **Integrate stage (Stage 5)**: after every integrate, **check the trigger conditions**. If a threshold is met, compaction is **mandatory** — it runs within the stage before the exit gate; deferring is not permitted (compaction is enforced, not merely a triggered check). If no threshold is met, record a one-liner ("compaction not triggered") so the skip is auditable.
 - **Orient stage (Stage 1)**: on session restore, if project_state is over threshold but not compacted, log a health-check finding (drift signal).
 - **Close stage (Stage 6)**: optionally trigger one compaction before archive so the state is clean on exit.
 

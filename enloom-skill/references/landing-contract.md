@@ -17,7 +17,7 @@ A gate is a **file-existence check** — mechanical, verifiable, no judgment. Th
 | **2 Plan** | project located — `<created>-<project>/` directory exists | `tasks/phase-plan-<phase>.md` exists; phase goal is clear (gate check passes) |
 | **3 Execute** (per task) | **`runs/<TASK>/task.md` exists** ← Law 2 gate | **`runs/<TASK>/output.md` exists** + **`runs/<TASK>/report.md` exists** + report has a Result section (done/blocked/failed) |
 | **4 Verify** | `runs/<TASK>/report.md` exists with Evidence Contract four elements | `runs/<TASK>/report.md`'s Review Result section is filled (verdict + conclusion) |
-| **5 Integrate** | every task of this phase has its report's Review Result section filled | `project_state.md` + Registry updated; **compaction run or threshold not met** (v0.5: upgraded from "trigger check run" — exceeding a threshold now *forces* compaction before exit; a non-triggered skip must be recorded as a one-liner) |
+| **5 Integrate** | every task of this phase has its report's Review Result section filled | `project_state.md` + Registry updated; **compaction run or threshold not met** (exceeding a threshold *forces* compaction before exit; a non-triggered skip must be recorded as a one-liner) |
 | **6 Close** | Integrate exit gates all pass | `archive/<phase>-entry.md` exists; old `runs/` content archived or declared discarded |
 
 All paths are project-relative: `.enloom/<project>/runs/<TASK>/...` — see [File Protocol](../SKILL.md) for the namespace layer.
@@ -63,11 +63,13 @@ control agent                worker                disk (.enloom/<project>/)
 
 **The physical premise:** dispatch hands the worker a *path* to `task.md`, not a verbal task description. The worker's deliverable is `output.md` + `report.md` on disk, not a chat reply. A worker that returns "done" without those files has not completed — the Stage 3 exit gate fails and the control agent routes it back.
 
+**Dispatch content vs. path — an implementation detail, not a gate question.** Handing the worker the `task.md` *path* is the Law 2 gate requirement: the durable artifact must exist on disk before dispatch (the entry gate checks `runs/<TASK>/task.md`), so the contract survives a session crash and a later Verify can re-read it. *How the worker obtains the packet's content* is below the gate: a sub-agent runtime that re-reads the file from the path satisfies Law 2, and so does a front-stage dispatch that embeds the packet content into the worker's prompt — provided the on-disk `task.md` already exists in both cases. The gate cares about the durable artifact surviving; the delivery channel (path-read vs. prompt-embedded) is free to vary. Either way the packet is the contract, and `output.md` / `report.md` must still land on disk to satisfy the exit gate.
+
 ## 3. Law 2 / Law 5 mechanization (aligned with Law 4)
 
-Law 4 (Evidence Contract) is already mechanized: `verdict = PASS` **iff** all declared checks ran and evidence is non-empty. Laws 2 and 5 were statements in v0.3; v0.4 raises them to the same mechanical standard.
+Law 4 (Evidence Contract) is already mechanized: `verdict = PASS` **iff** all declared checks ran and evidence is non-empty. Laws 2 and 5 are raised to the same mechanical standard — each is a file-existence gate, not a statement of intent.
 
-| Law | v0.3 (statement) | v0.4 (mechanized) |
+| Law | Statement (intent) | Mechanized (gate) |
 |---|---|---|
 | **Law 2** — no Worker without Task Packet | stated | **Pre-dispatch gate: `runs/<TASK>/task.md` must exist.** Control self-check + health-check double-verify. Missing → no dispatch; fall back to Plan. |
 | **Law 5** — no Archive without State Update | stated (extended: registry processed) | **Pre-archive gate: every task's `report.md` Review Result section is filled + project_state/Registry updated.** health-check hard-verifies. Missing → no archive. |
@@ -76,14 +78,14 @@ The Five Laws become uniformly mechanical: Law 2 governs dispatch entry, Law 4 g
 
 ## 4. health-check as the stage-transition hard gate
 
-`health-check` is no longer just a periodic drift detector (its v0.3 role). v0.4 promotes it to the **stage-transition gate executor**: at every stage boundary, it verifies the previous stage's exit-gate files and reports drift findings on any gap.
+`health-check` serves two roles: a periodic drift detector and the **stage-transition gate executor**. At every stage boundary, it verifies the previous stage's exit-gate files and reports drift findings on any gap.
 
 - Run on Stage transition (1→2→3→4→5→6), not only periodically.
-- **v0.5 light tier at transitions**: at a stage boundary, health-check runs **only the file-existence check for that transition's gate** — a one/two-line mechanical confirmation (e.g. `ls runs/<TASK>/task.md`), emitting a single-line "Gates OK" on pass. It does *not* expand the full nine-item scan at every transition. The full tier runs at Orient entry and periodic Verify drift checks (see [workflow-steps.md §Health Check](workflow-steps.md)). The hard-gate semantics are unchanged; only the execution cost drops.
+- **Light tier at transitions**: at a stage boundary, health-check runs **only the file-existence check for that transition's gate** — a one/two-line mechanical confirmation (e.g. `ls runs/<TASK>/task.md`), emitting a single-line "Gates OK" on pass. It does *not* expand the full nine-item scan at every transition. The full tier runs at Orient entry and periodic Verify drift checks (see [workflow-steps.md §Health Check](workflow-steps.md)). The hard-gate semantics are unchanged; only the execution cost drops.
 - It reports findings; it does not auto-fix (control agent fills the gap).
 - A drift finding is a Law violation signal — the control agent must resolve it before advancing.
 
-This is the second insurance layer: even if the control agent forgets to self-check, health-check catches the missing file at the boundary. Two independent checks (self-check + health-check) make a skipped landing far harder than either alone. The v0.5 light tier keeps this insurance while respecting the attention budget — 95% of transitions only need the existence check.
+This is the second insurance layer: even if the control agent forgets to self-check, health-check catches the missing file at the boundary. Two independent checks (self-check + health-check) make a skipped landing far harder than either alone. The light tier keeps this insurance while respecting the attention budget — 95% of transitions only need the existence check.
 
 ## 5. Sub-agent requirement
 
