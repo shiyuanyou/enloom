@@ -23,8 +23,8 @@
 
 - **`design/_archive/AgentOS/`** — v0.3 自举快照（legacy 命名故意保留）。整目录 `git mv` 归档，内部 45 文件 / 结构 / 200+ 自引用全部不动。
 - **`design/_archive/clear-mind/`** — clear-mind skill 的历史工作痕迹（2026-07-02 ~ 2026-07-07）。注意：`workflow-steps.md` 里 `.clear-mind/<project>/review.md` 是 clear-mind 的**活输出路径**，下次运行会重建 `.clear-mind/` 写新文件——归档的只是历史内容。
-- **`.enloom/archive/<project>/`** — 各版本 closed dogfood 项目（v04/v05/v06/clearmind-align/repo-hygiene），从 `.enloom/` 顶层折叠进来。每个项目内部互引是过程凭据，随目录迁移不改。折叠由 `fold` sub-action 驱动（Stage 0 Triage 时 closed 堆积 ≥3 触发，见 archive-policy.md §Project Fold）；task_board 行不动。
-- **`.enloom/project_state.md`（冻结 v0.3.3 单状态）+ `.enloom/runs/`（trigger-eval）** — 留在 `.enloom/` 原地不动。
+- **`.enloom/archive/<created>-<project>/`** — 各版本 closed dogfood 项目（v033-rename/v04/v05/v06/clearmind-align/repo-hygiene），从 `.enloom/` 顶层折叠进来。v033-rename 是 v0.4 前的旧单状态结构遗留（project_state + runs 散在根目录），现一并归档。每个项目内部互引是过程凭据，随目录迁移不改。折叠由 `fold` sub-action 驱动（Stage 0 Triage 时 closed 堆积 ≥3 触发，见 archive-policy.md §Project Fold）；task_board 行不动。
+- **`.enloom/` 根目录** 现在只剩 `task_board.md`（活索引）+ `archive/`（fold 目标）+ 未来新项目目录。
 
 可以改的是：`enloom-skill/SKILL.md`、`enloom-skill/references/`、`enloom-skill/prompt-assets/`、`README.md`、`PROGRESS.md`、`CHANGELOG.md`、`AGENTS.md`、新建 `.enloom/<today>-<project>/`。
 

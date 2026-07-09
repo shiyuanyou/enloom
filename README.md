@@ -93,9 +93,7 @@ enloom/
 ├── PROGRESS.md                        progress, next steps, roadmap / 进度、下一步
 ├── .enloom/                           ★ dogfood workspace (v0.4 namespace: task_board + per-project dirs) / 自举工作区
 │   ├── task_board.md                    project-level entry table (v0.4)
-│   ├── project_state.md                 frozen v0.3.3 single-state dogfood (historical)
-│   ├── runs/                            trigger-eval (v0.3.3 rename 产物)
-│   └── archive/                         closed dogfood projects 折叠于此 (fold 机制目标; v04/v05/v06/clearmind-align/repo-hygiene)
+│   └── archive/                         closed dogfood projects 折叠于此 (fold 机制目标; v033-rename/v04/v05/v06/clearmind-align/repo-hygiene)
 ├── enloom-skill/                      ★ runnable skill package
 │   ├── SKILL.md                         skill entry (name: enloom, lifecycle-driven + landing discipline)
 │   ├── references/                      lifecycle + contracts + templates + examples

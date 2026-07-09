@@ -22,9 +22,10 @@ Enloom 的版本演进日志。每版一行结论 + 入口 commit；细节 `git 
 
 1. **`AgentOS/` → `design/_archive/AgentOS/`** — v0.3 自举快照整目录归档，内部 45 文件 / legacy 命名 / 200+ 自引用全部不动。运行包 `enloom-skill/` 对它零依赖。
 2. **`.clear-mind/` → `design/_archive/clear-mind/`** — clear-mind skill 历史工作痕迹（2026-07-02 ~ 2026-07-07）归档。注意 `workflow-steps.md` 里 `.clear-mind/<project>/review.md` 是 clear-mind 的活输出路径，给未来新产物用——归档的只是历史内容。
-3. **`.enloom/` 5 个 closed 项目 → `.enloom/archive/`** — v04/v05/v06/clearmind-align/repo-hygiene 从 `.enloom/` 顶层折叠到 `.enloom/archive/`；`task_board.md`（用名字索引）、`project_state.md`（冻结 v0.3.3）、`runs/`（trigger-eval）留原地不动。
+3. **`.enloom/` 5 个 closed 项目 → `.enloom/archive/`** — v04/v05/v06/clearmind-align/repo-hygiene 从 `.enloom/` 顶层折叠到 `.enloom/archive/`；`task_board.md`（用名字索引）留原地。
 4. **AGENTS.md 规则同步** — 原「冻结证据 — 不要动」段改为「归档证据 — 正文不改」：位置更新、保护逻辑（正文不动，靠 git 历史）保留，消除「不要整理」与「已归档移动」的自相矛盾。
 5. **新增 `fold` 机制（项目级折叠）** — 上面第 3 点手工折叠催生的方法论缺口：现有 archive 只有 phase 级（`archive/<phase>-entry.md`），没有 project 级。新增 `fold` sub-action：Stage 0 Triage 时 closed 项目堆积 ≥3 → 派 sub-agent 把目录从 `.enloom/` 顶层 mv 到 `.enloom/archive/`，task_board 行不动。本次 5 项目折叠即其 worked example。落点：archive-policy.md §Project Fold + workflow-steps §Stage 0 + SKILL.md sub-action 表 + glossary/task-board 模板。
+6. **v0.3.3 旧单状态遗留物归档** — `.enloom/project_state.md`（冻结 v0.3.3 单状态）+ `.enloom/runs/`（trigger-eval）是 v0.4 命名空间规矩前的遗留，散在 `.enloom/` 根目录不合规矩。移到 `.enloom/archive/2026-06-24-v033-rename/`，`.enloom/` 根目录现在只剩 `task_board.md` + `archive/`。注：该 project_state.md 正文里的 `AgentOS` 是 v0.3.3 重命名项目「当时在做什么」的历史事实，非过时引用，按「归档证据—正文不改」保留。
 
 ---
 
