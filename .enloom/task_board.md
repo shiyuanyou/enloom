@@ -1,6 +1,8 @@
 # Task Board
 
 > 项目级索引。任务详情进各项目 project_state.md。Orient 第一步读本表。
+>
+> 注：以下 closed 项目目录已于 2026-07-09 折叠到 `.enloom/archive/<project>/`；表内 project 列用名字索引，路径变化不影响查找。
 
 | project | created | updated | phase | desc |
 |---|---|---|---|---|

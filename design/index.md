@@ -32,3 +32,14 @@ live skill 对 `design/` 的引用数为 0（已 `grep -rl 'design/' enloom-skil
 | `2026-06-15-v01-acceptance-report.md` | 63 | v0.1 验收报告（非设计文档）；历史归档，从 `enloom-skill/report.md` 移入。 |
 
 共 8 文件，3,615 行。归档日期：2026-07-09（v0.1 验收报告 2026-07-09 追加）。
+
+## 归档目录（design/_archive/）
+
+除上述闭合设计文档外，`design/_archive/` 还收两份**工程过程证据**（性质不同于设计推理，但统一归档入口）。均整目录 `git mv` 迁入，内部内容不动，证据真实性靠 git 历史：
+
+| 目录 | 内容 | 来源 |
+|---|---|---|
+| `AgentOS/` | enloom v0.3 自举快照（45 文件：tasks/runs/decisions/dist，legacy 命名故意保留） | 2026-07-09 从顶层 `AgentOS/` 归档 |
+| `clear-mind/` | clear-mind skill 历史工作痕迹（2026-07-02 ~ 2026-07-07，4 个分析项目） | 2026-07-09 从顶层 `.clear-mind/` 归档 |
+
+> 注：`enloom-skill/references/workflow-steps.md` 中 `.clear-mind/<project>/review.md` 是 clear-mind 的**活输出路径**，给未来新产物用；归档的是到 2026-07-07 为止的历史内容。

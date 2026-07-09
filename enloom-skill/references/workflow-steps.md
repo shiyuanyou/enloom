@@ -61,6 +61,9 @@ Enloom needs at least two of these triggers:
 
 Gate: single-file edits, clear bug fixes, one-off scripts, and direct Q&A default to `direct`. User explicit request → `enloom`. See [trigger-contract.md](trigger-contract.md).
 
+**Workspace hygiene check**（进新任务前）:
+若 task_board 中 `phase=closed` 的项目,其目录仍堆在 `.enloom/` 顶层(非 `.enloom/archive/`)且 ≥ 3 个 → 先派 sub-agent 执行 `fold`(见 [archive-policy.md](archive-policy.md) §Project Fold),再做 Triage 正事。fold 只 mv 目录,task_board 行不动。
+
 ## Stage 1: Orient
 
 Goal: restore enough state for the control agent to make a good next decision — thin orchestrator, but never blind.

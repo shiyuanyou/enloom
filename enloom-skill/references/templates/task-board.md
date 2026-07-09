@@ -20,7 +20,7 @@
 - **Orient(Stage 1)** — control agent reads this:读本表 → 定位目标 project 行(用户指明 / 唯一活跃 / 最近 updated)→ `cd .enloom/<created>-<project>/` → 读该项目 `project_state.md`。
 - **新项目**:无匹配行 → 建 `<今天>-<projectName>/` 目录 + 初始化 project_state.md + 在本表加一行(`created`=今天)。
 - **复用**:同名 project 已有行 → 复用其目录,只更新 `updated`,不新建目录、不改 `created`。
-- **闭合**:phase 列标 `closed`,行不删(历史可查)。
+- **闭合**:phase 列标 `closed`,行不删(历史可查)。closed 项目目录会在堆积 ≥3 时由 `fold` 折叠到 `.enloom/archive/`(见 [archive-policy.md](../archive-policy.md) §Project Fold);task_board 行不随之改动。
 
 ## 不要
 

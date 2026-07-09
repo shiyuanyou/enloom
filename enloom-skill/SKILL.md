@@ -45,6 +45,7 @@ Read [references/workflow-steps.md](references/workflow-steps.md) for the full s
 | `review` | 4 Verify | accept every worker on evidence |
 | `audit` | 4 Verify | periodic / pre-release verification |
 | `archive` | 6 Close | close the phase after state update |
+| `fold` | 0 Triage | 折叠 closed 项目目录到 .enloom/archive/（堆积 ≥3 时） |
 | `health-check` | 1 Orient + 4 Verify | periodic drift / risk-section check |
 
 ## The Five Laws

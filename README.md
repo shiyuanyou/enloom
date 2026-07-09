@@ -94,8 +94,8 @@ enloom/
 ├── .enloom/                           ★ dogfood workspace (v0.4 namespace: task_board + per-project dirs) / 自举工作区
 │   ├── task_board.md                    project-level entry table (v0.4)
 │   ├── project_state.md                 frozen v0.3.3 single-state dogfood (historical)
-│   ├── 2026-06-30-enloom-v04/           v0.4 dogfood project (namespace + landing-contract self-trial)
-│   └── archive/
+│   ├── runs/                            trigger-eval (v0.3.3 rename 产物)
+│   └── archive/                         closed dogfood projects 折叠于此 (fold 机制目标; v04/v05/v06/clearmind-align/repo-hygiene)
 ├── enloom-skill/                      ★ runnable skill package
 │   ├── SKILL.md                         skill entry (name: enloom, lifecycle-driven + landing discipline)
 │   ├── references/                      lifecycle + contracts + templates + examples
@@ -110,13 +110,12 @@ enloom/
 │   │   ├── templates/                   fill-in contracts (phase-plan, task-packet, audit, worker-report, task-board, ...)
 │   │   └── examples/                    triage tree + manual trial
 │   ├── prompt-assets/                   worker role assets (researcher / coder / reviewer)
-├── AgentOS/                           ★ frozen v0.3 self-bootstrap snapshot (do not rename)
 └── design/                            design archive (closed, not runtime — see design/index.md)
-    ├── index.md                         archive index (7 closed docs, 3552 lines)
-    └── _archive/                        v0.3/v0.4/v0.5 specs + design-summary + art-lab lessons + skill notes
+    ├── index.md                         archive index (8 closed docs + AgentOS/clear-mind 过程快照)
+    └── _archive/                        design specs + AgentOS v0.3 自举快照 + clear-mind 工作痕迹
 ```
 
-> Note: `AgentOS/` is a frozen v0.3 self-bootstrap snapshot — do not rename. The runnable skill package lives in `enloom-skill/`.
+> Note: `AgentOS/` v0.3 自举快照与 `.clear-mind/` 历史产物已归档至 `design/_archive/`（正文不动，证据真实性靠 git 历史）。The runnable skill package lives in `enloom-skill/`.
 
 ## Controls (sub-actions) · 子动作
 

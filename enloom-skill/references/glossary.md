@@ -16,7 +16,7 @@
 | **Review Budget** | verify 方允许读取的材料与成本。路由规则,不只是长度限制。 |
 | **Project State** | 当前项目压缩状态(`project_state.md`)。目标 3 分钟读完,<200 行触发 compaction。含 Registry 七区段。`project_state.md` 住在**项目目录内**(`.enloom/<project>/`),非全局唯一。 |
 | **Decisions** | 影响后续工作的关键决策记录(`decisions.md`)。 |
-| **Archive** | 已闭合任务的过程材料 + 归档条目。 |
+| **Archive** | 已闭合任务的过程材料 + 归档条目;已闭合项目(fold 后)的折叠目录。 |
 | **Done Signal** | Worker 完成后的明确标记:`done` / `blocked` / `failed`。 |
 
 ## 状态治理术语(Registry / Ownership / Promise / Compaction / Evidence Contract)
@@ -41,6 +41,7 @@
 | **task_board** | 唯一入口表(`.enloom/task_board.md`)。一行一 Project,字段 project/created/updated/phase/desc。Orient 第一步读它定位目标 Project。只索引项目,不索引任务。 |
 | **Gate / 闸门** | Stage 转移的机械检查 = 文件存在性。每个 Stage 有入口/出口闸门(如 Stage 3 入口:`runs/<TASK>/task.md` 必存在)。control 自检 + health-check 硬闸门双保险。完整表见 [landing-contract.md](landing-contract.md)。 |
 | **Landing / 落盘** | worker 产出必须落盘成文件(output.md/report.md),不能只留对话上下文。dispatch 交的是 task.md 路径,非口头描述。是闸门表成立的物理前提,也是铁律 2/5 机械化的基础。 |
+| **Fold / 折叠** | 项目级目录折叠。closed 项目目录从 `.enloom/` 顶层移到 `.enloom/archive/`,由 `fold` sub-action 执行(Stage 0 Triage 时堆积 ≥3 触发)。区别于 archive(phase 级归档)。task_board 行不动。 |
 
 ## 验证术语(Claim Consistency / health-check 两档 / Honest Blind Spots / Reference Tolerance / Mode-differentiated / recon)
 
