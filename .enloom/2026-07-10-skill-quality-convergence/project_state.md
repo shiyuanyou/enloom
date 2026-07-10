@@ -6,13 +6,13 @@
 
 ## Current Phase
 
-**P3 — Ownership/Runtime/Role-Asset 冻结：accepted 2026-07-10；P4 未开始。**
+**P4 — Namespace/Validation/机械链接：accepted 2026-07-10；P5 未开始。**
 
-- T-P3-01（PASS/accepted）：landing-contract.md C07/RA3 file-level artifact ownership（7-row table，review-result.md 为独立 control-owned artifact）；scheduler-rules.md C08 4-dimension runtime capability + hard/soft unknown policy；SKILL.md C09 5-role deterministic route table。
-- T-P3-02（PASS/accepted）：9 consumer 对齐——worker-report 删除 `## Review Result` 段；task/audit-packet 加 review-result.md Forbidden + Control Review Result Path；review-checklist/workflow-steps/archive-policy gate 引用改 review-result.md；reviewer.md 权限改为只写自己 run；glossary 加 file-level ownership 术语。
+- T-P4-01（PASS/accepted）：task-board.md C10 两根 resolver（active + archive，exactly one resolves）+ RA4 error enum 引用 + reopen 语义；validation.md C11 V01 5-enum + V02 3-enum + flat fallback UNSUPPORTED + C13 §Markdown Reference Integrity owner 段。
+- T-P4-02（PASS/accepted）：2 处 C13 机械缺陷修复（worker-report `[Registry §1](...)` + task-packet `[Ownership Table §2](...)`）；workflow-steps/SKILL/glossary C10 resolver 消费者对齐；AGENTS C13 owner 指向 validation.md。
 - Source/installed parity 验证通过（`diff -qr` exit 0）。
-- Exit Gate：worker-report `## Review Result` = 0；review-result.md 在 4 consumer 均有引用；旧 dual-ownership = 0；C08 4 维度 + C09 5 角色。
-- Compaction check：未触发（state ~125 lines，Accepted Results 9，低于阈值）。
+- Exit Gate：C13 defect regex 全模板 0 hit；C10 resolver 在 2 consumer 有引用；C11 V01=5/V02=3 enum。
+- Compaction check：未触发（state ~130 lines，Accepted Results 11，低于阈值）。
 
 ### Progressive Convergence Ladder
 
@@ -47,6 +47,8 @@
 - T-P2-02（PASS/accepted）：4 consumer 对齐 fold 时序、Stage 3 entry gate、RA2 引用、C05 phrase guard；见 `runs/T-P2-02/`。
 - T-P3-01（PASS/accepted）：C07/RA3 file-level ownership + C08 runtime capability + C09 role route 落地 3 owner；见 `runs/T-P3-01/`。
 - T-P3-02（PASS/accepted）：9 consumer 对齐 RA3 review-result.md split + C08/C09 引用；见 `runs/T-P3-02/`。
+- T-P4-01（PASS/accepted）：C10 两根 resolver + C11 V01/V02 enum + C13 owner 落地 2 owner；见 `runs/T-P4-01/`。
+- T-P4-02（PASS/accepted）：2 C13 机械缺陷修复 + 4 consumer C10/C13 对齐；见 `runs/T-P4-02/`。
 
 ## Registry
 
@@ -67,6 +69,9 @@
 | P3 phase plan | completed | P3 accepted；archive entry 已落盘 |
 | T-P3-01 | accepted | PASS；C07/RA3 + C08 + C09 落地 3 owner |
 | T-P3-02 | accepted | PASS；9 consumer 对齐 RA3 review-result.md split |
+| P4 phase plan | completed | P4 accepted；archive entry 已落盘 |
+| T-P4-01 | accepted | PASS；C10 resolver + C11 enum + C13 owner 落地 |
+| T-P4-02 | accepted | PASS；2 C13 机械修复 + 4 consumer 对齐 |
 
 ### Promised Outputs
 
@@ -74,8 +79,8 @@
 
 ### Pending Dependencies
 
-- P4 必须落地 namespace resolver（C10 task-board.md）、validation paths（C11）、Markdown link 修复（C13）；C07/C08/C09 已落地为 P3 的前置条件。
-- P5/P6 按 T-P0-02 graph 串行推进。
+- P5 必须落地命名清理（C05）、兼容性 preflight（C12）、Install 文档（C14）；C10/C11/C13 已落地为 P4 的前置条件。
+- P6 dogfood/close 按 graph 推进。
 - P3/P5 的 host-native prompt、runtime capability、跨模型 trigger 证据取决于可用 runtime；不可用时必须标成未验证。
 - P4/P5 的 validator、install command、renderer 与目录 move recovery 仍需执行证据；不能用静态矩阵冒充运行通过。
 
@@ -109,6 +114,7 @@
 - P1 done 2026-07-10, `accepted`; Evidence Contract totality + consumer alignment 见 `archive/P1-entry.md`。
 - P2 done 2026-07-10, `accepted`; lifecycle/dispatch/fold 去环化 + consumer alignment 见 `archive/P2-entry.md`。
 - P3 done 2026-07-10, `accepted`; ownership/runtime/role-asset 冻结 + consumer alignment 见 `archive/P3-entry.md`。
+- P4 done 2026-07-10, `accepted`; namespace/validation/机械链接 + consumer alignment 见 `archive/P4-entry.md`。
 
 ## Human Decisions Needed
 
@@ -117,4 +123,4 @@
 
 ## Next Review Point
 
-P4 phase plan/packet review；namespace/validation/机械链接是下一个收敛簇（C10 + C11 + C13）。任何 source change 仍需同 phase source/installed sync、diff parity、独立 review 与 commit gate。
+P5 phase plan/packet review；命名/兼容性/安装是下一个收敛簇（C05 + C12 + C14）。description 编辑需先有 trigger 证据（F-D7-02）。任何 source change 仍需同 phase source/installed sync、diff parity、独立 review 与 commit gate。

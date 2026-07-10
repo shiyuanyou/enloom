@@ -39,11 +39,11 @@
 
 | 术语 | 含义 |
 |------|------|
-| **Project** | 顶层命名空间单元。`.enloom/` 下一个 `<创建时间>-<项目名>` 目录 = 一个 Project,内含自己的 project_state / Registry / tasks / runs / archive。跨 Project 状态不混。同名 Project 第二次进入复用已有目录(时间戳=创建日,固定)。 |
-| **task_board** | 唯一入口表(`.enloom/task_board.md`)。一行一 Project,字段 project/created/updated/phase/desc。Orient 第一步读它定位目标 Project。只索引项目,不索引任务。 |
+| **Project** | 顶层命名空间单元。`.enloom/` 下一个 `<创建时间>-<项目名>` 目录 = 一个 Project,内含自己的 project_state / Registry / tasks / runs / archive。跨 Project 状态不混。同名 Project 第二次进入复用已有目录(时间戳=创建日,固定)。**定位走 C10 两根 resolver**(同时检查 active 根 `.enloom/<created>-<project>/` 与 archive 根 `.enloom/archive/<created>-<project>/`,fold 后的 closed 项目从 archive 根解析,不可无条件假设在 active 根)。 |
+| **task_board** | 唯一入口表(`.enloom/task_board.md`)。一行一 Project,字段 project/created/updated/phase/desc。Orient 第一步读它定位目标 Project,再跑 C10 两根 resolver 解析到唯一目录。只索引项目,不索引任务。 |
 | **Gate / 闸门** | Stage 转移的机械检查 = 文件存在性。每个 Stage 有入口/出口闸门。**Stage 3 入口 = 接受的 phase plan 存在**(C03:非 packet;packet 由 `make-prompt` 在 Stage 3 内创建,之后 **Law 2 预派发闸门**检查 packet 存在才允许 dispatch)。control 自检 + health-check 硬闸门双保险。完整表见 [landing-contract.md](landing-contract.md)。 |
 | **Landing / 落盘** | worker 产出必须落盘成文件(output.md/report.md),不能只留对话上下文。dispatch 交的是 task.md 路径,非口头描述。是闸门表成立的物理前提,也是铁律 2/5 机械化的基础。 |
-| **Fold / 折叠** | 项目级目录折叠。closed 项目目录从 `.enloom/` 顶层移到 `.enloom/archive/`。**触发时机(C04):Stage 0 Triage 决定 `enloom` 之后**(非 Triage 前);`direct`/`light-plan` 不触发。**control 直接执行的串行 namespace 操作,不派 sub-agent**。条件:phase=closed + 目录在顶层 + closed 顶层项目 ≥3。区别于 archive(phase 级归档)。task_board 行不动。详见 [archive-policy.md](archive-policy.md) §Project Fold。 |
+| **Fold / 折叠** | 项目级目录折叠。closed 项目目录从 `.enloom/` 顶层移到 `.enloom/archive/`。**触发时机(C04):Stage 0 Triage 决定 `enloom` 之后**(非 Triage 前);`direct`/`light-plan` 不触发。**control 直接执行的串行 namespace 操作,不派 sub-agent**。条件:phase=closed + 目录在顶层 + closed 顶层项目 ≥3。区别于 archive(phase 级归档)。task_board 行不动。**fold 后项目从 archive 根解析**(C10 两根 resolver:active 与 archive 两候选,fold 让路径变化对查找透明)。详见 [archive-policy.md](archive-policy.md) §Project Fold;resolver 规范见 [templates/task-board.md §Resolver](templates/task-board.md)。 |
 
 ## 验证术语(Claim Consistency / health-check 两档 / Honest Blind Spots / Reference Tolerance / Mode-differentiated / recon)
 

@@ -41,7 +41,7 @@ done | blocked | failed
 
 ## Registry Updates
 
-> Broken references / accepted-with-risk / rejected / promised outputs discovered. Lands in the matching [Registry](../registry-and-compaction.md §1) section.
+> Broken references / accepted-with-risk / rejected / promised outputs discovered. Lands in the matching [Registry §1](../registry-and-compaction.md) section.
 
 
 ## State Update

@@ -120,6 +120,8 @@ Recommended project-local layout. Enloom writes its working files under a **hidd
 
 `task_board.md` is the namespace entry point — the first thing Orient reads to locate the target project. Each project keeps its own `project_state.md`, Registry, tasks, runs, and archive; cross-project state is never co-mingled. A same-named project entered a second time **reuses** its existing directory (timestamp = creation date, fixed) and only updates the `updated` column — it does not create a new one.
 
+**Locating a project — two-root resolution (C10).** Never assume a project sits at the active root `.enloom/<created>-<project>/`. From the row's stable slug + `created`, the resolver checks **both** candidate roots — active `.enloom/<created>-<project>/` and archive `.enloom/archive/<created>-<project>/` — and resolves to the single directory that exists. A closed project may already have been folded to the archive root, so an unconditional active-root path would miss it. The resolver and its error enum are owned by [references/templates/task-board.md §Resolver](templates/task-board.md).
+
 For first use, create `.enloom/task_board.md` and the current project's directory (`<today>-<projectName>/`) with its `project_state.md`; add the rest (`tasks/`, `runs/`, `archive/`) as the current phase needs them.
 
 ## Landing Discipline

@@ -32,7 +32,7 @@
 
 1. **源 / 副本同步**。`enloom-skill/` 是源，`~/.agents/skills/enloom/` 是已安装副本。改了源必须同步到副本（`cp` 改动文件），否则 host 加载的是旧版。这是 Law 5 之外的工程纪律——archive 不校验它，但不同步 = 改了个寂寞。
 2. **改 `description` 字段前先想 trigger 影响**。description 是 skill 的触发门，改措辞可能改变 host 是否调用 enloom。trigger 行为靠真实任务 dogfood 验证。
-3. **改 references 时查交叉引用**。references 间用 `§Section Title`（人读形式）引用，不用 `.md#slug` 锚点。改段标题前 `grep -r '<旧标题>' enloom-skill/` 确认引用方。被引最多的：`evidence-contract.md`（13 文件引）、`landing-contract.md`、`registry-and-compaction.md`。
+3. **改 references 时查交叉引用**。references 间用 `§Section Title`（人读形式）引用，不用 `.md#slug` 锚点。改段标题前 `grep -r '<旧标题>' enloom-skill/` 确认引用方。被引最多的：`evidence-contract.md`（13 文件引）、`landing-contract.md`、`registry-and-compaction.md`。**引用链接完整性的 normative owner 是 [validation.md §Markdown Reference Integrity](enloom-skill/references/validation.md)**：链接 target 只放可解析的相对路径/URL，`§N` 放在 label 或邻近散文，绝不放进 target（target 里嵌 `§N` 是 malformed）；内联代码示例（如 `` `[x](path)` ``）保持 code，不得当成链接去"修复"。
 4. **不改铁律 / 阶段骨架 / Evidence Contract 四要素**。这些是方法论不变量。改前先问：这是修订史 bloat（可去），还是规则本身（不可动）。
 
 ## 开发即 dogfood

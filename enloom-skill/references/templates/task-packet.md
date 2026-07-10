@@ -35,7 +35,7 @@ Role: researcher | coder | reviewer | integrator | tester
 
 ## Writable Files
 
-> Exclusive list, precise to the path. Derived from the [Ownership Table](../registry-and-compaction.md §2).
+> Exclusive list, precise to the path. Derived from the [Ownership Table §2](../registry-and-compaction.md).
 
 
 ## Forbidden Files

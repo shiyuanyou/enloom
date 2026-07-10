@@ -75,11 +75,11 @@ Sub-action: `health-check` (now also the stage-transition hard gate — see [lan
 - **Exit gate**: 5–10 line state summary written into the located project's `project_state.md` Current Phase (or confirmed unnecessary).
 
 Read in this order:
-1. **`.enloom/task_board.md`** — locate the target project (user-named / sole active / most-recently-updated). This is the namespace entry point; it is read *before* any project file. If no matching row exists, this is a new project → create the `<created>-<project>/` directory and add a task_board row.
-2. **`.enloom/<project>/project_state.md`** (inside the located project directory) — **must scan the Registry risk sections**: Pending Dependencies / Broken References / Accepted With Risk / Rejected Reports. The value of a thin orchestrator is holding the global invariants.
-3. Current task in `.enloom/<project>/tasks/`.
-4. `.enloom/<project>/decisions.md`.
-5. Latest relevant `.enloom/<project>/runs/*/report.md`.
+1. **`.enloom/task_board.md`** — locate the target project (user-named / sole active / most-recently-updated). This is the namespace entry point; it is read *before* any project file. Then **run the C10 resolver**: from the row's stable slug + `created`, check **both** candidate roots — active `.enloom/<created>-<project>/` and archive `.enloom/archive/<created>-<project>/` — and resolve to the **single** directory that exists. Do not assume the active root: a closed project may already have been folded to the archive root. If no matching row exists, this is a new project → create the `<created>-<project>/` directory and add a task_board row. The resolver and its error enum are owned by [templates/task-board.md §Resolver](templates/task-board.md).
+2. **`project_state.md`** (inside the *resolved* project directory — found via the resolver, never an unconditional path) — **must scan the Registry risk sections**: Pending Dependencies / Broken References / Accepted With Risk / Rejected Reports. The value of a thin orchestrator is holding the global invariants.
+3. Current task in the resolved project's `tasks/`.
+4. The resolved project's `decisions.md`.
+5. Latest relevant `runs/*/report.md` in the resolved project.
 6. **若 `.clear-mind/<project>/review.md` 存在，可选读取**——在状态摘要中声明是否读取（读/未读都明说）。此文件是 Clear-Mind 的前置澄清产物；不存在则跳过。Clear-Mind 是可选 phase -1，不阻断 Orient。
 
 Default not to read:
