@@ -1,6 +1,6 @@
 # Review Checklist
 
-Verify 阶段(阶段 4)的 gate 清单。对齐 [Evidence Contract](evidence-contract.md) 四要素 + 三态 verdict。逐条核对。
+Verify 阶段(阶段 4)的 gate 清单。verdict 与 conclusion 的判定逻辑以 [Evidence Contract §Verdict Decision Function](evidence-contract.md) 为唯一 SSOT(owner),本文件不复述公式,只列 gate 检查项。逐条核对。
 
 ## 读什么(report-first)
 
@@ -10,22 +10,23 @@ Verify 阶段(阶段 4)的 gate 清单。对齐 [Evidence Contract](evidence-con
 
 ## 三态 verdict(机械化判定)
 
-先按 Evidence Contract 硬约束判定 verdict,再映射到 review 结论:
+verdict 与 review 结论的判定由 [evidence-contract.md §Verdict Decision Function](evidence-contract.md) 作为唯一 SSOT 给出(total function:每个归一化输入恰好选中一行 verdict + 一行结论)。下面只列三态概览,**判定条件以 owner 为准**,此处不复述公式:
 
-| Verdict | 判定条件 | 典型 review 结论 |
-|---------|---------|-----------------|
-| `PASS` | 所有 declared checks 已跑 + evidence 非空 + 盲区已声明 + 无未解释的高严重问题 | accepted |
+| Verdict | 含义 | review 结论(mandatory mapping) |
+|---------|------|-----------------|
+| `PASS` | 所有 required checks 已跑 + evidence 非空 + 盲区已声明 + 无未解释的高严重问题 | accepted |
 | `ISSUES` | 有缺陷但可继续(medium/low severity,已登记 registry) | accepted-with-risk |
-| `FAIL` | high severity 未解 / 必检未跑 / 证据缺失 | needs-rework 或 rejected |
+| `FAIL` | high severity 未解 / required check 未跑 / 证据缺失 / STATUS_INVALID | needs-rework 或 rejected |
 
-**硬约束(Evidence Contract)**:`verdict = PASS` 当且仅当所有 declared checks 已执行且 evidence 非空。任何 declared check 标记 `NOT RUN` → 不能 PASS。任何 high-severity issue 未解释 → 不能 PASS。无证据的 PASS → 自动降级。
+**硬约束**:owner 的 §Verdict Decision Function(ordered verdict table + mandatory conclusion mapping)是机械化判定的全部公式。任何 required check 未跑(Not Checked 非空)→ 不能 PASS;任何 high-severity issue 未解释 → 不能 PASS;无证据的 PASS → 自动降级。此处不再独立复述「PASS iff」条件。
 
 ## accepted 的必要条件(全部满足)
 
 - [ ] report 含 Checks Run(四要素 1,非空)。
 - [ ] report 含 Evidence(四要素 2,具体证据,非「trust me」)。
-- [ ] report 含 Not Checked(四要素 3,显式声明盲区,即使为「无」)。
-- [ ] report 含 Known Blind Spots(四要素 4,盲区理由 + 风险大小)。
+- [ ] report 含 Not Checked(四要素 3 = **packet 声明的 required-check ID 中未执行者**,显式声明,即使为「无」;非空 → 阻断 PASS)。
+- [ ] report 含 Known Blind Spots(四要素 4 = **结构性 / 运行时 / 越界限制**,每行带 `blocks_check_ids`;`blocks_check_ids=[]` 可与 PASS 共存)。
+- [ ] **Not Checked 与 Known Blind Spots 不混用**(C02 disjoint 语义):结构性限制不得放进 Not Checked;required omission 不得软化成盲区。详见 owner §The Four Elements。
 - [ ] 无未解释的高严重问题。
 - [ ] Acceptance Criteria 逐条对照通过。
 

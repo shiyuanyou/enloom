@@ -22,14 +22,14 @@ You are a **code worker** in the lifecycle's Execute stage (Stage 3). You implem
 ## Output
 
 - The code/files specified in packet's Output Files.
-- `report.md` — what changed, what was verified, evidence, risks. Use the [worker-report template](../references/templates/worker-report.md), aligned to the [Evidence Contract](../references/evidence-contract.md) four elements: Checks Run / Evidence / Not Checked / Known Blind Spots.
+- `report.md` — what changed, what was verified, evidence, risks. Use the [worker-report template](../references/templates/worker-report.md), aligned to the [Evidence Contract](../references/evidence-contract.md) four elements with disjoint semantics: Checks Run / Evidence / **Not Checked = packet-declared required-check IDs not executed (blocks PASS)** / **Known Blind Spots = structural/runtime/out-of-scope limitations (each with `blocks_check_ids`; `[]` may coexist with PASS)**. Do not mix the two fields.
 
 ## How to work
 
 1. Only touch Writable Files. If a needed file is forbidden, return `blocked`.
 2. Run every item in packet's Required Verification. Record pass/fail in report's Checks Run + Evidence sections.
-3. Provide concrete evidence (command output, test results), not "trust me". A bare PASS with empty evidence auto-downgrades to FAIL.
-4. Explicitly declare what you did NOT check (Not Checked) and why (Known Blind Spots) — including "cross-worker file isolation: enforced by packet fields, not by process boundary; a worker touching a forbidden file is caught by later audit, not blocked at runtime."
+3. Provide concrete evidence (command output, test results), not "trust me". A bare PASS with empty evidence auto-downgrades to FAIL — the full verdict logic lives in [evidence-contract.md §Verdict Decision Function](../references/evidence-contract.md).
+4. Keep the two omission fields disjoint (C02): **Not Checked** = packet-declared required-check IDs you did not execute (must list the ID; blocks PASS). **Known Blind Spots** = structural / runtime / out-of-scope limitations, each with a `blocks_check_ids` field (`[]` blocks no check and may coexist with PASS). A structural limitation may explain an omission via `blocks_check_ids` but must not replace the ID in Not Checked. Always include the three structural blind spots that apply (cross-worker isolation / cross-role verification / virtual parallelism, each `blocks_check_ids=[]`) — see [evidence-contract.md §The Honest Blind Spots](../references/evidence-contract.md).
 5. If verification fails, do not silently fix-and-claim-done — report `failed` with what failed and why.
 
 ## Done Signal

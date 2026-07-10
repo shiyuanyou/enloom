@@ -28,7 +28,7 @@ The laws constrain the lifecycle, not individual operations. All five carry thro
    Parallel work is allowed for read-only research, isolated outputs, or alternative proposals. Parallel writing requires an explicit file ownership table (three-tier model: parallel-write / serial-integration / read-only). See [registry-and-compaction.md](registry-and-compaction.md).
 
 4. **No PASS without Evidence.**
-   A report is not accepted because the Worker says it is done. Acceptance requires the Evidence Contract: checks run, evidence, blind spots declared. Mechanized in [evidence-contract.md](evidence-contract.md).
+   A report is not accepted because the Worker says it is done. Acceptance requires the Evidence Contract: checks run, evidence, blind spots declared. The verdict and conclusion are mechanized by the total decision function in [evidence-contract.md §Verdict Decision Function](evidence-contract.md).
 
 5. **No Archive without State Update.**
    Archive only after report review, project state update, decision update if needed, registry update (risk sections processed: cleared or carried), raw-material handling, and next-step clarity.
@@ -162,13 +162,13 @@ Read in this order (all under `.enloom/<project>/runs/<TASK>/`):
 2. `output.md` — only if report evidence is insufficient.
 3. `raw-notes.md` — only for failure, high risk, or retrospective work.
 
-The report must satisfy the [Evidence Contract](evidence-contract.md) (four elements). The verdict is three-state:
+The report must satisfy the [Evidence Contract](evidence-contract.md) four elements with disjoint semantics (Not Checked = required-check IDs not executed, blocks PASS; Known Blind Spots = structural limitations with `blocks_check_ids`). The verdict is three-state; its selection conditions and the mandatory verdict→conclusion mapping are defined exhaustively by the total decision function in [evidence-contract.md §Verdict Decision Function](evidence-contract.md) — that section is the SSOT and is not restated here:
 
-- `PASS` — all declared checks run, evidence non-empty, blind spots declared, no unexplained high-severity issue.
+- `PASS` — all required checks run, evidence non-empty, blind spots declared, no unexplained high-severity issue.
 - `ISSUES` — defects present but workable (medium/low severity, logged in registry); the control agent can proceed with known defects.
-- `FAIL` — high severity unresolved / required check not run / evidence missing.
+- `FAIL` — high severity unresolved / required check not run / evidence missing / STATUS_INVALID.
 
-Hard constraint (mechanization of law 4): `verdict = PASS` **if and only if** all declared checks have run and evidence is non-empty. Any declared check marked `NOT RUN` → not PASS. Any high-severity issue unexplained → not PASS. A bare PASS without evidence auto-downgrades to FAIL/needs-rework.
+Hard constraint (mechanization of law 4): the ordered verdict table in §Verdict Decision Function is the complete PASS/FAIL predicate — a required check not run, or `evidence_ref=none` on any executed row, selects `FAIL`; PASS is row 4 only. Apply that function, not an independent formula.
 
 After review, the control agent **must log discovered problems into the matching Registry section** (broken reference / accepted-with-risk / rejected). This is the obligation that makes the registry a live truth rather than a write-only log.
 

@@ -26,10 +26,10 @@
 | **Registry** | project_state.md 的固定结构,七区段活性真相。详见 [registry-and-compaction.md](registry-and-compaction.md)。 |
 | **Ownership Table** | 文件所有权表。三阶所有权模型(并行写区 / 串行集成区 / 只读区)。并行 dispatch 的硬前置(铁律 3:No Parallel without Ownership Table)。 |
 | **Promise Registry** | 承诺产出注册表。占 Registry 的 `## Promised Outputs` 区段。限同一 phase 内 worker 间前向声明(worker A 声明将产出 X,worker B 已引用 X);交付物按惯例自带的悬空引用(如 canon forward-declare `[[Djembe]]`)不属此,归 Accepted With Risk 或 Known Exceptions。前向声明产出 + 悬空引用容忍 + 末端校验。 |
-| **Evidence Contract** | 证据契约。任何宣称完成的 worker 必须产出四要素:Checks Run / Evidence / Not Checked / Known Blind Spots。详见 [evidence-contract.md](evidence-contract.md)。 |
+| **Evidence Contract** | 证据契约。任何宣称完成的 worker 必须产出四要素(两两 disjoint):Checks Run / Evidence / **Not Checked**(packet 声明的 required-check ID 中未执行者,阻断 PASS)/ **Known Blind Spots**(结构性/运行时/越界限制,带 `blocks_check_ids`)。verdict 与 conclusion 的判定由 §Verdict Decision Function 作为 total function 唯一给出。详见 [evidence-contract.md](evidence-contract.md)。 |
 | **Audit Packet** | 审计任务包。Task Packet 的特化,约束 worker **验证**(该验证什么、怎么算通过)。5 元组 check_item schema。详见 [templates/audit-task-packet.md](templates/audit-task-packet.md)。 |
 | **Audit Mode** | 审计模式。`batch`(抽样,周期性)/ `final`(全量,发布前)。挂 Verify 阶段。 |
-| **Verdict** | 三态验收结论:`PASS` / `ISSUES` / `FAIL`。中间态 ISSUES 支撑「带已知缺陷继续推进」。 |
+| **Verdict** | 三态验收结论:`PASS` / `ISSUES` / `FAIL`。判定由 [evidence-contract.md §Verdict Decision Function](evidence-contract.md) 作为 total function 唯一给出(ordered verdict table + mandatory conclusion mapping),消费者不复述公式。中间态 ISSUES 支撑「带已知缺陷继续推进」。 |
 | **Compaction** | 压缩协议。压缩已闭合的过程细节,绝不压缩未闭合风险。四步:扫描 → 迁移 → 收口 → 校验。 |
 | **check_item** | Audit Packet 的标准检查项,5 元组:id / command / pass_condition / fail_signal / named_list。 |
 

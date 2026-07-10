@@ -1,3 +1,64 @@
+# T-P1-01 — output.md
+
+Rewritten file: `enloom-skill/references/evidence-contract.md`
+
+## Verification Results (V01–V06)
+
+| ID | Command | Result | Pass? |
+|---|---|---|---|
+| V01 | `rg 'if and only if\|当且仅当\|Typical review conclusion\|mapping is a default'` | zero hits (exit 1) | PASS |
+| V02 | `rg -c 'required_check_spec\|required_check_status\|issue_status\|STATUS_INVALID\|repair_class'` | 22 (>= 5) | PASS |
+| V03 | `rg 'blocks_check_ids'` | 5 hits (>= 1) | PASS |
+| V04 | `rg -c 'run \| pass \| present\|run \| fail \| present\|not-run \| not-run \| none'` | 9 (>= 3) | PASS |
+| V05 | `rg -c 'Verdict Decision Function'` | 5 (>= 1) | PASS |
+| V06 | `wc -l` | 183 lines (in ~180–250 band) | PASS (informational) |
+
+Countable outputs:
+- RA1 schema terms introduced: 5 (`required_check_spec`, `required_check_status`, `issue_status`, `STATUS_INVALID`, `repair_class`).
+- RA1.2 valid tuples: exactly 3 (`run | pass | present`, `run | fail | present`, `not-run | not-run | none`).
+- AR counterexamples: exactly 8 (AR-01 through AR-08).
+- STATUS_INVALID tuple rows in RA1.2 table: exactly 9.
+
+## Change Summary
+
+### Added
+
+- **§Verdict Decision Function** (new section) — the single owner SSOT for verdict and conclusion logic (C01). Contains:
+  - Packet/report contract: four-row schema table (`required_check_spec`, `required_check_status`, `Known Blind Spots` row, `issue_status`) with all required fields and rules, including the frozen `on_fail`, `STATUS_INVALID` on ID-set mismatch, `blocks_check_ids` projection, and `repair_class` terminal/bounded/unknown precedence.
+  - **Status tuple totality (RA1.2)**: declares the 3 valid tuples and the 9 invalid ones (`STATUS_INVALID`), with the exhaustive 12-row normalized tuple table (3 valid + 9 invalid), and the rule that tuple validation precedes every verdict predicate.
+  - **Ordered verdict table** (4 rows, first-match wins): row 1 STATUS_INVALID/not-run/empty-evidence/missing-heading → FAIL; row 2 terminal/AC-violation/on_fail=FAIL → FAIL; row 3 on_fail=ISSUES/claim-mismatch-not-AC → ISSUES; row 4 all-pass → PASS.
+  - **Mandatory conclusion mapping**: PASS→accepted / ISSUES→accepted-with-risk / FAIL→rejected (if terminal) or needs-rework (if bounded or unknown).
+  - **Counterexamples**: AR-01 through AR-08, each with normalized facts and a unique verdict/conclusion pair; includes the PASS/FAIL signal for re-derivation.
+
+### Revised
+
+- **§The Four Elements** (C02):
+  - `Checks Run` now maps every executed required-check ID to outcome.
+  - `Evidence` maps each executed ID to concrete proof.
+  - `Not Checked` redefined: ONLY packet-declared required-check IDs not executed (or explicit `None`); blocks PASS. (Was: "declared blind spots".)
+  - `Known Blind Spots` redefined: structural/runtime/out-of-scope limitations with a `blocks_check_ids` field. Empty array can coexist with PASS; non-empty must project to matching not-run IDs in Not Checked. (Was: "reasons for Not Checked items".)
+  - Added the two explicit prohibitions: a structural limitation MUST NOT be placed in Not Checked; a required omission MUST NOT be softened into a blind spot.
+- **§The Hard Constraint**: the old "`verdict = PASS` if and only if…" formula is replaced with a pointer to the §Verdict Decision Function as the complete and only formula. Keeps the spirit (no bare PASS without evidence) but defers the mechanism to the total function.
+- **§Verdict vs Review Conclusion**: "The mapping is a default, not a rule" replaced with a mandatory mapping. The conclusion is determined by the RA1 conclusion rule, not a default the control agent may override.
+- **§Three-State Verdict**: FAIL row updated to include `STATUS_INVALID`; closing sentence now points to §Verdict Decision Function for the exhaustive selection conditions. (§Three-State Verdict was kept but lightly aligned — removing "typical" language.)
+- **§The Honest Blind Spots**: the cross-field reference corrected so the three blind spots are listed under Known Blind Spots (`blocks_check_ids=[]`) rather than Not Checked — consistent with the new C02 disjoint semantics. (Prose content of the three items unchanged.)
+
+### Deleted (absent from final file)
+
+- The old two-condition formula: `verdict = PASS` **if and only if** all declared checks have run and the evidence is non-empty.
+- The phrases `Typical review conclusion` and `mapping is a default` (as formula/mapping statements).
+
+### Preserved unchanged
+
+- §The Fifth Dimension — Claim Consistency (byte-for-byte).
+- §How the Contract Attaches to Work (minor: "applies the hard constraint" → "applies the Verdict Decision Function" only in the Verify-stage bullet, to keep the cross-reference live; structure and content otherwise unchanged).
+- §脚本执行已知坑 (byte-for-byte).
+- §The Honest Blind Spots (three blind-spot items byte-for-byte; only the one-line framing of which field they live in was aligned to C02).
+- §See Also (byte-for-byte).
+
+## Full Rewritten File Content
+
+```markdown
 # Evidence Contract
 
 The dividing line: anything an agent can avoid by reading docs is **protocol**; anything you can only find by actually running a command and checking file-system state is **executable evidence**. The Evidence Contract governs the second kind. It verifies worker results; the task packet constrains worker behavior. The two are orthogonal.
@@ -181,3 +242,4 @@ These do not make Enloom weaker — they make it honest. A control agent that pr
 - [templates/worker-report.md](templates/worker-report.md) — the report shape aligned to the four elements.
 - [templates/audit-task-packet.md](templates/audit-task-packet.md) — the packet specialized for verification.
 - [review-checklist.md](review-checklist.md) — the gates that enforce this contract at Verify.
+```

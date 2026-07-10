@@ -35,11 +35,7 @@ Each `check_item` is a 5-tuple. The `command` is either an executable check comm
 
 ## Conclusion Rules
 
-These are the hard constraints from the [Evidence Contract](../evidence-contract.md):
-
-- Any declared `check_item` marked `NOT RUN` that is critical → verdict = FAIL.
-- Any high-severity issue left unexplained → verdict = FAIL.
-- `verdict = PASS` requires: every declared check run + non-empty evidence + blind spots declared.
+Verdict and conclusion logic are defined by the total **Verdict Decision Function** in [evidence-contract.md §Verdict Decision Function](../evidence-contract.md) (ordered verdict table + mandatory conclusion mapping) — that section is the SSOT and is not restated here. In summary: a declared `check_item` not run or missing evidence selects `FAIL`; a high-severity unexplained issue selects `FAIL`; `PASS` requires every required check `run/pass` with evidence and no FAIL/ISSUES predicate above it.
 
 ## Severity Levels
 
@@ -55,7 +51,7 @@ Named lists produced by the checks, for Registry intake. Each list's items land 
 
 ## Not Checked
 
-Blind spots — checks that should have run but did not, with why and the risk size (Evidence Contract element 3 + 4):
+**Packet-declared required-check IDs not executed** (Evidence Contract element 3 — required omissions only; a non-empty entry blocks `PASS`). Structural limitations go in Known Blind Spots, not here (C02 disjoint semantics):
 
 -
 

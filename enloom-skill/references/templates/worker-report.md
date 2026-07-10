@@ -21,15 +21,17 @@ done | blocked | failed
 
 ## Not Checked
 
-> Evidence Contract element 3 — which verifications should have run but did not. Declared blind spots, explicitly, not hidden.
+> Evidence Contract element 3 — **packet-declared required-check IDs that were not executed** (or an explicit `None` when every declared check ran). Not a place for structural limitations. A non-empty entry here blocks `PASS`. C02: this field is reserved for required omissions only.
 
 
 ## Known Blind Spots
 
-> Evidence Contract element 4 — for each Not Checked item: why it was not checked, and how large the risk is. Three structural blind spots should be reflected here when applicable (see [evidence-contract.md §The Honest Blind Spots](../evidence-contract.md)):
-> 1. **cross-worker file isolation** — enforced by packet field discipline (Writable / Forbidden), not by process boundary; even with independent sub-agents, a worker touching a forbidden file is caught by later audit, not blocked at runtime.
-> 2. **cross-role verification** — verdict / review may share model or session; independent reasoning-chain verification is not guaranteed even when worker and reviewer are separate sub-agents.
-> 3. **virtual parallelism** — declared `strategy: parallel` is protocol form only; the control agent spawns tasks sequentially within one session, so no runtime concurrency occurs.
+> Evidence Contract element 4 — **structural / runtime / out-of-scope limitations**, NOT explanations for Not Checked items. Each row carries a `blocks_check_ids` field: empty array `[]` names no blocked check and may coexist with `PASS`; a non-empty array MUST project to matching `not-run` IDs listed in Not Checked. C02 disjoint semantics: a structural limitation may *explain* an omission (via `blocks_check_ids`) but MUST NOT *replace* the omitted check ID in Not Checked.
+>
+> Three structural limitations belong in this field (never in the required-omission field above), each with `blocks_check_ids=[]` because they block no required check — see [evidence-contract.md §The Honest Blind Spots](../evidence-contract.md):
+> 1. **cross-worker file isolation** — `blocks_check_ids=[]`; enforced by packet field discipline (Writable / Forbidden), not by process boundary; a worker touching a forbidden file is caught by later audit, not blocked at runtime.
+> 2. **cross-role verification** — `blocks_check_ids=[]`; verdict / review may share model or session; independent reasoning-chain verification is not guaranteed even when worker and reviewer are separate sub-agents.
+> 3. **virtual parallelism** — `blocks_check_ids=[]`; declared `strategy: parallel` is protocol form only; the control agent spawns tasks sequentially within one session, so no runtime concurrency occurs.
 >
 > Not every report needs all three — list the ones that actually apply to this task's risk surface.
 
