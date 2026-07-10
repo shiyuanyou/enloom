@@ -72,6 +72,30 @@ Ownership Table 管「**谁**能写哪个文件」(防写冲突);但 split / mig
 
 ## 并行调度的真实时序(virtual parallelism 盲区)
 
-> ⚠️ **架构盲区**:即使每个 task 都真 dispatch 给独立 sub-agent,control agent 在单个会话里**顺序发起**这些 dispatch——phase-plan 里声明的 `strategy: parallel` + Ownership Table 是**协议形式**,不代表运行时真并发执行。该盲区纳入 Evidence Contract 的 **Known Blind Spots** 第 3 项(virtual parallelism),见 [evidence-contract.md §The Honest Blind Spots](evidence-contract.md)。Ownership Table 仍有价值——它把意图写明,是真实并发运行时会执行的契约——但不得用 `parallel` 标签暗示已发生真实并行。
+> ⚠️ **架构盲区**:即使每个 task 都真 dispatch 给独立 sub-agent,control agent 在单个会话里**顺序发起**这些 dispatch——phase-plan 里声明的 `strategy: parallel` + Ownership Table 是**协议形式**(scheduling intent),不代表运行时真并发执行。判断"是否真并发"必须查 §Runtime Capability and Actual Dispatch Record 的 **actual concurrency** 维度,而不是看 strategy 标签。该盲区纳入 Evidence Contract 的 **Known Blind Spots** 第 3 项(virtual parallelism),见 [evidence-contract.md §The Honest Blind Spots](evidence-contract.md)。Ownership Table 仍有价值——它把意图写明,是真实并发运行时会执行的契约——但不得用 `parallel` 标签暗示已发生真实并行。
 
-(注:无 sub-agent 能力的运行时,Enloom 直接中断,见 [landing-contract.md §5](landing-contract.md)。本段只讨论"有 sub-agent 但顺序发起"的情况。)
+(注:无 sub-agent 能力的运行时,Enloom 直接中断,见 [landing-contract.md §5](landing-contract.md)。本段只讨论"有 sub-agent 但顺序发起"的情况。)`
+
+## Runtime Capability and Actual Dispatch Record (C08)
+
+能力(capability)、调度意图(strategy)、真实执行(actual)、模型/会话差异(diversity)是**四个独立事实**,不得互相推导。`strategy: parallel` 只是 scheduling intent;它既不证明运行时有并发能力,也不代表真实发生了并发。
+
+| 维度 (Dimension) | 取值 (Values) | 协议要求 (Protocol requirement) | 记录规则 (Recording rule) |
+|---|---|---|---|
+| **independent sub-agent availability** | `yes\|no\|unknown` | `yes` 是 full Enloom 的强制前提;`no` / `unknown` 在任何 `.enloom` 写入之前 **hard halt**(C12 preflight)。 | 记录 preflight 证据来源;不得从 "skill 能加载" 推断 `yes`。 |
+| **concurrent dispatch capability** | `yes\|no\|unknown` | 可选,不 gate full Enloom。 | 独立于 phase strategy 记录宿主能力。 |
+| **actual concurrency** | `serial\|concurrent\|mixed\|unknown` | 无强制取值;如实描述本次运行。 | `concurrent` 必须有运行时原生证据或重叠时间戳;否则按观测记录 `unknown` / `serial`。 |
+| **model/session diversity** | `same\|different\|mixed\|unknown` | 可选,是证据强度,不是隔离证明。 | 只记录已知的 model/session 关系;未知保持 `unknown`。 |
+
+**Hard / soft unknown policy.** 四个维度中只有 **independent sub-agent availability** 是 hard:`no` 或 `unknown` 在 task_board 创建/更新、fold marker/move、project state、packet 或任何其他 `.enloom` 写入之前 **hard halt**(sole hard halt)。其余三个维度的 `unknown` 都是 **soft**——只如实记录,**绝不 block、也绝不推断**(不得把 unknown 渲染成 no 或 yes;不得从 capability 推断 actual;不得把 model/session diversity 当作进程隔离证明)。
+
+| Dimension | `unknown` policy | Propagation |
+|---|---|---|
+| independent sub-agent availability | hard halt before task_board creation/update, fold marker/move, project state, packet, or any other `.enloom` write | only evidenced `yes` is copied into the phase plan and every task packet |
+| concurrent dispatch capability | soft; record `unknown` and use serial-safe scheduling | phase/runtime record, never a compatibility gate |
+| actual concurrency | soft; record `unknown` until runtime observation, then the actual value | report only; never inferred from strategy/capability |
+| model/session diversity | soft; record `unknown` as an honest limitation | report/blind spot only; never isolation proof |
+
+**Propagation rule.** Hard preflight 通过后(`independent_subagent=yes`),control MUST 把该证据复制进**每一个** phase plan 和 task packet;每个 dispatch gate 校验这个冻结的 `yes`。一个 packet 缺少 preflight 记录本身就是缺陷。其余三个维度按各自的 soft propagation 规则记录,不进 compatibility gate。
+
+**Forbidden legacy wording/behavior:** "control always spawns sequentially"(把单宿主观察 universal 化);"parallel means concurrent"(把 strategy 等同于 actual);把不同 agent/model 当作已证明的进程隔离;从一个宿主/会话推断 capability;从 strategy 推断 actual concurrency;把 `unknown` 渲染成 `no` 或 `yes`;"all unknowns block"。

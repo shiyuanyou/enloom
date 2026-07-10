@@ -157,7 +157,7 @@ Goal: decide whether Worker output can be integrated — on evidence, not on ass
 Sub-actions: `review` (every worker) + `audit` (periodic, every N workers, or pre-release).
 
 - **Entry gate**: `runs/<TASK>/report.md` exists with the Evidence Contract four elements.
-- **Exit gate**: `runs/<TASK>/report.md`'s Review Result section is filled (verdict + conclusion).
+- **Exit gate**: `runs/<TASK>/review-result.md` exists (verdict + conclusion) — the result is a separate control-owned file (RA3), not a section of `report.md`.
 
 Read in this order (all under `.enloom/<project>/runs/<TASK>/`):
 1. `report.md` — required.
@@ -184,7 +184,7 @@ Gate: required verification not run means no `accepted`. High-severity unexplain
 
 Goal: compress accepted results into durable state instead of carrying process material.
 
-- **Entry gate**: every task of this phase has its `report.md` Review Result section filled (from Stage 4).
+- **Entry gate**: every task of this phase has its `review-result.md` filled (from Stage 4 — RA3: the result is a separate control-owned file, not a section of `report.md`).
 - **Exit gate**: `project_state.md` + Registry updated; **compaction enforced** — if a trigger threshold is met, the Compaction Protocol must run before this gate passes (compaction is mandatory, not merely a triggered check); if no threshold is met, a one-liner records the skip.
 
 Update (all paths project-relative under `.enloom/<project>/`):
@@ -209,7 +209,7 @@ Goal: close the current phase and leave the control window small.
 Sub-action: `archive`.
 
 - **Entry gate**: Stage 5 Integrate exit gates all pass (project_state + Registry updated).
-- **Exit gate (Law 5 mechanized)**: `archive/<phase>-entry.md` exists; every task's `report.md` Review Result section was filled + project_state/Registry updated (health-check hard-verifies); old `runs/` content archived or declared discarded. See [landing-contract.md](landing-contract.md) §3.
+- **Exit gate (Law 5 mechanized)**: `archive/<phase>-entry.md` exists; every task's `review-result.md` exists + project_state/Registry updated (health-check hard-verifies); old `runs/` content archived or declared discarded. See [landing-contract.md](landing-contract.md) §3.
 
 Archive conditions (all must hold — see [archive-policy.md](archive-policy.md)):
 - task packet exists

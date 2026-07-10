@@ -1,3 +1,69 @@
+# T-P3-01 — Output
+
+Implemented C07/RA3 (file-level artifact ownership split), C08 (runtime capability 4-dimension record), and C09 (deterministic role-to-asset route) in three owner files. No file outside the writable set was touched (git diff confirms exactly 3 files). P1/P2 changes preserved; no description/trigger wording changed; no broad naming cleanup.
+
+## Per-file change summary
+
+### 1. `enloom-skill/references/landing-contract.md` (C07/RA3)
+
+**1a. Gate table (Stage 4/5/6 exit + Law 5) — RA3 file-level gates.**
+- Stage 4 exit gate: "Review Result exists (currently the `report.md` Review Result section; will become `review-result.md` in P3)" → "`runs/<TASK>/review-result.md` exists with verdict + conclusion".
+- Stage 5 entry gate: "every task of this phase has its Review Result filled" → "every task of this phase has its `review-result.md` filled".
+- Stage 6 Close entry gate: "Integrate exit gates all pass" → "Integrate exit gates all pass — every task's `review-result.md` is present".
+- Law 5 mechanized gate: "every task's Review Result is filled" → "every task's `review-result.md` exists".
+
+**1b. RA2 V0→V3 states — "writes Review Result" → "writes review-result.md".**
+- `V2_VERIFY_RUN_LANDED` action: "writes its Review Result … writes the target Review Result" → "writes its `review-result.md` … writes the target `review-result.md`".
+- `V3_CONTROL_FINALIZED` entry: "target Review Result exists AND every Verify-worker run has its own Review Result" → "target `review-result.md` exists AND every Verify-worker run has its own `review-result.md`".
+
+**1c. NEW §6 Artifact Ownership — file-level split (RA3).** Added after §5 Sub-agent requirement, before §See Also. Contains:
+- 7-row file-level ownership table (writer count = 1 each), with `review-result.md` as a separate control-owned artifact (`report.md` entirely worker-owned).
+- Canonical run join: `task.md + output.md + report.md + review-result.md`; gate-to-file mapping.
+- Packet requirements: `report.md` in Writable, `review-result.md` in Forbidden, `Control Review Result Path: runs/<RUN>/review-result.md`.
+- Forbidden legacy wording list.
+
+### 2. `enloom-skill/references/scheduler-rules.md` (C08)
+
+**2a. NEW §Runtime Capability and Actual Dispatch Record (C08).** Appended after the virtual-parallelism section. Contains:
+- 4-dimension matrix: independent sub-agent availability (hard), concurrent dispatch capability (soft), actual concurrency (soft), model/session diversity (soft).
+- Hard/soft unknown policy: `independent_subagent=no|unknown` is the sole hard halt before any `.enloom` write; the other three unknowns are soft, never block, never inferred.
+- Hard/soft policy table (4 rows).
+- Propagation rule: after preflight=`yes`, control copies evidence into every phase plan/task packet; every dispatch gate validates the frozen `yes`.
+- Forbidden legacy wording list.
+
+**2b. Virtual parallelism section updated.** The blind-spot paragraph now references "§Runtime Capability and Actual Dispatch Record 的 actual concurrency 维度,而不是看 strategy 标签" instead of only "顺序发起".
+
+### 3. `enloom-skill/SKILL.md` (C09)
+
+**3a. NEW §Role-to-Prompt-Asset Route (C09).** Added after §References, before §File Protocol. Contains:
+- 5-role canonical table: `researcher→prompt-assets/researcher.md`, `coder→prompt-assets/coder.md`, `reviewer→prompt-assets/reviewer.md`, `integrator→packet-only`, `tester→packet-only`.
+- Pre-dispatch check: make-prompt MUST resolve Role through this table; mapped asset MUST be read+incorporated; packet-only MUST be recorded explicitly; prompt assets are source assets, not copied into projects.
+- Evidence boundary: `ROLE_ROUTE_EVIDENCE_GAP` if host-native evidence unavailable; static packet marker is not host dispatch proof.
+
+## Countable outputs
+
+- RA3 ownership table data rows: **exactly 7** (header + 7 rows).
+- C08 dimensions: **exactly 4**.
+- C09 role routes: **exactly 5**.
+
+## V01–V06 results
+
+| ID | Command | Required | Actual | Result |
+|---|---|---|---|---|
+| V01 | `rg 'review-result\.md' landing-contract.md` | ≥ 3 hits | 12 hits | PASS |
+| V02 | `rg 'writer count.*1\|Writer count.*1\|writer.*=.*1' landing-contract.md` | ≥ 5 hits | 9 hits | PASS |
+| V03 | 4 C08 dimensions present in scheduler-rules.md | all 4 | all 4 (3/2/4/3 hits) | PASS |
+| V04 | `rg 'hard.halt\|soft\|hard.*unknown\|sole hard' scheduler-rules.md` | ≥ 2 hits | 7 hits | PASS |
+| V05 | 5 C09 role routes present in SKILL.md | all 5 | all 5 (1 each) | PASS |
+| V06 | `rg 'Control Review Result Path' landing-contract.md` | ≥ 1 hit | 1 hit | PASS |
+
+All V01–V06 PASS.
+
+## Full rewritten content
+
+### `enloom-skill/references/landing-contract.md`
+
+```markdown
 # Landing Contract — 落盘时序契约
 
 State governance lives in [registry-and-compaction.md](registry-and-compaction.md); evidence in [evidence-contract.md](evidence-contract.md). This reference is the **landing discipline** — the third leg of state governance: *when*, *by whom*, a workflow artifact must exist on disk. Templates exist (task-packet / worker-report have complete fields) and the Stage 0 Triage + six-stage lifecycle (Stages 1–6) names the stages, but without an explicit rule for which file gets written at which stage boundary, an agent could "complete" the whole six-stage lifecycle (Stages 1–6, after Stage 0 Triage) touching the disk zero times. The Landing Contract closes that gap by making every stage crossing a **file-existence gate**.
@@ -162,3 +228,47 @@ Pure audit MUST NOT omit these fields. Reviewer/audit Registry entries remain *p
 - [archive-policy.md](archive-policy.md) §Project Fold — fold timing and namespace resolver.
 - [registry-and-compaction.md](registry-and-compaction.md) — state governance (Registry / Ownership / Compaction); landing is its on-disk enforcement layer.
 - [templates/task-packet.md](templates/task-packet.md) / [templates/worker-report.md](templates/worker-report.md) — the artifacts the gates require to exist.
+```
+
+### `enloom-skill/references/scheduler-rules.md`
+
+(Full rewritten content: original 78 lines + new C08 section + updated virtual-parallelism paragraph. The complete current file text is the source of truth on disk; the new/changed regions are the §Runtime Capability and Actual Dispatch Record (C08) section and the one-sentence update inside §并行调度的真实时序 pointing to that section's actual-concurrency dimension.)
+
+Key new region:
+
+```markdown
+## Runtime Capability and Actual Dispatch Record (C08)
+
+能力(capability)、调度意图(strategy)、真实执行(actual)、模型/会话差异(diversity)是**四个独立事实**，不得互相推导。`strategy: parallel` 只是 scheduling intent；它既不证明运行时有并发能力，也不代表真实发生了并发。
+
+| 维度 (Dimension) | 取值 (Values) | 协议要求 (Protocol requirement) | 记录规则 (Recording rule) |
+|---|---|---|---|
+| **independent sub-agent availability** | `yes\|no\|unknown` | `yes` 是 full Enloom 的强制前提；`no` / `unknown` 在任何 `.enloom` 写入之前 **hard halt**（C12 preflight）。 | 记录 preflight 证据来源；不得从 "skill 能加载" 推断 `yes`。 |
+| **concurrent dispatch capability** | `yes\|no\|unknown` | 可选，不 gate full Enloom。 | 独立于 phase strategy 记录宿主能力。 |
+| **actual concurrency** | `serial\|concurrent\|mixed\|unknown` | 无强制取值；如实描述本次运行。 | `concurrent` 必须有运行时原生证据或重叠时间戳；否则按观测记录 `unknown` / `serial`。 |
+| **model/session diversity** | `same\|different\|mixed\|unknown` | 可选，是证据强度，不是隔离证明。 | 只记录已知的 model/session 关系；未知保持 `unknown`。 |
+
+**Hard / soft unknown policy.** 四个维度中只有 **independent sub-agent availability** 是 hard：`no` 或 `unknown` 在 task_board 创建/更新、fold marker/move、project state、packet 或任何其他 `.enloom` 写入之前 **hard halt**（sole hard halt）。其余三个维度的 `unknown` 都是 **soft**——只如实记录，**绝不 block、也绝不推断**。
+```
+
+### `enloom-skill/SKILL.md`
+
+(Full rewritten content: original 126 lines + new §Role-to-Prompt-Asset Route (C09). The complete current file text is the source of truth on disk; the new region is the C09 section inserted between §References and §File Protocol.)
+
+New region:
+
+```markdown
+## Role-to-Prompt-Asset Route (C09)
+
+Before dispatch, `make-prompt` MUST resolve the packet's `Role` through one canonical table.
+
+| Role | Prompt asset | Behavior |
+|---|---|---|
+| `researcher` | `prompt-assets/researcher.md` | load + incorporate with the packet boundary |
+| `coder` | `prompt-assets/coder.md` | load + incorporate |
+| `reviewer` | `prompt-assets/reviewer.md` | load + incorporate |
+| `integrator` | `packet-only` | no asset; recorded explicitly |
+| `tester` | `packet-only` | no asset; recorded explicitly |
+
+**Pre-dispatch check.** `make-prompt` MUST run this resolution before dispatch. A mapped asset MUST be read and incorporated; a `packet-only` role MUST be recorded explicitly. Prompt assets are source assets and MUST NOT be copied into each project by default.
+```

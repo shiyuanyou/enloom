@@ -6,13 +6,13 @@
 
 ## Current Phase
 
-**P2 — Lifecycle/Dispatch/Fold 去环化：accepted 2026-07-10；P3 未开始。**
+**P3 — Ownership/Runtime/Role-Asset 冻结：accepted 2026-07-10；P4 未开始。**
 
-- T-P2-01（PASS/accepted）：重写 landing-contract.md + archive-policy.md owner——C03 Stage 3 entry = phase plan（task.md 变为 pre-dispatch gate，消除循环入口）；C06 health-check 两轴（periodic homes vs transition executor）；RA2 V0→V3 Verify-worker 非递归四态；C04 Triage 无副作用 + fold 移到 enloom 决定后 + control-owned；RA4/RA4.2 resolver 7 级 precedence + fold-move-state.md 快照 + PROJECT_OPERATION_INVALID。
-- T-P2-02（PASS/accepted）：4 个 consumer 对齐——workflow-steps / SKILL / glossary / AGENTS 全部更新 fold 时序、Stage 3 entry gate、RA2 引用、C05 phrase guard。
+- T-P3-01（PASS/accepted）：landing-contract.md C07/RA3 file-level artifact ownership（7-row table，review-result.md 为独立 control-owned artifact）；scheduler-rules.md C08 4-dimension runtime capability + hard/soft unknown policy；SKILL.md C09 5-role deterministic route table。
+- T-P3-02（PASS/accepted）：9 consumer 对齐——worker-report 删除 `## Review Result` 段；task/audit-packet 加 review-result.md Forbidden + Control Review Result Path；review-checklist/workflow-steps/archive-policy gate 引用改 review-result.md；reviewer.md 权限改为只写自己 run；glossary 加 file-level ownership 术语。
 - Source/installed parity 验证通过（`diff -qr` exit 0）。
-- Exit Gate：circular entry residue = 0；old fold timing residue = 0；RA2 states = 4；RA4 enums = 6 error + 3 success；C05 phrase guard = 2/2/2 per file。
-- Compaction check：未触发（state ~120 lines，Accepted Results 7，低于阈值）。
+- Exit Gate：worker-report `## Review Result` = 0；review-result.md 在 4 consumer 均有引用；旧 dual-ownership = 0；C08 4 维度 + C09 5 角色。
+- Compaction check：未触发（state ~125 lines，Accepted Results 9，低于阈值）。
 
 ### Progressive Convergence Ladder
 
@@ -45,6 +45,8 @@
 - T-P1-02（PASS/accepted）：8 个 consumer 文件对齐 owner §Verdict Decision Function 和 C02 disjoint 语义；见 `runs/T-P1-02/`。
 - T-P2-01（PASS/accepted）：landing-contract + archive-policy owner 重写，C03/C04/C06/RA2/RA4/RA4.2 全落地；见 `runs/T-P2-01/`。
 - T-P2-02（PASS/accepted）：4 consumer 对齐 fold 时序、Stage 3 entry gate、RA2 引用、C05 phrase guard；见 `runs/T-P2-02/`。
+- T-P3-01（PASS/accepted）：C07/RA3 file-level ownership + C08 runtime capability + C09 role route 落地 3 owner；见 `runs/T-P3-01/`。
+- T-P3-02（PASS/accepted）：9 consumer 对齐 RA3 review-result.md split + C08/C09 引用；见 `runs/T-P3-02/`。
 
 ## Registry
 
@@ -62,6 +64,9 @@
 | P2 phase plan | completed | P2 accepted；archive entry 已落盘 |
 | T-P2-01 | accepted | PASS；landing+archive owner 重写，C03/C04/C06/RA2/RA4 全落地 |
 | T-P2-02 | accepted | PASS；4 consumer 对齐，fold timing + Stage 3 entry + RA2 + C05 guard |
+| P3 phase plan | completed | P3 accepted；archive entry 已落盘 |
+| T-P3-01 | accepted | PASS；C07/RA3 + C08 + C09 落地 3 owner |
+| T-P3-02 | accepted | PASS；9 consumer 对齐 RA3 review-result.md split |
 
 ### Promised Outputs
 
@@ -69,8 +74,8 @@
 
 ### Pending Dependencies
 
-- P3 必须冻结 durable ownership（C07/RA3 file-level split）、runtime capability 记录（C08）、role-to-asset 路由（C09）；C03/C04/C06 已落地为 P2 的前置条件。
-- P4/P5/P6 按 T-P0-02 graph 串行推进；任何实现 phase 未 PASS 不得提交或进入下一 phase。
+- P4 必须落地 namespace resolver（C10 task-board.md）、validation paths（C11）、Markdown link 修复（C13）；C07/C08/C09 已落地为 P3 的前置条件。
+- P5/P6 按 T-P0-02 graph 串行推进。
 - P3/P5 的 host-native prompt、runtime capability、跨模型 trigger 证据取决于可用 runtime；不可用时必须标成未验证。
 - P4/P5 的 validator、install command、renderer 与目录 move recovery 仍需执行证据；不能用静态矩阵冒充运行通过。
 
@@ -103,6 +108,7 @@
 - P0 done 2026-07-10, `accepted`; canonical matrix + independent adversarial closure 见 `archive/P0-entry.md`。
 - P1 done 2026-07-10, `accepted`; Evidence Contract totality + consumer alignment 见 `archive/P1-entry.md`。
 - P2 done 2026-07-10, `accepted`; lifecycle/dispatch/fold 去环化 + consumer alignment 见 `archive/P2-entry.md`。
+- P3 done 2026-07-10, `accepted`; ownership/runtime/role-asset 冻结 + consumer alignment 见 `archive/P3-entry.md`。
 
 ## Human Decisions Needed
 
@@ -111,4 +117,4 @@
 
 ## Next Review Point
 
-P3 phase plan/packet review；ownership/runtime/role-asset 冻结是下一个收敛簇（C07/RA3 + C08 + C09）。任何 source change 仍需同 phase source/installed sync、diff parity、独立 review 与 commit gate。
+P4 phase plan/packet review；namespace/validation/机械链接是下一个收敛簇（C10 + C11 + C13）。任何 source change 仍需同 phase source/installed sync、diff parity、独立 review 与 commit gate。

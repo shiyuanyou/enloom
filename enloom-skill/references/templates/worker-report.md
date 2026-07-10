@@ -54,10 +54,6 @@ done | blocked | failed
 
 The control agent receives only: **Result + Checks Run summary + verdict-level Evidence + named risks**. Do not paste full raw output, full command logs, or worker process narrative back into the main window — detail sinks into `output.md` / `raw-notes.md` on disk, where the control agent reads only on evidence-shortfall or failure. This mirrors [audit-task-packet.md §Return To Caller](audit-task-packet.md).
 
-## Review Result
+---
 
-> Verdict (PASS / ISSUES / FAIL) + review conclusion (accepted | accepted-with-risk | needs-rework | rejected). See [review-checklist.md](../review-checklist.md).
-
-Verdict:
-Conclusion:
-Reviewer notes:
+> **Review Result lives in a sibling file.** Verdict (PASS / ISSUES / FAIL) + review conclusion (accepted | accepted-with-risk | needs-rework | rejected) is written by **control** to a sibling `review-result.md` (RA3 file-level ownership) — **not in this file.** This report is entirely worker-owned; see [landing-contract.md §6 Artifact Ownership](../landing-contract.md) and [review-checklist.md](../review-checklist.md).

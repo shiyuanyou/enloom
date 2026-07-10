@@ -12,6 +12,17 @@ audit_scope:
 
 This is a specialization of [task-packet.md](task-packet.md). An ordinary packet constrains worker **behavior** (what to do); an audit packet constrains worker **verification** (what to check and what counts as pass). They are orthogonal. A worker may receive both (an ordinary packet's `Required Verification` may reference audit `check_item`s), or a pure audit worker may receive only this packet.
 
+> **RA3 file-level ownership (mandatory).** A pure audit packet MUST NOT omit the path declarations below. The audit worker writes its proposal/evidence to its own `output.md` / `report.md`; it MUST NOT write the target's `report.md`, Registry, or `review-result.md` — those are control-owned. See [landing-contract.md §6 Artifact Ownership](../landing-contract.md).
+
+Worker Output Path: runs/<RUN>/output.md
+Worker Report Path: runs/<RUN>/report.md
+Control Review Result Path: runs/<RUN>/review-result.md
+
+Forbidden (examples):
+- `runs/<RUN>/review-result.md` — control-owned verdict + conclusion (RA3)
+- `project_state.md`, `decisions.md`, `task_board.md` — serial-integration files
+- the target run's `report.md` / `output.md` — read-only for the audit worker
+
 ## Goal
 
 

@@ -64,6 +64,10 @@ The failure mode this prevents: a worker casually edits the global index/log and
 
 The serial-integration zone exists on the premise that "global state cannot be append-only parallel." If a task's global state can be designed as an append-only log (conflict-free merge), the integration zone could in theory parallelize — but the default is to **keep the serial-integration zone single-threaded** unless the Plan stage explicitly argues it can parallelize. This holds the "parallel is the exception" law.
 
+### File-level sole-writer (RA3)
+
+The three-tier model above governs parallel *zones*. RA3 governs ownership at the *artifact* level: every durable artifact has exactly **one sole writer** — no physical file has two writers. `report.md` is entirely worker-owned; `review-result.md` is a separate control-owned artifact. Reviewer/audit workers write proposals into their *own* run's `output.md` / `report.md`; only control integrates — it writes `review-result.md` for the target run and every Verify-worker run. The canonical seven-row table lives in [landing-contract.md §6 Artifact Ownership](landing-contract.md). This supersedes any section-level model: the verdict + conclusion are their own file, not a region of the worker report reserved for control to fill.
+
 ### Lifecycle Hooks
 
 - **Plan stage (Stage 2)**: choosing a parallel/hybrid strategy makes the Ownership Table a **hard prerequisite** (law 3 upgraded: No Parallel without Ownership Table).

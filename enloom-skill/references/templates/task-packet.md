@@ -42,10 +42,22 @@ Role: researcher | coder | reviewer | integrator | tester
 
 > Do-not-touch list. **Must explicitly enumerate the serial-integration files** (project_state, decisions, registry-bearing files), not just say "don't touch shared files." This is the two-list discipline (registry-and-compaction.md §2).
 >
+> **Must include `runs/<RUN>/review-result.md`** — it is control-owned (RA3 file-level ownership: `report.md` is worker-owned, `review-result.md` is a separate control-owned artifact). The worker never writes the review result. See [landing-contract.md §6 Artifact Ownership](../landing-contract.md).
+>
 > **Split / migrate / merge batches**: if this task moves units between files, route destinations should be pre-filled by the control agent, not decided here — see [prompt-control.md §1 Route Pre-fill](../prompt-control.md). The worker executes routing, it does not invent it.
+
+Example (audited):
+- `runs/<RUN>/review-result.md` — control-owned verdict + conclusion (RA3)
+- `project_state.md`, `decisions.md`, `task_board.md` — serial-integration files
 
 
 ## Output Files
+
+> Declare the worker's `output.md` / `report.md` paths (both worker-owned under RA3) and the control-owned result path.
+
+Worker Output Path: runs/<RUN>/output.md
+Worker Report Path: runs/<RUN>/report.md
+Control Review Result Path: runs/<RUN>/review-result.md
 
 
 ## Acceptance Criteria

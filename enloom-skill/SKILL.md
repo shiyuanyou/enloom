@@ -76,6 +76,22 @@ Read these on demand — do not load them all into context at once:
 - [references/templates/](references/templates/) — the fill-in contracts (phase-plan, task-packet, audit-task-packet, worker-report, project-state, archive-entry).
 - [references/examples/triage-decision-tree.md](references/examples/triage-decision-tree.md) — worked triage examples.
 
+## Role-to-Prompt-Asset Route (C09)
+
+Before dispatch, `make-prompt` MUST resolve the packet's `Role` through one canonical table. This is the sole routing rule — there is no agent discovery and no default project-local copy.
+
+| Role | Prompt asset | Behavior |
+|---|---|---|
+| `researcher` | `prompt-assets/researcher.md` | load + incorporate with the packet boundary |
+| `coder` | `prompt-assets/coder.md` | load + incorporate |
+| `reviewer` | `prompt-assets/reviewer.md` | load + incorporate |
+| `integrator` | `packet-only` | no asset; recorded explicitly |
+| `tester` | `packet-only` | no asset; recorded explicitly |
+
+**Pre-dispatch check.** `make-prompt` MUST run this resolution before dispatch. A mapped asset (`researcher` / `coder` / `reviewer`) MUST be read and incorporated into the worker's prompt; a `packet-only` role (`integrator` / `tester`) MUST be recorded explicitly — it is a deliberate route, not an absent asset. Prompt assets are **source assets** and MUST NOT be copied into each project by default. The three `prompt-assets/*.md` files identify themselves but do not own routing — this table is the owner.
+
+**Evidence boundary.** Static packet construction proves only that routing resolved. P3 acceptance requires host-native evidence from the worker-received prompt or runtime dispatch record (including explicit `packet-only` for integrator/tester). If that evidence is unavailable, the status is `ROLE_ROUTE_EVIDENCE_GAP`, not PASS — a generated packet marker is not host dispatch proof.
+
 ## File Protocol
 
 Recommended project-local layout. Enloom writes its working files under a **hidden `.enloom/` directory** so they stay out of the user's way by default. `.enloom/` is a **project-level namespace**: a single `task_board.md` entry table at the root, and one directory per project:
@@ -113,7 +129,7 @@ Templates and stages define *what* artifacts exist; the Landing Contract defines
 Two load-bearing rules:
 
 - **Every stage crossing is a file-existence gate.** Entry/exit gates per stage are mechanical checks (e.g. Stage 3 entry: accepted phase plan present; Stage 3 pre-dispatch sub-gate: `make-prompt` writes `runs/<TASK>/task.md`, then Law 2 checks it before dispatch; exit: `output.md` + `report.md` must exist). The control agent self-checks at each entry; health-check hard-verifies at each transition. Full table + control↔worker handshake sequence: [references/landing-contract.md](references/landing-contract.md).
-- **Worker output must land as files, not chat replies.** Dispatch hands the worker a *path* to `task.md`; the worker writes `output.md` / `report.md` to disk. This mechanizes Law 2 (no dispatch before `task.md` exists) and Law 5 (no archive before every report's Review Result is filled).
+- **Worker output must land as files, not chat replies.** Dispatch hands the worker a *path* to `task.md`; the worker writes `output.md` / `report.md` to disk. This mechanizes Law 2 (no dispatch before `task.md` exists) and Law 5 (no archive before every `review-result.md` exists).
 - **Compaction is a mandatory gate, not an optional check.** At the Integrate exit, if a compaction trigger threshold is met, the Compaction Protocol *must* run before the stage passes — "check the trigger and defer" is not acceptable. See [references/registry-and-compaction.md](references/registry-and-compaction.md) §4.
 
 ## Review Posture

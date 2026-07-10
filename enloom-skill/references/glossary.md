@@ -11,7 +11,7 @@
 | **Task Packet** | 给 Worker 的任务契约。版本化(当前 0.2)。最小字段见 [templates/task-packet.md](templates/task-packet.md)。约束 worker **行为**(该做什么)。 |
 | **Worker** | 短生命周期执行单元,是**独立的 sub-agent 执行单元**(sub-agent / Pi / 其他支持 sub-agent dispatch 的运行时)。主窗口(control agent)不进入 worker mode——Stage 3 task 必须 dispatch 给独立 sub-agent;运行时无 sub-agent 能力 → 中断,提示换支持工具(opencode / pi / codex 等),不退化自执行。在 packet 边界内发挥智能。 |
 | **Prompt Asset** | 可复用的 Worker prompt 模板(如 researcher.md / coder.md)。素材,不是常驻 agent。 |
-| **Report** | Worker 给 verify 的压缩结论。固定结构对齐 Evidence Contract 四要素。 |
+| **Report** | Worker 给 verify 的压缩结论(`report.md`)。固定结构对齐 Evidence Contract 四要素。RA3:entirely worker-owned —— 不含 Review Result(verdict/conclusion 在独立的 `review-result.md`,control 写)。 |
 | **Raw Notes** | 可追溯但默认不读的过程材料。仅当证据不足 / 失败 / 高风险 / 复盘时读。 |
 | **Review Budget** | verify 方允许读取的材料与成本。路由规则,不只是长度限制。 |
 | **Project State** | 当前项目压缩状态(`project_state.md`)。目标 3 分钟读完,<200 行触发 compaction。含 Registry 七区段。`project_state.md` 住在**项目目录内**(`.enloom/<project>/`),非全局唯一。 |
@@ -30,6 +30,8 @@
 | **Audit Packet** | 审计任务包。Task Packet 的特化,约束 worker **验证**(该验证什么、怎么算通过)。5 元组 check_item schema。详见 [templates/audit-task-packet.md](templates/audit-task-packet.md)。 |
 | **Audit Mode** | 审计模式。`batch`(抽样,周期性)/ `final`(全量,发布前)。挂 Verify 阶段。 |
 | **Verdict** | 三态验收结论:`PASS` / `ISSUES` / `FAIL`。判定由 [evidence-contract.md §Verdict Decision Function](evidence-contract.md) 作为 total function 唯一给出(ordered verdict table + mandatory conclusion mapping),消费者不复述公式。中间态 ISSUES 支撑「带已知缺陷继续推进」。 |
+| **Review Result / review-result.md** | Verify 阶段的验收结果文件(`runs/<RUN>/review-result.md`)。含 verdict(PASS/ISSUES/FAIL)+ review 结论(accepted/accepted-with-risk/needs-rework/rejected)。**RA3:control-owned 独立文件,sole writer = control** —— 不在 worker 的 `report.md` 内。reviewer/audit worker 只在自己的 `output.md`/`report.md` 写 proposal;只有 control 整合,写 target 与每个 Verify-worker run 的 `review-result.md`。canonical run join = `task.md + output.md + report.md + review-result.md`。 |
+| **File-level ownership(RA3)** | 每个 durable artifact 恰好一个 sole writer,无物理文件双写。`report.md` 全归 worker;`review-result.md` 是独立 control-owned artifact。取代旧的 section-level 模型(一个 `report.md` 由 worker 写 evidence body + control 填 Review Result 子段)。七行 owner 表见 [landing-contract.md §6](landing-contract.md)。 |
 | **Compaction** | 压缩协议。压缩已闭合的过程细节,绝不压缩未闭合风险。四步:扫描 → 迁移 → 收口 → 校验。 |
 | **check_item** | Audit Packet 的标准检查项,5 元组:id / command / pass_condition / fail_signal / named_list。 |
 
