@@ -7,7 +7,7 @@
 | 术语 | 含义 |
 |------|------|
 | **Control Skill** | 按需触发的控制流程,走生命周期 6 阶段编排(triage → orient → plan → execute → verify → integrate → close)。不编码、不深读 raw。 |
-| **Lifecycle Stage** | 生命周期主架。6 阶段:0 Triage / 1 Orient / 2 Plan / 3 Execute / 4 Verify / 5 Integrate / 6 Close。操作降级为阶段内的子动作。 |
+| **Lifecycle Stage** | 生命周期主架。模型是 Stage 0 Triage 入口决策 + 六阶段生命周期(Stages 1–6):0 Triage / 1 Orient / 2 Plan / 3 Execute / 4 Verify / 5 Integrate / 6 Close。Triage 是入口决策,不计入六阶段。操作降级为阶段内的子动作。 |
 | **Task Packet** | 给 Worker 的任务契约。版本化(当前 0.2)。最小字段见 [templates/task-packet.md](templates/task-packet.md)。约束 worker **行为**(该做什么)。 |
 | **Worker** | 短生命周期执行单元,是**独立的 sub-agent 执行单元**(sub-agent / Pi / 其他支持 sub-agent dispatch 的运行时)。主窗口(control agent)不进入 worker mode——Stage 3 task 必须 dispatch 给独立 sub-agent;运行时无 sub-agent 能力 → 中断,提示换支持工具(opencode / pi / codex 等),不退化自执行。在 packet 边界内发挥智能。 |
 | **Prompt Asset** | 可复用的 Worker prompt 模板(如 researcher.md / coder.md)。素材,不是常驻 agent。 |
@@ -39,16 +39,16 @@
 |------|------|
 | **Project** | 顶层命名空间单元。`.enloom/` 下一个 `<创建时间>-<项目名>` 目录 = 一个 Project,内含自己的 project_state / Registry / tasks / runs / archive。跨 Project 状态不混。同名 Project 第二次进入复用已有目录(时间戳=创建日,固定)。 |
 | **task_board** | 唯一入口表(`.enloom/task_board.md`)。一行一 Project,字段 project/created/updated/phase/desc。Orient 第一步读它定位目标 Project。只索引项目,不索引任务。 |
-| **Gate / 闸门** | Stage 转移的机械检查 = 文件存在性。每个 Stage 有入口/出口闸门(如 Stage 3 入口:`runs/<TASK>/task.md` 必存在)。control 自检 + health-check 硬闸门双保险。完整表见 [landing-contract.md](landing-contract.md)。 |
+| **Gate / 闸门** | Stage 转移的机械检查 = 文件存在性。每个 Stage 有入口/出口闸门。**Stage 3 入口 = 接受的 phase plan 存在**(C03:非 packet;packet 由 `make-prompt` 在 Stage 3 内创建,之后 **Law 2 预派发闸门**检查 packet 存在才允许 dispatch)。control 自检 + health-check 硬闸门双保险。完整表见 [landing-contract.md](landing-contract.md)。 |
 | **Landing / 落盘** | worker 产出必须落盘成文件(output.md/report.md),不能只留对话上下文。dispatch 交的是 task.md 路径,非口头描述。是闸门表成立的物理前提,也是铁律 2/5 机械化的基础。 |
-| **Fold / 折叠** | 项目级目录折叠。closed 项目目录从 `.enloom/` 顶层移到 `.enloom/archive/`,由 `fold` sub-action 执行(Stage 0 Triage 时堆积 ≥3 触发)。区别于 archive(phase 级归档)。task_board 行不动。 |
+| **Fold / 折叠** | 项目级目录折叠。closed 项目目录从 `.enloom/` 顶层移到 `.enloom/archive/`。**触发时机(C04):Stage 0 Triage 决定 `enloom` 之后**(非 Triage 前);`direct`/`light-plan` 不触发。**control 直接执行的串行 namespace 操作,不派 sub-agent**。条件:phase=closed + 目录在顶层 + closed 顶层项目 ≥3。区别于 archive(phase 级归档)。task_board 行不动。详见 [archive-policy.md](archive-policy.md) §Project Fold。 |
 
 ## 验证术语(Claim Consistency / health-check 两档 / Honest Blind Spots / Reference Tolerance / Mode-differentiated / recon)
 
 | 术语 | 含义 |
 |------|------|
 | **Claim Consistency(报告自洽)** | Evidence Contract 第 5 维。对 report 任何可数 claim(条目数/通过率/文件数/覆盖率),Verify 阶段用独立脚本(grep -c/awk/git diff --stat)对 output 实际重数;偏差>0 → ISSUES。**不叫 sub-agent 计数验证**(单 agent 下名不副实)。audited 模式必填,recorded/emergent 可选。详见 [evidence-contract.md §The Fifth Dimension](evidence-contract.md)。 |
-| **health-check 两档** | health-check 执行分两档:**轻量档**(Stage 转移时只跑该闸门文件存在性,单行 "Gates OK" 确认)+ **完整档**(Orient 入口 + 定期 Verify,九项全量)。硬闸门语义不变,只降执行成本。详见 [workflow-steps.md §Health Check](workflow-steps.md)。 |
+| **health-check 两档** | health-check 操作在**两个轴(C06)**:**周期主场所轴**(完整档——Orient 入口 + 定期 Verify,九项全量扫描)+ **转移执行轴**(轻量档——control 在六阶段生命周期的五个边界 `1→2/2→3/3→4/4→5/5→6` 各跑一次,只验前一阶段出口闸门文件,单行 "Gates OK" 确认)。两轴不可混同:周期主场所不是转移执行点的全集。硬闸门语义不变,只降执行成本。详见 [landing-contract.md](landing-contract.md) §4。 |
 | **Honest Blind Spots(三项)** | 单 agent 环境的诚实盲区共三项:(1) cross-worker real isolation(无独立 runtime 验证未碰 forbidden),(2) cross-role verification(verdict/review/audit 可能同 context),(3) virtual parallelism(单 agent 下 strategy:parallel 只是协议形式,执行实际串行)。详见 [evidence-contract.md §The Honest Blind Spots](evidence-contract.md)。 |
 | **Reference Tolerance Decision Table** | phase-plan 的引用容忍度决策表。填 3-5 种引用类型(wikilinks/markdown links/code import/file path/schema $ref)的悬空容忍度,据此决定 promise+parallel 是否可用。脚手架非新闸门。详见 [templates/phase-plan.md](templates/phase-plan.md)。 |
 | **Mode-differentiated density(模式约束密度)** | task-packet 三模式差异化字段表。约束密度匹配 mode:emergent 的 Forbidden 可选(audited 级约束对探索任务过度);audited 的 Required Verification + Countable outputs 必填(缺则 make-prompt 自检失败,不准 dispatch)。详见 [templates/task-packet.md](templates/task-packet.md)。 |

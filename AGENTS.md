@@ -37,7 +37,7 @@
 
 ## 开发即 dogfood
 
-enloom 用自己的机制治理自己的开发。改 skill 不是直接硬干——当改动命中触发器（≥2 个：多阶段 / 多 worker / 跨会话状态 / review 归档纪律）时，进 enloom 生命周期：
+enloom 用自己的机制治理自己的开发。改 skill 不是直接硬干——当改动命中触发器（≥2 个：多阶段 / 多 worker / 跨会话状态 / review 归档纪律）时，进 enloom 生命周期（Stage 0 Triage 入口决策 + 六阶段生命周期 Stages 1–6）：
 
 - `.enloom/task_board.md` 是入口表（一项目一行）
 - 每个项目一个 `.enloom/<created>-<project>/` 目录，含 `project_state.md` + `tasks/` + `runs/` + `archive/`

@@ -20,7 +20,7 @@ Plan only the current phase, never the whole project.
 
 ## Lifecycle
 
-The work proceeds through six stages. Operations are sub-actions that belong to a stage, not a flat menu.
+The model is a Stage 0 Triage entry decision + six-stage lifecycle (Stages 1–6). Operations are sub-actions that belong to a stage, not a flat menu.
 
 ```
 0. Triage    → direct / light-plan / enter lifecycle
@@ -45,8 +45,8 @@ Read [references/workflow-steps.md](references/workflow-steps.md) for the full s
 | `review` | 4 Verify | accept every worker on evidence |
 | `audit` | 4 Verify | periodic / pre-release verification |
 | `archive` | 6 Close | close the phase after state update |
-| `fold` | 0 Triage | 折叠 closed 项目目录到 .enloom/archive/（堆积 ≥3 时） |
-| `health-check` | 1 Orient + 4 Verify | periodic drift / risk-section check |
+| `fold` | post-Triage (after `enloom`) | control-owned serial move of closed projects to .enloom/archive/; runs only after the `enloom` decision, not during Triage（堆积 ≥3 时） |
+| `health-check` | two-axis (C06) | periodic homes = Orient + Verify (full scan); transition executor = control at 5 boundaries (light check) |
 
 ## The Five Laws
 
@@ -112,7 +112,7 @@ Templates and stages define *what* artifacts exist; the Landing Contract defines
 
 Two load-bearing rules:
 
-- **Every stage crossing is a file-existence gate.** Entry/exit gates per stage are mechanical checks (e.g. Stage 3 entry: `runs/<TASK>/task.md` must exist; exit: `output.md` + `report.md` must exist). The control agent self-checks at each entry; health-check hard-verifies at each transition. Full table + control↔worker handshake sequence: [references/landing-contract.md](references/landing-contract.md).
+- **Every stage crossing is a file-existence gate.** Entry/exit gates per stage are mechanical checks (e.g. Stage 3 entry: accepted phase plan present; Stage 3 pre-dispatch sub-gate: `make-prompt` writes `runs/<TASK>/task.md`, then Law 2 checks it before dispatch; exit: `output.md` + `report.md` must exist). The control agent self-checks at each entry; health-check hard-verifies at each transition. Full table + control↔worker handshake sequence: [references/landing-contract.md](references/landing-contract.md).
 - **Worker output must land as files, not chat replies.** Dispatch hands the worker a *path* to `task.md`; the worker writes `output.md` / `report.md` to disk. This mechanizes Law 2 (no dispatch before `task.md` exists) and Law 5 (no archive before every report's Review Result is filled).
 - **Compaction is a mandatory gate, not an optional check.** At the Integrate exit, if a compaction trigger threshold is met, the Compaction Protocol *must* run before the stage passes — "check the trigger and defer" is not acceptable. See [references/registry-and-compaction.md](references/registry-and-compaction.md) §4.
 

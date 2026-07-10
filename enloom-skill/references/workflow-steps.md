@@ -1,6 +1,6 @@
 # Enloom Lifecycle
 
-Enloom is a lifecycle-driven control-plane protocol for complex agent work. The work proceeds through six stages; operations are sub-actions that belong to specific stages.
+Enloom is a lifecycle-driven control-plane protocol for complex agent work. The model is a Stage 0 Triage entry decision + six-stage lifecycle (Stages 1–6); operations are sub-actions that belong to specific stages.
 
 ```
 0. Triage   (entry decision)   → direct / light-plan / enter lifecycle
@@ -61,8 +61,9 @@ Enloom needs at least two of these triggers:
 
 Gate: single-file edits, clear bug fixes, one-off scripts, and direct Q&A default to `direct`. User explicit request → `enloom`. See [trigger-contract.md](trigger-contract.md).
 
-**Workspace hygiene check**（进新任务前）:
-若 task_board 中 `phase=closed` 的项目,其目录仍堆在 `.enloom/` 顶层(非 `.enloom/archive/`)且 ≥ 3 个 → 先派 sub-agent 执行 `fold`(见 [archive-policy.md](archive-policy.md) §Project Fold),再做 Triage 正事。fold 只 mv 目录,task_board 行不动。
+**Triage is side-effect-free.** It decides `direct | light-plan | enloom` only — it does NOT create files, dispatch agents, or move directories. `direct` / `light-plan` exit Enloom entirely with no further action; no fold runs on those paths.
+
+**Workspace hygiene check (after the `enloom` decision — C04):** only when Triage returns `enloom` does control (the serial namespace owner) read `task_board`, apply the C10 resolver, and fold qualifying closed top-level projects before entering Stage 1 Orient. Trigger conditions (all must hold): task_board row's `phase=closed`; the project directory is still at `.enloom/` top level (not under `.enloom/archive/`); and closed top-level projects ≥ 3 (accumulation threshold). Fold is a control-owned serial move — it is NOT a sub-agent; it only moves directories and MUST NOT alter the task_board row. `direct` / `light-plan` do not trigger fold. See [archive-policy.md](archive-policy.md) §Project Fold.
 
 ## Stage 1: Orient
 
@@ -122,7 +123,8 @@ Goal: make the work executable and reviewable without expanding the control cont
 
 Sub-actions: `make-prompt` (build task packet) + `dispatch` (run worker).
 
-- **Entry gate (per task, Law 2 mechanized)**: `runs/<TASK>/task.md` exists. Missing → fall back to Plan and write the packet; never dispatch without it. See [landing-contract.md](landing-contract.md) §3.
+- **Entry gate (per task, C03)**: **accepted phase plan present** (`tasks/phase-plan-<phase>.md`). Admission requires the plan, never the packet — the per-task packet is created *inside* this stage by `make-prompt` (see the pre-dispatch sub-gate below), so requiring it at admission would be circular. Missing phase plan → fall back to Stage 2 Plan. See [landing-contract.md](landing-contract.md) §1.
+- **Pre-dispatch sub-gate (Law 2 mechanized, C03)**: order is `make-prompt` writes `runs/<TASK>/task.md` → **Law 2 pre-dispatch gate** checks that exact file exists → `dispatch`. `make-prompt` is the first Stage 3 control action; only after it writes the packet does Law 2 check it and permit dispatch. A missing packet (make-prompt did not run / failed) → no dispatch; re-run `make-prompt` (this is NOT a Plan fallback — the phase plan already passed the entry gate). See [landing-contract.md](landing-contract.md) §2–3.
 - **Exit gate (per task)**: `runs/<TASK>/output.md` exists + `runs/<TASK>/report.md` exists + report has a Result section (done/blocked/failed). Missing → route the worker back; the task is not complete until both files land.
 
 Output: use [templates/task-packet.md](templates/task-packet.md) for ordinary work, [templates/audit-task-packet.md](templates/audit-task-packet.md) for verification work. The packet is written to `runs/<TASK>/task.md` *before* dispatch — dispatch hands the worker the path to that file, not a verbal description ([landing-contract.md](landing-contract.md) §2).
@@ -171,6 +173,8 @@ The report must satisfy the [Evidence Contract](evidence-contract.md) four eleme
 Hard constraint (mechanization of law 4): the ordered verdict table in §Verdict Decision Function is the complete PASS/FAIL predicate — a required check not run, or `evidence_ref=none` on any executed row, selects `FAIL`; PASS is row 4 only. Apply that function, not an independent formula.
 
 After review, the control agent **must log discovered problems into the matching Registry section** (broken reference / accepted-with-risk / rejected). This is the obligation that makes the registry a live truth rather than a write-only log.
+
+**Verify-worker handshake (RA2 — non-recursive V0→V3).** When independent verification is required, the same `make-prompt → task.md exists → dispatch` mini-handshake runs *inside* Stage 4, never at Stage 3 entry. Control owns every transition and is the normative finalizer. The Verify-worker runs through `V0_TARGET_READY → V1_VERIFY_PACKET_READY → V2_VERIFY_RUN_LANDED → V3_CONTROL_FINALIZED`: zero Plan edges, zero reviewer-of-review edges, at most three forward transitions. Direct control review reaches V3 in one transition. The full state table and invariants are defined in [landing-contract.md](landing-contract.md) §Verify-Worker Handshake — that section is the SSOT and is not restated here.
 
 Periodic / pre-release audits use an [audit task packet](templates/audit-task-packet.md) with `audit_mode: batch` (sampled) or `final` (full). The audit returns a verdict + named lists (dead_links / broken_refs / malformed_outputs / ...) for registry intake.
 
@@ -244,6 +248,11 @@ Same phase failed three times:
 - Stop dispatch and create an assumption review before continuing.
 
 ## Health Check (stage-transition hard gate + periodic drift)
+
+`health-check` operates on **two distinct axes (C06)** — they are NOT the same thing, and conflating them is the bug the two-axis framing removes. The SSOT is [landing-contract.md](landing-contract.md) §4.
+
+- **Axis 1 — Periodic homes (full tier):** where comprehensive drift detection lives — Stage 1 Orient (entry) and periodic Stage 4 Verify (when a drift scan is due). These run the full nine-item scan. A periodic home is NOT the complete set of transition execution points.
+- **Axis 2 — Transition executor (light tier):** control invokes a light check at each of the five stage boundaries of the six-stage lifecycle (Stages 1–6): `1→2`, `2→3`, `3→4`, `4→5`, `5→6`. Each verifies only the previous stage's exit-gate files — a one/two-line mechanical confirmation. The procedure reports; control repairs.
 
 `health-check` plays two roles, and its execution is split into two tiers so that the cheap, high-frequency case (stage transitions) does not pay the cost of the full nine-item scan every time. The hard-gate *semantics* are unchanged — only the execution cost drops.
 
