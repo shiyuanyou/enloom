@@ -6,13 +6,13 @@
 
 ## Current Phase
 
-**P4 — Namespace/Validation/机械链接：accepted 2026-07-10；P5 未开始。**
+**P5 — 命名/兼容性/安装：accepted 2026-07-10；P6 未开始。**
 
-- T-P4-01（PASS/accepted）：task-board.md C10 两根 resolver（active + archive，exactly one resolves）+ RA4 error enum 引用 + reopen 语义；validation.md C11 V01 5-enum + V02 3-enum + flat fallback UNSUPPORTED + C13 §Markdown Reference Integrity owner 段。
-- T-P4-02（PASS/accepted）：2 处 C13 机械缺陷修复（worker-report `[Registry §1](...)` + task-packet `[Ownership Table §2](...)`）；workflow-steps/SKILL/glossary C10 resolver 消费者对齐；AGENTS C13 owner 指向 validation.md。
+- T-P5-01（PASS/accepted）：workflow-steps.md C05 全量命名清理（one-plus-six 限定语）；SKILL.md C12 §Compatibility Preflight（full Enloom 需独立 sub-agent + preflight timing + no/unknown halt）+ compatibility frontmatter 字段；README.md C14 可执行 install（cp -r + diff -qr parity）+ C05 + P3 consistency。description 未改（F-D7-02 证据不足）。
+- T-P5-02（PASS/accepted）：glossary.md C05 Control Skill 条目修复；trigger-contract.md C12 preflight 引用；PROGRESS.md C05 naming 对齐；review-checklist 正确跳过（C12 不在 Stage 4）。
 - Source/installed parity 验证通过（`diff -qr` exit 0）。
-- Exit Gate：C13 defect regex 全模板 0 hit；C10 resolver 在 2 consumer 有引用；C11 V01=5/V02=3 enum。
-- Compaction check：未触发（state ~130 lines，Accepted Results 11，低于阈值）。
+- Exit Gate：C05 qualified phrases = 3；C12 compatibility = 6；C14 executable = 2；description count = 1（未改）；residual "6 阶段" = 0。
+- Compaction check：未触发（state ~135 lines，Accepted Results 13，低于阈值）。
 
 ### Progressive Convergence Ladder
 
@@ -49,6 +49,8 @@
 - T-P3-02（PASS/accepted）：9 consumer 对齐 RA3 review-result.md split + C08/C09 引用；见 `runs/T-P3-02/`。
 - T-P4-01（PASS/accepted）：C10 两根 resolver + C11 V01/V02 enum + C13 owner 落地 2 owner；见 `runs/T-P4-01/`。
 - T-P4-02（PASS/accepted）：2 C13 机械缺陷修复 + 4 consumer C10/C13 对齐；见 `runs/T-P4-02/`。
+- T-P5-01（PASS/accepted）：C05 全量命名 + C12 兼容性 preflight + C14 可执行 install 落地 3 owner；见 `runs/T-P5-01/`。
+- T-P5-02（PASS/accepted）：3 consumer C05/C12 对齐；见 `runs/T-P5-02/`。
 
 ## Registry
 
@@ -72,6 +74,9 @@
 | P4 phase plan | completed | P4 accepted；archive entry 已落盘 |
 | T-P4-01 | accepted | PASS；C10 resolver + C11 enum + C13 owner 落地 |
 | T-P4-02 | accepted | PASS；2 C13 机械修复 + 4 consumer 对齐 |
+| P5 phase plan | completed | P5 accepted；archive entry 已落盘 |
+| T-P5-01 | accepted | PASS；C05 naming + C12 preflight + C14 install 落地 |
+| T-P5-02 | accepted | PASS；3 consumer C05/C12 对齐 |
 
 ### Promised Outputs
 
@@ -79,8 +84,8 @@
 
 ### Pending Dependencies
 
-- P5 必须落地命名清理（C05）、兼容性 preflight（C12）、Install 文档（C14）；C10/C11/C13 已落地为 P4 的前置条件。
-- P6 dogfood/close 按 graph 推进。
+- P6 必须 dogfood 冻结后的契约、重评 P0 三份 frozen report、同步 source/installed、关闭并 release。所有 C01–C14 已落地。
+- F-D7-02 trigger 证据仍不足；description 未改。P6 dogfood 可收集行为证据但不自动改 description。
 - P3/P5 的 host-native prompt、runtime capability、跨模型 trigger 证据取决于可用 runtime；不可用时必须标成未验证。
 - P4/P5 的 validator、install command、renderer 与目录 move recovery 仍需执行证据；不能用静态矩阵冒充运行通过。
 
@@ -115,6 +120,7 @@
 - P2 done 2026-07-10, `accepted`; lifecycle/dispatch/fold 去环化 + consumer alignment 见 `archive/P2-entry.md`。
 - P3 done 2026-07-10, `accepted`; ownership/runtime/role-asset 冻结 + consumer alignment 见 `archive/P3-entry.md`。
 - P4 done 2026-07-10, `accepted`; namespace/validation/机械链接 + consumer alignment 见 `archive/P4-entry.md`。
+- P5 done 2026-07-10, `accepted`; 命名/兼容性/安装 + consumer alignment 见 `archive/P5-entry.md`。
 
 ## Human Decisions Needed
 
@@ -123,4 +129,4 @@
 
 ## Next Review Point
 
-P5 phase plan/packet review；命名/兼容性/安装是下一个收敛簇（C05 + C12 + C14）。description 编辑需先有 trigger 证据（F-D7-02）。任何 source change 仍需同 phase source/installed sync、diff parity、独立 review 与 commit gate。
+P6 dogfood/close：真实任务跑冻结后的全契约 + 重评 P0 frozen reports + source/installed 最终 parity + Registry 高风险清零 + archive closure。这是最后一个 phase。

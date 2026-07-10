@@ -45,3 +45,5 @@ triage 结果映射到生命周期入口:
 - `direct` → 不进入生命周期,直接做完退出。
 - `light-plan` → 不进入生命周期,给短计划,不创建文件。
 - `enloom` → 进入生命周期,从阶段 1 Orient 开始。
+
+> **C12 兼容性 preflight(硬前置)。** Triage 返回 `enloom` 之后、任何 `.enloom` 写入(创建/更新 task_board、项目目录、project_state、fold、dispatch)之前,control **必须**先跑兼容性 preflight——确认独立 sub-agent 可用(`independent_sub-agent availability`)。`no` 或 `unknown` → 立即中断,只输出最小运行时切换提示,零 `.enloom` 变更;不退化自执行。只有 `yes` 才进入 Orient,并把该 preflight 证据拷进 phase plan 与每个 task packet 的 dispatch 闸门。并发 dispatch 与 model/session 多样性是可选 C08 记录,不是兼容性前置条件。详见 [SKILL.md §Compatibility Preflight](../SKILL.md)。

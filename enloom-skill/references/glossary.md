@@ -6,7 +6,7 @@
 
 | 术语 | 含义 |
 |------|------|
-| **Control Skill** | 按需触发的控制流程,走生命周期 6 阶段编排(triage → orient → plan → execute → verify → integrate → close)。不编码、不深读 raw。 |
+| **Control Skill** | 按需触发的控制流程,走 Stage 0 Triage 入口决策 + 六阶段生命周期(Stages 1–6)编排(triage → orient → plan → execute → verify → integrate → close)。不编码、不深读 raw。 |
 | **Lifecycle Stage** | 生命周期主架。模型是 Stage 0 Triage 入口决策 + 六阶段生命周期(Stages 1–6):0 Triage / 1 Orient / 2 Plan / 3 Execute / 4 Verify / 5 Integrate / 6 Close。Triage 是入口决策,不计入六阶段。操作降级为阶段内的子动作。 |
 | **Task Packet** | 给 Worker 的任务契约。版本化(当前 0.2)。最小字段见 [templates/task-packet.md](templates/task-packet.md)。约束 worker **行为**(该做什么)。 |
 | **Worker** | 短生命周期执行单元,是**独立的 sub-agent 执行单元**(sub-agent / Pi / 其他支持 sub-agent dispatch 的运行时)。主窗口(control agent)不进入 worker mode——Stage 3 task 必须 dispatch 给独立 sub-agent;运行时无 sub-agent 能力 → 中断,提示换支持工具(opencode / pi / codex 等),不退化自执行。在 packet 边界内发挥智能。 |

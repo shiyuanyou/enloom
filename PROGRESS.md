@@ -37,8 +37,8 @@
 |------|--------|
 | [README.md](README.md) | 项目 SSOT——是什么、目录、子动作清单、状态 |
 | [CHANGELOG.md](CHANGELOG.md) | 版本历史——每版一行结论 + 入口 commit + 变更细节 |
-| [enloom-skill/SKILL.md](enloom-skill/SKILL.md) | 可运行 skill 入口，生命周期 6 阶段 + 文件协议 |
-| [enloom-skill/references/workflow-steps.md](enloom-skill/references/workflow-steps.md) | 生命周期 6 阶段完整工作流 + 五条铁律 |
+| [enloom-skill/SKILL.md](enloom-skill/SKILL.md) | 可运行 skill 入口，Stage 0 Triage 入口决策 + 六阶段生命周期(Stages 1–6) + 文件协议 |
+| [enloom-skill/references/workflow-steps.md](enloom-skill/references/workflow-steps.md) | Stage 0 Triage 入口决策 + 六阶段生命周期(Stages 1–6)完整工作流 + 五条铁律 |
 | [enloom-skill/references/evidence-contract.md](enloom-skill/references/evidence-contract.md) | 证据契约四要素 + 三态 verdict |
 | [enloom-skill/references/registry-and-compaction.md](enloom-skill/references/registry-and-compaction.md) | Registry/Ownership/Promise/Compaction 状态治理 |
 | [design/index.md](design/index.md) | design/ 归档区入口——已闭合设计文档的索引，全部在 `design/_archive/` |

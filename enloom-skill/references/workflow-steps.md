@@ -12,6 +12,8 @@ Enloom is a lifecycle-driven control-plane protocol for complex agent work. The 
 6. Close    (archive and exit) → archive + closure check + user report
 ```
 
+The walkthrough above spans **one entry stage (Stage 0 Triage) plus six lifecycle stages (Stages 1–6)** — seven rows total, but Triage is the side-effect-free entry decision, not one of the six lifecycle stages. "Stages 0–6" is only an accurate description of all seven rows when it carries this one-plus-six qualifier.
+
 **Landing gates**: every stage crossing is a file-existence gate — see [landing-contract.md](landing-contract.md) §1 for the full gate table (entry/exit per stage) and §2 for the control↔worker handshake. Stages reference it inline below. The control agent self-checks at each entry; health-check hard-verifies at each transition (double insurance — landing-contract.md §3–4).
 
 ## Five Laws

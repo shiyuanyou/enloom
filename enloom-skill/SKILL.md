@@ -1,6 +1,7 @@
 ---
 name: enloom
 description: Use this workflow skill for Enloom, complex multi-stage work, worker task packets, report-first review, project_state updates, archiving, context governance, or when a task may need multiple roles, cross-session state, explicit evidence, or controlled worker boundaries. Trigger it when the user asks to run Enloom, plan a long task, dispatch workers, review a worker report, audit evidence, archive a phase, or health-check workflow state. Do not use for simple direct Q&A, one-file edits, obvious bug fixes, tiny scripts, or tasks that can be completed cleanly without state, review, or workers.
+compatibility: Full Enloom requires dispatch to an independent sub-agent; there is no control-self-execution fallback. Control MUST preflight independent-sub-agent availability after Triage returns `enloom` and before any `.enloom` write, fold, or dispatch.
 ---
 
 # Enloom
@@ -57,6 +58,17 @@ The laws constrain the lifecycle:
 3. **No Parallel without Ownership Table.** (three-tier model)
 4. **No PASS without Evidence.** (Evidence Contract hard constraint)
 5. **No Archive without State Update.** (Registry risk sections processed)
+
+## Compatibility Preflight (C12)
+
+Full Enloom requires dispatch to an **independent sub-agent**. There is no control-self-execution fallback: the control agent is the serial namespace owner and orchestrator, not a substitute for a worker running in its own context. Some hosts ignore a `compatibility` frontmatter field, so this prose section is the mandatory statement of the same requirement.
+
+**Preflight timing — before any Enloom write.** After Stage 0 Triage returns `enloom` but **before** creating or updating `.enloom/` (task_board, project directory, project_state), folding closed projects, or dispatching a worker, control MUST preflight independent-sub-agent availability:
+
+- `yes` → proceed; copy the preflight evidence into the phase plan and every task packet so each dispatch gate can validate the frozen `yes`.
+- `no` or `unknown` → **hard halt**. Control MUST NOT create/update `.enloom/`, fold, or dispatch. It emits a minimal runtime-switch message telling the user that full Enloom requires an independent sub-agent and that this runtime cannot provide one, then stops. `no` and `unknown` behave identically: unknown capability is never assumed `yes`.
+
+**What is NOT a compatibility requirement.** Concurrent dispatch capability, actual concurrency, and model/session diversity are optional C08 runtime facts recorded separately — they are soft records, not compatibility gates, and their `unknown` values never halt. The independent sub-agent requirement is the sole hard halt before any `.enloom` write.
 
 ## References
 

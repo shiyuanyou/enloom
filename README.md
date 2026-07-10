@@ -32,7 +32,7 @@ A markdown-based methodology that keeps the orchestrator **thin but never blind*
 
 > If only one trigger fires → `light-plan` (a short plan, no files). If none fire → `direct` (just do it).
 
-## How it works · 六阶段生命周期
+## How it works · Stage 0 Triage + 六阶段生命周期（Stages 1–6）
 
 ```
 0. Triage    → direct / light-plan / enter lifecycle   判断是否进入
@@ -49,7 +49,7 @@ A markdown-based methodology that keeps the orchestrator **thin but never blind*
 2. No Worker without Task Packet. (dispatch gate requires `task.md` to exist) / 无任务包不派 worker。
 3. No Parallel without Ownership Table. (three-tier model) / 无所有权表不并行。
 4. No PASS without Evidence. (Evidence Contract hard constraint) / 无证据不得 PASS。
-5. No Archive without State Update. (archive gate requires every report's Review Result filled) / 无状态更新不归档。
+5. No Archive without State Update. (archive gate requires every review-result.md to exist) / 无状态更新不归档。
 
 ## Core mechanisms · 核心机制
 
@@ -71,9 +71,21 @@ A markdown-based methodology that keeps the orchestrator **thin but never blind*
 
 Skill name: `enloom`. Installed globally at `~/.agents/skills/enloom/`. It triggers from its `description`; invoke it by running a long task in any agent runtime that loads skills.
 
+The supported install mechanism is a source copy to the agent home (this is the same sync method used in development). From the repo root:
+
 ```bash
-# from this repo, package + install (uses skill-creator tooling)
+# Install: copy skill source to agent home
+cp -r enloom-skill/ ~/.agents/skills/enloom/
 ```
+
+After installing, verify source/installed parity:
+
+```bash
+# Verify source/installed parity
+diff -qr enloom-skill/ ~/.agents/skills/enloom/
+```
+
+A clean `diff` (no output, exit 0) means the installed copy matches the source. Re-run the `cp` after any source change to keep them in sync.
 
 See [enloom-skill/](enloom-skill/) for the runnable skill package.
 
