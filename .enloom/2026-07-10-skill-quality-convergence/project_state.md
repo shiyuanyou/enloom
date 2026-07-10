@@ -6,13 +6,12 @@
 
 ## Current Phase
 
-**P5 — 命名/兼容性/安装：accepted 2026-07-10；P6 未开始。**
+**P6 — Dogfood/对比/同步/关闭：accepted 2026-07-10。项目全部闭合。**
 
-- T-P5-01（PASS/accepted）：workflow-steps.md C05 全量命名清理（one-plus-six 限定语）；SKILL.md C12 §Compatibility Preflight（full Enloom 需独立 sub-agent + preflight timing + no/unknown halt）+ compatibility frontmatter 字段；README.md C14 可执行 install（cp -r + diff -qr parity）+ C05 + P3 consistency。description 未改（F-D7-02 证据不足）。
-- T-P5-02（PASS/accepted）：glossary.md C05 Control Skill 条目修复；trigger-contract.md C12 preflight 引用；PROGRESS.md C05 naming 对齐；review-checklist 正确跳过（C12 不在 Stage 4）。
-- Source/installed parity 验证通过（`diff -qr` exit 0）。
-- Exit Gate：C05 qualified phrases = 3；C12 compatibility = 6；C14 executable = 2；description count = 1（未改）；residual "6 阶段" = 0。
-- Compaction check：未触发（state ~135 lines，Accepted Results 13，低于阈值）。
+- T-P6-01（PASS/accepted）：C01–C14 全部在 live skill 中验证通过；本项目 P1–P5 自身用新契约跑通（dogfood）；source/installed 最终 parity 通过（`diff -qr` exit 0）；P0 三份 frozen report 重评一致；Registry 无高风险项。
+- 所有 14 条 canonical rules 已落地；所有 RA1/RA1.2/RA2/RA3/RA4/RA4.2 amendments 已实现。
+- 6 个实现 phase（P1–P6），每个独立 review + sync + commit。
+- Compaction check：state ~140 lines，Accepted Results 15。未触发强制 compaction 阈值，但接近；项目关闭后可按需压缩。
 
 ### Progressive Convergence Ladder
 
@@ -51,6 +50,7 @@
 - T-P4-02（PASS/accepted）：2 C13 机械缺陷修复 + 4 consumer C10/C13 对齐；见 `runs/T-P4-02/`。
 - T-P5-01（PASS/accepted）：C05 全量命名 + C12 兼容性 preflight + C14 可执行 install 落地 3 owner；见 `runs/T-P5-01/`。
 - T-P5-02（PASS/accepted）：3 consumer C05/C12 对齐；见 `runs/T-P5-02/`。
+- T-P6-01（PASS/accepted）：全契约自洽验证 + dogfood + P0 重评 + 最终 parity；见 `runs/T-P6-01/`。
 
 ## Registry
 
@@ -77,6 +77,8 @@
 | P5 phase plan | completed | P5 accepted；archive entry 已落盘 |
 | T-P5-01 | accepted | PASS；C05 naming + C12 preflight + C14 install 落地 |
 | T-P5-02 | accepted | PASS；3 consumer C05/C12 对齐 |
+| P6 phase plan | completed | P6 accepted；项目全部闭合 |
+| T-P6-01 | accepted | PASS；14/14 rules 自洽 + dogfood + P0 重评 + parity |
 
 ### Promised Outputs
 
@@ -84,17 +86,14 @@
 
 ### Pending Dependencies
 
-- P6 必须 dogfood 冻结后的契约、重评 P0 三份 frozen report、同步 source/installed、关闭并 release。所有 C01–C14 已落地。
-- F-D7-02 trigger 证据仍不足；description 未改。P6 dogfood 可收集行为证据但不自动改 description。
-- P3/P5 的 host-native prompt、runtime capability、跨模型 trigger 证据取决于可用 runtime；不可用时必须标成未验证。
-- P4/P5 的 validator、install command、renderer 与目录 move recovery 仍需执行证据；不能用静态矩阵冒充运行通过。
+无。项目全部闭合。所有 C01–C14 已落地并通过验证。
 
 ### Broken References
 
-- **open / P4 owner C13**：`enloom-skill/references/templates/task-packet.md` 与 `worker-report.md` 各一处 `§` 被写入 Markdown target；P0 已定 owner 为 `references/validation.md`，尚未修 live。
-- **open / P4 owner C10**：fold 后 task_board 顶层 resolver 无法唯一定位 archive project；需按 RA4 error enum/两 root 规则实现。
-- **open / P4 owner C11**：validation reference 宣称的 full YAML contract 与 flat fallback 实现边界尚未落地。
-- **superseded**：phase-plan 的 ``[x](path)`` 位于 code span，不是 live link；不进入修复队列，历史假设保留在 T-P0-01 output。
+- **resolved / P4 C13**：`task-packet.md` 与 `worker-report.md` 的 2 处 `§` 写入 target 已在 P4 修复。
+- **resolved / P4 C10**：fold 后两根 resolver 已在 P4（task-board.md）+ P2（archive-policy.md RA4）落地。
+- **resolved / P4 C11**：validation V01/V02 promise boundary 已在 P4（validation.md）落地。
+- **superseded**：phase-plan 的 ``[x](path)`` 位于 code span，不是 live link；不进入修复队列。
 
 ### Known Exceptions
 
@@ -104,10 +103,11 @@
 
 ### Accepted With Risk
 
-- P0 只证明静态 contract totality/ownership/state-machine 可判定；Stage 4 runtime dispatch、filesystem move、validator、install、renderer、host prompt 与 trigger 行为尚未执行。
-- C08/C09/C11/C14 与 F-D7-02 的 runtime/host evidence gap 按 P3–P6 graph 携带；C05 phrase guard 在 P2 作为不变量，广泛命名清理仍后置 P5。
+- **C09 ROLE_ROUTE_EVIDENCE_GAP**：5-role route table 静态正确（SKILL.md），但 host-native prompt dispatch 未独立观察。需 host-native prompt inspection 验证。
+- **C14 clean-room install**：install 命令（cp -r + diff -qr）在本项目中实际使用同步成功，但未在隔离临时 agent-home 测试。
+- **F-D7-02 trigger evidence**：trigger quality 证据仍不足；description 未改。未来 trigger 评估需 host-native positive/near-miss 证据。
 - shared workspace 与 model/session ancestry 不提供 process/model isolation；hash/status 只能检测边界漂移，不能证明无 interleaving race。
-- T-P0-03 两次 FAIL/rework 是已闭合过程证据，不视为 accepted defect；原始 report/output 不回写。
+- T-P0-03 两次 FAIL/rework 是已闭合过程证据，不视为 accepted defect。
 
 ### Rejected Reports
 
@@ -121,12 +121,13 @@
 - P3 done 2026-07-10, `accepted`; ownership/runtime/role-asset 冻结 + consumer alignment 见 `archive/P3-entry.md`。
 - P4 done 2026-07-10, `accepted`; namespace/validation/机械链接 + consumer alignment 见 `archive/P4-entry.md`。
 - P5 done 2026-07-10, `accepted`; 命名/兼容性/安装 + consumer alignment 见 `archive/P5-entry.md`。
+- P6 done 2026-07-10, `accepted`; dogfood + 重评 + 最终 parity + 关闭 见 `archive/P6-entry.md`。
 
 ## Human Decisions Needed
 
-- P0 无阻塞决策；D006 八项已由 T-P0-02 adjudication 形成 accepted P0 contract input。
-- P5 进入 trigger 优化前，用户需要 review 一次 should-trigger / should-not-trigger 样例集。
+- 项目无阻塞决策。D006 八项已全部实现。
+- 未来如需改 description（F-D7-02），用户需先 review should-trigger / should-not-trigger 样例集 + 收集 host-native trigger 证据。
 
 ## Next Review Point
 
-P6 dogfood/close：真实任务跑冻结后的全契约 + 重评 P0 frozen reports + source/installed 最终 parity + Registry 高风险清零 + archive closure。这是最后一个 phase。
+项目已闭合。无后续 phase。未来如需 trigger 优化（F-D7-02）或 version bump，开新项目。
