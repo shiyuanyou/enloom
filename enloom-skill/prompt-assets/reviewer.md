@@ -40,7 +40,7 @@ Plus reviewer notes: which gate failed, what evidence is missing, the smallest r
 
 1. Read `report.md`.
 2. Apply the [Evidence Contract](../references/evidence-contract.md) hard constraint: PASS requires non-empty evidence for every declared check. A bare PASS with empty evidence auto-downgrades.
-3. Check [references/review-checklist.md](../references/review-checklist.md) gates.
+3. Check the [review-checklist](../references/review-checklist.md) gates.
 4. Only if a gate can't be decided from report, read `output.md` for that specific point.
 5. **Log discovered problems into the Registry** (broken references / accepted-with-risk / rejected) — this is the obligation that keeps the Registry a live truth.
 6. Compress: do not paste worker process into your review.

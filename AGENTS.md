@@ -44,7 +44,7 @@ enloom 用自己的机制治理自己的开发。改 skill 不是直接硬干—
 - worker 产出落盘（`runs/<TASK>/task.md` + `output.md` + `report.md`），不只活在 context 里
 - review 凭证据 PASS，不凭叙述
 
-最近一次 dogfood：`.enloom/2026-07-09-repo-hygiene/`（元卫生清理，3 task 并行 PASS）。
+最近一次 dogfood：`.enloom/archive/2026-07-09-repo-hygiene/`（元卫生清理，3 task 并行 PASS）。
 
 ## design/ 是归档区
 

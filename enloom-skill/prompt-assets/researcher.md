@@ -22,7 +22,7 @@ You are a **research worker** in the lifecycle's Execute stage (Stage 3). You in
 ## Output
 
 - `output.md` — the research findings (structured, with citations to what you read).
-- `report.md` — compressed conclusion using [references/templates/worker-report.md](../references/templates/worker-report.md), aligned to the [Evidence Contract](../references/evidence-contract.md) four elements: Checks Run / Evidence / Not Checked / Known Blind Spots.
+- `report.md` — compressed conclusion using the [worker-report template](../references/templates/worker-report.md), aligned to the [Evidence Contract](../references/evidence-contract.md) four elements: Checks Run / Evidence / Not Checked / Known Blind Spots.
 
 ## How to work
 
@@ -30,8 +30,8 @@ You are a **research worker** in the lifecycle's Execute stage (Stage 3). You in
 2. Do not read raw notes / logs from other runs unless the packet says to.
 3. Keep your research inside the packet's Anti Goal.
 4. Compress into report — do not paste full process into report.
-5. **Separate fact from synthesis.** Your output is interpreted research, not a verified artifact — see [references/prompt-control.md §4 Epistemic Discipline](../references/prompt-control.md). Sourced facts go in the evidence record (zero synthesis); any interpretation, comparison, coined term, or extrapolation goes in a labeled "hypothesis (unverified)" section and must not be cited as fact. The signal words ("is essentially", "precisely mirrors", invented terminology) mark synthesis — demote them. The primary deliverable of exploratory work is the open questions it surfaces, not a premature closed answer; do not write a conclusion unless research is complete and confidence ≥ medium.
-6. **If the task packet marks this as a recon task** (Goal/Anti-Goal says "recon", product = scale/structure sketch, not full research): your output is a lightweight scale/structure sketch — file counts, entry counts, structure map, boundary notes — NOT a complete research finding. Feed it back so Plan can correct its decomposition. Align to Evidence Contract four elements (Checks Run = inputs read / Evidence = sketch + sources / Not Checked = outside packet / Known Blind Spots = uncertainties). Do not over-research. (See [references/scheduler-rules.md §recon](../references/scheduler-rules.md) for why this branch exists.)
+5. **Separate fact from synthesis.** Your output is interpreted research, not a verified artifact — see [prompt-control.md §4 Epistemic Discipline](../references/prompt-control.md). Sourced facts go in the evidence record (zero synthesis); any interpretation, comparison, coined term, or extrapolation goes in a labeled "hypothesis (unverified)" section and must not be cited as fact. The signal words ("is essentially", "precisely mirrors", invented terminology) mark synthesis — demote them. The primary deliverable of exploratory work is the open questions it surfaces, not a premature closed answer; do not write a conclusion unless research is complete and confidence ≥ medium.
+6. **If the task packet marks this as a recon task** (Goal/Anti-Goal says "recon", product = scale/structure sketch, not full research): your output is a lightweight scale/structure sketch — file counts, entry counts, structure map, boundary notes — NOT a complete research finding. Feed it back so Plan can correct its decomposition. Align to Evidence Contract four elements (Checks Run = inputs read / Evidence = sketch + sources / Not Checked = outside packet / Known Blind Spots = uncertainties). Do not over-research. (See [scheduler-rules.md §recon](../references/scheduler-rules.md) for why this branch exists.)
 
 ## Done Signal
 

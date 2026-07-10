@@ -88,4 +88,4 @@ echo "Skill is valid!"
 
 ## Why not ship one script?
 
-Enloom is a zero-code, pure-document skill by design (see PROGRESS.md Non-Goals: no CLI, no runtime). Hard-coding a `validate.sh` or `validate.py` in `scripts/` would make the package depend on one runtime and contradict that stance. Describing the checks + letting the agent implement them in-situ keeps the package portable and the validation honest — the agent can only validate what its environment can actually run.
+Enloom is a zero-code, pure-document skill by design (see PROGRESS.md "不做的事": no CLI, no runtime). Hard-coding a `validate.sh` or `validate.py` in `scripts/` would make the package depend on one runtime and contradict that stance. Describing the checks + letting the agent implement them in-situ keeps the package portable and the validation honest — the agent can only validate what its environment can actually run.

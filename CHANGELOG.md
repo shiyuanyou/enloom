@@ -62,7 +62,7 @@ git: `e71f686`(P0+P0.5) → `b675c30`(P1) → `5dc33d8`(P2) → `e43f6d1`(P3)
 
 ## v0.4（2026-06-30）— 项目级命名空间 + 落盘时序契约
 
-来自实跑诊断的两条腿。dogfood 痕迹：`.enloom/2026-06-30-enloom-v04/`，设计输入 `design/_archive/v0.4-project-namespace-spec.md`。
+来自实跑诊断的两条腿。dogfood 痕迹：`.enloom/archive/2026-06-30-enloom-v04/`，设计输入 `design/_archive/v0.4-project-namespace-spec.md`。
 
 1. **项目级命名空间** — `.enloom/` 重组为 `task_board.md`（入口表）+ 每项目目录（`<created>-<project>/`），项目隔离。
 2. **落盘时序契约（landing-contract）** — 每个 stage 加 entry/exit 闸门；机械化 Law 2 & 5，让 worker 产出真实落盘。
@@ -84,7 +84,7 @@ git: `e71f686`(P0+P0.5) → `b675c30`(P1) → `5dc33d8`(P2) → `e43f6d1`(P3)
 ## 深层历史索引
 
 - **设计文档**（v0.3/v0.4/v0.5 规格 + 设计演化 + 经验笔记）：[design/index.md](design/index.md) → `design/_archive/`
-- **v0.3 自举冻结快照**（legacy 命名 `AgentOS/`，故意保留）：`AgentOS/`
-- **各版本 dogfood 痕迹**：`.enloom/<date>-<project>/`（如 `2026-07-06-enloom-v06/`、`2026-07-01-enloom-v05/`、`2026-06-30-enloom-v04/`）
+- **v0.3 自举冻结快照**（legacy 命名 `AgentOS/`，故意保留）：`design/_archive/AgentOS/`
+- **各版本 dogfood 痕迹**：`.enloom/archive/<date>-<project>/`（如 `2026-07-06-enloom-v06/`、`2026-07-01-enloom-v05/`、`2026-06-30-enloom-v04/`）
 - **v0.1 验收报告**（历史归档）：`design/_archive/2026-06-15-v01-acceptance-report.md`
 - **文件级历史**：`git log --oneline` 或 `git show <commit>`

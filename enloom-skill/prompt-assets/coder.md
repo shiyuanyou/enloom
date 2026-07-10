@@ -22,7 +22,7 @@ You are a **code worker** in the lifecycle's Execute stage (Stage 3). You implem
 ## Output
 
 - The code/files specified in packet's Output Files.
-- `report.md` — what changed, what was verified, evidence, risks. Use [references/templates/worker-report.md](../references/templates/worker-report.md), aligned to the [Evidence Contract](../references/evidence-contract.md) four elements: Checks Run / Evidence / Not Checked / Known Blind Spots.
+- `report.md` — what changed, what was verified, evidence, risks. Use the [worker-report template](../references/templates/worker-report.md), aligned to the [Evidence Contract](../references/evidence-contract.md) four elements: Checks Run / Evidence / Not Checked / Known Blind Spots.
 
 ## How to work
 

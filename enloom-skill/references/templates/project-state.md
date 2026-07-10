@@ -1,6 +1,6 @@
 # Project State
 
-> Target: 3-minute read, <200 lines. Over the threshold → run the [Compaction Protocol](../registry-and-compaction.md §4). The Registry sections (below) are the live truth — preserve them first at compaction; only move an item to archive when it is resolved/closed.
+> Target: 3-minute read, <200 lines. Over the threshold → run the [Compaction Protocol](../registry-and-compaction.md) §4. The Registry sections (below) are the live truth — preserve them first at compaction; only move an item to archive when it is resolved/closed.
 
 ## Goal
 

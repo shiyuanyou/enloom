@@ -12,7 +12,7 @@ Enloom is a lifecycle-driven control-plane protocol for complex agent work. The 
 6. Close    (archive and exit) → archive + closure check + user report
 ```
 
-**Landing gates**: every stage crossing is a file-existence gate — see [landing-contract.md](landing-contract.md) §1 for the full gate table (entry/exit per stage) and §2 for the control↔worker handshake. Stages reference it inline below. The control agent self-checks at each entry; health-check hard-verifies at each transition (double insurance — landing-contract §3–4).
+**Landing gates**: every stage crossing is a file-existence gate — see [landing-contract.md](landing-contract.md) §1 for the full gate table (entry/exit per stage) and §2 for the control↔worker handshake. Stages reference it inline below. The control agent self-checks at each entry; health-check hard-verifies at each transition (double insurance — landing-contract.md §3–4).
 
 ## Five Laws
 
@@ -31,7 +31,7 @@ The laws constrain the lifecycle, not individual operations. All five carry thro
    A report is not accepted because the Worker says it is done. Acceptance requires the Evidence Contract: checks run, evidence, blind spots declared. Mechanized in [evidence-contract.md](evidence-contract.md).
 
 5. **No Archive without State Update.**
-   Archive only after report review, project state update, decision update if needed, registry update (risk sections cleared or carried), raw-material handling, and next-step clarity.
+   Archive only after report review, project state update, decision update if needed, registry update (risk sections processed: cleared or carried), raw-material handling, and next-step clarity.
 
 ## Stage 0: Triage
 
@@ -249,7 +249,7 @@ Same phase failed three times:
 
 ### Two Tiers
 
-1. **Stage-transition hard gate** (primary role) — run at every stage boundary (1→2→3→4→5→6). It verifies the previous stage's exit-gate files exist (the gate table in [landing-contract.md](landing-contract.md) §1). A missing file → drift finding (a Law violation signal); the control agent must fill the gap before advancing. This is the second insurance layer on top of the control agent's own self-check (double insurance — landing-contract §3).
+1. **Stage-transition hard gate** (primary role) — run at every stage boundary (1→2→3→4→5→6). It verifies the previous stage's exit-gate files exist (the gate table in [landing-contract.md](landing-contract.md) §1). A missing file → drift finding (a Law violation signal); the control agent must fill the gap before advancing. This is the second insurance layer on top of the control agent's own self-check (double insurance — landing-contract.md §3).
    - **Light tier at transitions**: at a stage crossing, run **only the file-existence check** for that transition's gate (e.g. `ls runs/<TASK>/task.md`, `ls runs/<TASK>/output.md runs/<TASK>/report.md`). This is one or two mechanical confirmations, not the full scan. On pass, emit a single-line confirmation ("Gates OK: Stage 2→3, files present") — do not expand the full nine-item report. 95% of stage transitions only need "does the gate file exist?"; the light tier pays exactly that cost.
 2. **Periodic drift detection** (retained role) — triggered in:
    - **Stage 1 Orient** — state over threshold but not compacted; packets/reports missing.

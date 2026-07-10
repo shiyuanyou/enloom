@@ -36,7 +36,7 @@ archive 后,control 只向用户汇报:
 
 project_state 不能只是越来越长的总结。每次 review 只追加或替换对应小节;过期细节移入 archive。
 
-compaction 是完整 [Compaction Protocol](registry-and-compaction.md §4):触发条件(>200 行 / Accepted Results 阈值 / 可读性)→ 四步流程(扫描 → 迁移 → 收口 → 校验)→ 防错规则(**压缩前后 registry 四个风险区段条目数只能持平或减少,仅当 genuinely resolved;否则回滚**)。
+compaction 是完整 [Compaction Protocol](registry-and-compaction.md) §4:触发条件(>200 行 / Accepted Results 阈值 / 可读性)→ 四步流程(扫描 → 迁移 → 收口 → 校验)→ 防错规则(**压缩前后 registry 四个风险区段条目数只能持平或减少,仅当 genuinely resolved;否则回滚**)。
 
 核心原则:**压缩的是已闭合的过程细节,绝不压缩未闭合风险。** Registry 七区段是活性真相,compaction 时优先保留。
 

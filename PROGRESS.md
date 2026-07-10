@@ -21,7 +21,7 @@
 
 ## 不做的事
 
-引用 `design/design-summary.md` 与 `design/skill-workflow-draft.md` 的 Non-Goals：
+引用 `design/_archive/design-summary.md` 与 `design/_archive/skill-workflow-draft.md` 的 Non-Goals：
 
 - 不做常驻后台——需要时介入，完成后退场
 - 不做自动模型选择
