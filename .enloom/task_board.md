@@ -13,3 +13,4 @@
 | clearmind-align | 2026-07-06 | 2026-07-06 | closed | clear-mind skill 对齐 enloom v0.6 dispatch-default posture:三层轻量对齐(叙事/接口/命名)闭合,PASS。运行时默认未翻转,独立可用性保留。 |
 | repo-hygiene | 2026-07-09 | 2026-07-09 | closed (P1 完成 + eval 删除收尾) | 用 enloom 治理 enloom 开发仓库自身:references 去版本标注 bloat (25→5) + design/ 归档 (3552行) + PROGRESS compaction (249→80) + 方法论缝隙修复 + dev repo Registry 建立。3/3 task PASS, installed skill 同步。收尾:eval 套件删除(源+副本)+ README/PROGRESS 更新 + AGENTS.md 新建,Accepted With Risk 闭合。最强 dogfood。 |
 | skill-quality-convergence | 2026-07-10 | 2026-07-10 | closed (P0–P6 全部 accepted) | 渐进修复 Enloom；14 canonical rules 全部落地，17 findings 全部闭合，source/installed parity 通过。 |
+| prompt-workflow-optimization | 2026-07-17 | 2026-07-17 | closed | Clear-Mind `CONDITIONAL` 下完成 P1/P3 最小 source patch + readonly audited-researcher dogfood；P2 Clear-Mind handoff 留给 sibling project。 |

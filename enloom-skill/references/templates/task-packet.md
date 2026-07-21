@@ -69,6 +69,8 @@ Control Review Result Path: runs/<RUN>/review-result.md
 >
 > **Countable outputs (Claim Consistency, 5th Evidence dimension)**: list any countable quantity this task's report will assert — entry counts, pass rates, file counts, coverage numbers. The Verify stage independently recounts these against the actual output (`grep -c` / `awk` / `git diff --stat`); a mismatch > 0 → ISSUES. **Mandatory in `audited` mode; optional in `recorded`/`emergent`.** See [evidence-contract.md §The Fifth Dimension](../evidence-contract.md).
 
+> **Researcher material-finding locators.** For an `audited` `researcher` packet, declare whether an Evidence Record is required and its locator granularity. When required, each material finding uses: fact → source locator; hypothesis → dependent fact locators + reasoning; open question → missing evidence or next check. Do not require rows for every citation or for non-material prose.
+
 Countable outputs:
 
 

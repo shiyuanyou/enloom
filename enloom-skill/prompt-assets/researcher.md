@@ -22,6 +22,7 @@ You are a **research worker** in the lifecycle's Execute stage (Stage 3). You in
 ## Output
 
 - `output.md` — the research findings (structured, with citations to what you read).
+- For an `audited` packet whose role is `researcher` and whose `Evidence Required` explicitly requires material-finding locators, `output.md` also includes a brief Evidence Record. List only material findings; the packet owns locator granularity. Use the existing [Prompt Control reference](../references/prompt-control.md), §4 "Epistemic Discipline", for category semantics.
 - `report.md` — compressed conclusion using the [worker-report template](../references/templates/worker-report.md), aligned to the [Evidence Contract](../references/evidence-contract.md) four elements with disjoint semantics: Checks Run / Evidence / **Not Checked = packet-declared required-check IDs not executed (blocks PASS)** / **Known Blind Spots = structural/runtime/out-of-scope limitations (each with `blocks_check_ids`; `[]` may coexist with PASS)**. Do not mix the two fields.
 
 ## How to work

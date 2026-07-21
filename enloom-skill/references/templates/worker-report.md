@@ -9,6 +9,16 @@ done | blocked | failed
 ## Files Changed
 
 
+## Boundary Check
+
+> Worker self-attestation for reviewer lookup: report actual scope, not proof of runtime isolation, permission enforcement, independent verification, or a stronger `PASS`. This does not change the Evidence Contract fields or control-owned `review-result.md`.
+
+- Actual inputs investigated:
+- Packet-boundary deviations and reasons:
+- Source / config / state modifications:
+- Out-of-scope questions:
+
+
 ## Checks Run
 
 > Evidence Contract element 1 — which verifications were executed, named. Aligns with the packet's Required Verification.
